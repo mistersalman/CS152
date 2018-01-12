@@ -14,7 +14,7 @@ DIGIT    [0-9]
 "+"            {printf("PLUS\n"); currPos += yyleng; }
 "*"            {printf("MULT\n"); currPos += yyleng; }
 "/"            {printf("DIV\n"); currPos += yyleng; }
-"%"            {printf("REMAINDER\n"); currPos += yyleng; }
+"%"            {printf("MOD\n"); currPos += yyleng; }
 ">"            {printf("GT\n"); currPos += yyleng; }
 "<"            {printf("LT\n"); currPos += yyleng; }
 ">="           {printf("GTE\n"); currPos += yyleng; }
@@ -24,6 +24,13 @@ DIGIT    [0-9]
 "("            {printf("L_PAREN\n"); currPos += yyleng; }
 ")"            {printf("R_PAREN\n"); currPos += yyleng; }
 ":="           {printf("ASSIGN\n"); currPos += yyLeng; }
+":"           {printf("COLON\n"); currPos += yyLeng; }
+";"           {printf("SEMI-COLON\n"); currPos += yyLeng; }
+"not"          {printf("LOGICAL NOT\n"); currPos += yyLeng; }
+"and"          {printf("LOGICAL AND\n"); currPos += yyLeng; }
+"or"          {printf("LOGICAL OR\n"); currPos += yyLeng; }
+"["            {printf("L_SQUARE_BRACKET\n"); currPos += yyleng; }
+"]"            {printf("R_SQUARE_BRACKET\n"); currPos += yyleng; }
 
 (\.{DIGIT}+)|({DIGIT}+(\.{DIGIT}*)?([eE][+-]?[0-9]+)?)   {printf("NUMBER %s\n", yytext); currPos += yyleng;}
 
