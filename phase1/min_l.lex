@@ -10,11 +10,17 @@ DIGIT    [0-9]
    
 %%
 
-"-"            {printf("MINUS\n"); currPos += yyleng; }
+"-"            {printf("SUB\n"); currPos += yyleng; }
 "+"            {printf("PLUS\n"); currPos += yyleng; }
 "*"            {printf("MULT\n"); currPos += yyleng; }
 "/"            {printf("DIV\n"); currPos += yyleng; }
-"="            {printf("EQUAL\n"); currPos += yyleng; }
+"%"            {printf("REMAINDER\n"); currPos += yyleng; }
+">"            {printf("GT\n"); currPos += yyleng; }
+"<"            {printf("LT\n"); currPos += yyleng; }
+">="           {printf("GTE\n"); currPos += yyleng; }
+"<="           {printf("LTE\n"); currPos += yyleng; }
+"=="           {printf("EQUAL\n"); currPos += yyleng; }
+"<>"           {printf("NOT EQUAL\n"); currPos += yyleng; }
 "("            {printf("L_PAREN\n"); currPos += yyleng; }
 ")"            {printf("R_PAREN\n"); currPos += yyleng; }
 ":="           {printf("ASSIGN\n"); currPos += yyLeng; }
