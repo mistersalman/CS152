@@ -17,6 +17,7 @@ DIGIT    [0-9]
 "="            {printf("EQUAL\n"); currPos += yyleng; }
 "("            {printf("L_PAREN\n"); currPos += yyleng; }
 ")"            {printf("R_PAREN\n"); currPos += yyleng; }
+":="           {printf("ASSIGN\n"); currPos += yyLeng; }
 
 (\.{DIGIT}+)|({DIGIT}+(\.{DIGIT}*)?([eE][+-]?[0-9]+)?)   {printf("NUMBER %s\n", yytext); currPos += yyleng;}
 
