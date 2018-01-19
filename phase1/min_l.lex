@@ -11,7 +11,7 @@ DIGIT    [0-9]
 %%
 
 "-"            {printf("SUB\n"); currPos += yyleng; }
-"+"            {printf("PLUS\n"); currPos += yyleng; }
+"+"            {printf("ADD\n"); currPos += yyleng; }
 "*"            {printf("MULT\n"); currPos += yyleng; }
 "/"            {printf("DIV\n"); currPos += yyleng; }
 "%"            {printf("MOD\n"); currPos += yyleng; }
@@ -25,7 +25,7 @@ DIGIT    [0-9]
 ")"            {printf("R_PAREN\n"); currPos += yyleng; }
 ":="           {printf("ASSIGN\n"); currPos += yyleng; }
 ":"            {printf("COLON\n"); currPos += yyleng; }
-";"            {printf("SEMI-COLON\n"); currPos += yyleng; }
+";"            {printf("SEMICOLON\n"); currPos += yyleng; }
 "not"          {printf("NOT\n"); currPos += yyleng; }
 "and"          {printf("AND\n"); currPos += yyleng; }
 "or"           {printf("OR\n"); currPos += yyleng; }
