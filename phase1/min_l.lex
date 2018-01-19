@@ -7,6 +7,9 @@
 %}
 
 DIGIT    [0-9]
+LOWERCHAR [a-z]
+UPPERCHAR [A-Z]
+SPECIALCHAR [_$]
    
 %%
 
@@ -60,6 +63,8 @@ DIGIT    [0-9]
 "return"	      {printf("RETURN\n"); currPos += yyleng; }
 
 (\.{DIGIT}+)|({DIGIT}+(\.{DIGIT}*)?([eE][+-]?[0-9]+)?)   {printf("NUMBER %s\n", yytext); currPos += yyleng;}
+
+({LOWERCHAR} OR {UPPERCHAR})+({LOWERCHAR} OR {UPPERCHAR} OR {DIGIT} OR {SPECIALCHAR})* {printf("IDENT %s\n", yytext); currPos += yyleng;}
 
 [ \t]+         {/* ignore spaces */ currPos += yyleng;}
 
