@@ -72,7 +72,7 @@ SPECIALCHAR [_$]
 
 "\n"           {currLine++; currPos = 1;}
 
-[#][#][.]*[\n] dfa starts with 2 '#' then any sequence of characters and ends with a '\n'       {currLine++; currPos = 1;}
+[#][#].*[\n] dfa starts with 2 '#' then any sequence of characters and ends with a '\n'       {currLine++; currPos = 1;}
 
 .              {printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", currLine, currPos, yytext); exit(0);}
 
