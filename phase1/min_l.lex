@@ -65,8 +65,6 @@ DIGIT    [0-9]
 
 [ \t]+         {/* ignore spaces */ currPos += yyleng;}
 
-" "        {currPos += yyleng;}
-
 "\n"           {currLine++; currPos = 1;}
 
 [#][#].*[\n]     {currLine++; currPos = 1;}
