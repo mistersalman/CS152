@@ -63,9 +63,9 @@ DIGIT    [0-9]
 
 [A-Za-z][A-Za-z0-9_$]*[A-Za-z0-9]     {printf("IDENT %s\n", yytext); currPos += yyleng;}
 
-[A-Za-z][A-Za-z0-9_$]*[_]  {printf("Error at line %d, column %d: invalid symbol \"%s\"n", currLine, currPos, yytext); exit(0);}
+[A-Za-z][A-Za-z0-9_$]*[_]  {printf("Error at line %d, column %d: invalid IDENT \"%s\"n", currLine, currPos, yytext); exit(0);}
 
-[0-9]+[A-Za-z0-9_$]*[A-Za-z0-9]  {printf("Error at line %d, column %d: invalid symbol \"%s\"n", currLine, currPos, yytext); exit(0);}
+[0-9]+[A-Za-z0-9_$]*[A-Za-z0-9]  {printf("Error at line %d, column %d: invalid IDENT \"%s\"n", currLine, currPos, yytext); exit(0);}
 
 [ \t]+         {/* ignore spaces */ currPos += yyleng;}
 
