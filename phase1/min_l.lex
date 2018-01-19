@@ -64,13 +64,15 @@ SPECIALCHAR [_$]
 
 (\.{DIGIT}+)|({DIGIT}+(\.{DIGIT}*)?([eE][+-]?[0-9]+)?)   {printf("NUMBER %s\n", yytext); currPos += yyleng;}
 
-({LOWERCHAR} OR {UPPERCHAR})+({LOWERCHAR} OR {UPPERCHAR} OR {DIGIT} OR {SPECIALCHAR})* {printf("IDENT %s\n", yytext); currPos += yyleng;}
+[A-Za-z][A-Za-z0-9_$]*     {printf("IDENT %s\n", yytext); currPos += yyleng;}
 
 [ \t]+         {/* ignore spaces */ currPos += yyleng;}
 
 " "        {currPos += yyleng;}
 
 "\n"           {currLine++; currPos = 1;}
+
+[#][#][.]*[\n] dfa starts with 2 '#' then any sequence of characters and ends with a '\n'       {currLine++; currPos = 1;}
 
 .              {printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", currLine, currPos, yytext); exit(0);}
 
