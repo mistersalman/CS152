@@ -64,9 +64,9 @@ ID    [A-Za-z]([A-Za-z0-9_]*[A-Za-z0-9])*
 
 {ID}    {printf("IDENT %s\n", yytext); currPos += yyleng;}
 
-{ID}[_]+  {printf("Error at line %d, column %d: invalid IDENT \"%s\"n", currLine, currPos, yytext); exit(0);}
+{ID}[_]+  {printf("Error at line %d, column %d: IDENT cannot end with underscore \"%s\n", currLine, currPos, yytext); exit(0);}
 
-[0-9_]+{ID}*  {printf("Error at line %d, column %d: invalid IDENT \"%s\"n", currLine, currPos, yytext); exit(0);}
+[0-9_]+{ID}*  {printf("Error at line %d, column %d: IDENT cannot start with number or underscore. \"%s\n", currLine, currPos, yytext); exit(0);}
 
 [ \t]+         {/* ignore spaces */ currPos += yyleng;}
 
@@ -74,7 +74,7 @@ ID    [A-Za-z]([A-Za-z0-9_]*[A-Za-z0-9])*
 
 [#][#].*[\n]     {currLine++; currPos = 1;}
 
-.              {printf("Error at line %d, column %d: unrecognized symbol \"%s\"\n", currLine, currPos, yytext); exit(0);}
+.              {printf("Error at line %d, column %d: unrecognized symbol \"%s\n", currLine, currPos, yytext); exit(0);}
 
 %%
 
