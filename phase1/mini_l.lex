@@ -66,7 +66,7 @@ ID    [A-Za-z]([A-Za-z0-9_]*[A-Za-z0-9])*
 
 {ID}[_]+  {printf("Error at line %d, column %d: invalid IDENT \"%s\"n", currLine, currPos, yytext); exit(0);}
 
-[0-9_]+{ID}  {printf("Error at line %d, column %d: invalid IDENT \"%s\"n", currLine, currPos, yytext); exit(0);}
+[0-9_]+{ID}*  {printf("Error at line %d, column %d: invalid IDENT \"%s\"n", currLine, currPos, yytext); exit(0);}
 
 [ \t]+         {/* ignore spaces */ currPos += yyleng;}
 
