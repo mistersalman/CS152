@@ -1,0 +1,54 @@
+
+Rules:
+	terminal: (...)
+	non-terminal: [...]
+	start: [Program]
+	Epsilon: E         *It was mentioned in lab that epsilon causes shift reduce errors so tried to use as few as possible
+
+	[Program] -> [FunctionSet] 
+	[FunctionSet] -> [Function][FunctionSet] | E
+
+	[Function] -> (function)(identifier)(;)(beginparams)[DeclarationSet](endparams)(beginlocals)[DeclarationSet](endlocals)(beginbody)[StatementSet](endbody)
+	[DeclarationSet] -> [Declaration](;)[DeclarationSet] | E
+	[StatementSet] -> [Statement](;)[StatementSet] | [Statement](;)
+
+	[Declaration] -> [IdentifierSet](;)(integer) | [IdentifierSet](:)(array)([)(number)(])(of)(integer)
+	[IdentifierSet] -> (identifier)(,)[IdentifierSet] | (identifier)
+
+	[Statement] -> [VarStatement] | [IfStatement] | [WhileStatement] | [DoStatement] | [ForeachStatement] | [ReadStatement] | [WriteStatement] | [ContinueStatement] | [ReturnStatement]
+	[VarStatement] -> [Var](:=)[Expression]
+	[IfStatement] -> (if)[Bool-Expr](then)[statmentSet][IfStatementElse]
+	[IfStatementElse] -> (else)[StatementSet](endif) | (endif)
+	[WhileStatement] -> (while)[Bool-Expr](beginloop)[StatementSet](endloop)
+	[DoStatement] -> (do)(beginloop)[StatementSet](endloop)(while)[Bool-Expr]
+	[ForeachStatement] -> (foreach)(identifier)(in)(identifier)(beginloop)[StatementList](endloop)
+	[ReadStatement] -> [Varset]
+	[WriteStatement] -> [VarSet]
+	[ContinueStatement] -> (Continue)
+	[ReturnStatement] -> (return)[Expression]
+	[VarSet] -> [Var](,)[VarSet] | [Var]
+
+	[Bool-Expr] -> [Relation-And-Expr][Relation-And-ExprSet]
+	[Relation-And-ExprSet] -> (or)[Relation-And-Expr][Relation-And-ExprSet] | E
+
+	[Relation-And-Expr] -> [Relation-Expr][Relation-ExprSet]
+	[Relation-ExprSet] -> (and)[Relation-Expr][Relation-ExprSet] | E
+
+	[Relation-Expr] -> (not)[Expression][Comp][Expression] | (not)(true) | (not)(false) | (not)(()[Bool-Expr]()) | [Expression][Comp][Expression] | (true) | (false) | (()[Bool-Expr]())	
+
+	[Comp] -> (==) | (<>) | (<) | (>) | (<=) | (>=)
+
+	[Expression] -> [Multiplicative-Expr][Multiplicative-ExprSet]
+	[Multiplicative-ExprSet] -> [AddOrSub][Multiplicative-Expr][Multiplicative-ExprSet] | E
+	[AddOrSub] -> (+) | (-)
+
+	[Multiplicative-Expr] -> [Term][TermSet]
+	[TermSet] -> [MultOrDivOrMod][Term][TermSet] | E
+	[MultOrDivOrMod] -> (*) | (/) | (%)
+
+	[Term] -> [TermOption1] | [TermOption2]
+	[TermOption1] -> (-)[Var] | (-)(number) | (-)(()[Expression]()) | [Var] | (number) | (()[Expression]())
+	[TermOption2] ->(identifier)(()()) | (identifier)(()[ExpressionSet]())
+	[ExpressionSet] -> [Expression](,)[ExpressionSet] | [Expression]
+  
+	[Var] -> (identifier) | (identifier)([)[Expression](])
