@@ -36,11 +36,11 @@
 
 %% 
 program:	
-	functionset {};
+	functionset { print("program -> functionset"); };
 functionset:
-	function functionset {} | {};
+	function functionset { print("functionset -> function functionset"); } | { print("functionset -> Epsilon"); };
 function: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
-	FUNCTION IDENT SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY {};
+	FUNCTION IDENT SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { };
 declarationset:
 	declaration SEMICOLON declarationset {} | {};
 statementset:
@@ -124,18 +124,6 @@ expressionset:
 var:
 	IDENT {} | IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET {};
 
-
-/*line:		exp EQUAL END         { printf("\t%f\n", $1);}
-			;
-
-exp:		NUMBER                { $$ = $1; }
-			| exp PLUS exp        { $$ = $1 + $3; }
-			| exp MINUS exp       { $$ = $1 - $3; }
-			| exp MULT exp        { $$ = $1 * $3; }
-			| exp DIV exp         { if ($3==0) yyerror("divide by zero"); else $$ = $1 / $3; }
-			| MINUS exp %prec UMINUS { $$ = -$2; }
-			| L_PAREN exp R_PAREN { $$ = $2; }
-			;*/
 %%
 
 int main(int argc, char **argv) {
