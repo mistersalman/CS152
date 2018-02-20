@@ -20,7 +20,7 @@ Statement:
 	[IfStatementElse] -> (else)[StatementSet](endif) | (endif)
 	[WhileStatement] -> (while)[Bool-Expr](beginloop)[StatementSet](endloop)
 	[DoStatement] -> (do)(beginloop)[StatementSet](endloop)(while)[Bool-Expr]
-	[ForeachStatement] -> (foreach)(identifier)(in)(identifier)(beginloop)[StatementList](endloop)
+	[ForeachStatement] -> (foreach)(identifier)(in)(identifier)(beginloop)[StatementSet](endloop)
 	[ReadStatement] -> [Varset]
 	[WriteStatement] -> [VarSet]
 	[ContinueStatement] -> (Continue)
