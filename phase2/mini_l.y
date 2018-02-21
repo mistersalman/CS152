@@ -65,7 +65,8 @@ statement:
 	| continuestatement {print("statement -> continuestatement");}
 	| returnstatement{print("statement -> returnstatement");};
 varstatement:
-	var ASSIGN expression {print("varstatement -> var ASSIGN expression");};
+	var ASSIGN expression {print("varstatement -> var ASSIGN expression");} 
+	| { if ($2 != ":=") yyerror(":= expected"); else yyerror("invalid declaration");};
 ifstatement:
 	IF bool-expr THEN statementset ifstatementelse {print("ifstatement -> IF bool-expr THEN statementset ifstatementelse");};
 ifstatementelse:
