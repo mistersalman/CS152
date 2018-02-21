@@ -38,92 +38,117 @@
 program:	
 	functionset { print("program -> functionset"); };
 functionset:
-	function functionset { print("functionset -> function functionset"); } | { print("functionset -> Epsilon"); };
+	function functionset { print("functionset -> function functionset"); } 
+	| { print("functionset -> Epsilon"); };
 function: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
-	FUNCTION IDENT SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { };
+	FUNCTION IDENT SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { print("function -> FUNCTION IDENT SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY"); };
 declarationset:
-	declaration SEMICOLON declarationset {} | {};
+	declaration SEMICOLON declarationset {print("declarationset -> declaration SEMICOLON declarationset");} 
+	| {print("declarationset -> Epsilon");};
 statementset:
-	statement SEMICOLON statementset {} | statement SEMICOLON {};
+	statement SEMICOLON statementset {print("statementset -> statement SEMICOLON statementset");} 
+	| statement SEMICOLON {print("statementset -> statement SEMICOLON");};
 declaration:
-	identifierset SEMICOLON INTEGER {} 
-	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {};
+	identifierset SEMICOLON INTEGER {print("declaration -> identifierset SEMICOLON INTEGER");} 
+	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {print("declaration -> identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER");};
 identifierset:
-	IDENT COMMA identifierset {} | IDENT {};
+	IDENT COMMA identifierset {print("identifierset -> IDENT COMMA identifierset");} 
+	| IDENT {print("identifierset -> IDENT");};
 statement:
-	varstatement {}
-	| ifstatement {}
-	| whilestatement {}
-	| dostatement {}
-	| foreachstatement {}
-	| readstatement {}
-	| writestatement {}
-	| continuestatement {}
-	| returnstatement{};
+	varstatement {print("statement -> varstatement");}
+	| ifstatement {print("statement -> ifstatement");}
+	| whilestatement {print("statement -> whilestatement");}
+	| dostatement {print("statement -> dostatement");}
+	| foreachstatement {print("statement -> foreachstatement");}
+	| readstatement {print("statement -> readstatement");}
+	| writestatement {print("statement -> writestatement");}
+	| continuestatement {print("statement -> continuestatement");}
+	| returnstatement{print("statement -> returnstatement");};
 varstatement:
-	var ASSIGN expression {};
+	var ASSIGN expression {print("varstatement -> var ASSIGN expression");};
 ifstatement:
-	IF bool-expr THEN statementset ifstatementelse {};
+	IF bool-expr THEN statementset ifstatementelse {print("ifstatement -> IF bool-expr THEN statementset ifstatementelse");};
 ifstatementelse:
-	ELSE statementset ENDIF {} | ENDIF {};
+	ELSE statementset ENDIF {print("ifstatementelse -> ELSE statementset ENDIF");} 	
+	| ENDIF {print("ifstatementelse -> ENDIF");};
 whilestatement:
-	WHILE bool-expr BEGINLOOP statementset ENDLOOP {};
+	WHILE bool-expr BEGINLOOP statementset ENDLOOP {print("whilestatement -> WHILE bool-expr BEGINLOOP statementset ENDLOOP");};
 dostatement:
-	DO BEGINLOOP statementset ENDLOOP WHILE bool-expr {};
+	DO BEGINLOOP statementset ENDLOOP WHILE bool-expr {print("dostatement -> DO BEGINLOOP statementset ENDLOOP WHILE bool-expr");};
 foreachstatement:
-	FOREACH IDENT IN IDENT BEGINLOOP statementset ENDLOOP {};
+	FOREACH IDENT IN IDENT BEGINLOOP statementset ENDLOOP {print("foreachstatement -> FOREACH IDENT IN IDENT BEGINLOOP statementset ENDLOOP");};
 readstatement:
-	varset {};
+	varset {print("readstatement -> varset");};
 writestatement:
-	varset {};
+	varset {print("writestatement -> varset");};
 continuestatement:
-	CONTINUE {};
+	CONTINUE {print("continuestatement -> CONTINUE");};
 returnstatement:
-	RETURN expression {};
+	RETURN expression {print("returnstatement -> RETURN expression");};
 varset:
-	var COMMA varset {} | var {};
+	var COMMA varset {print("varset -> var COMMA varset");} 
+	| var {print("varset -> var COMMA varset");};
 bool-expr:
-	relation-and-expr relation-and-exprset {};
+	relation-and-expr relation-and-exprset {print("bool-expr -> relation-and-expr relation-and-exprset");};
 relation-and-exprset:
-	OR relation-and-expr relation-and-exprset {} | {};
+	OR relation-and-expr relation-and-exprset {print("relation-and-exprset -> OR relation-and-expr relation-and-exprset");} 
+	| {print("relation-and-exprset -> Epsilon");};
 relation-and-expr:
-	relation-expr relation-exprset {};
+	relation-expr relation-exprset {print("relation-and-expr -> relation-expr relation-exprset");};
 relation-exprset:
-	AND relation-expr relation-exprset {} | {};
+	AND relation-expr relation-exprset {print("relation-exprset -> AND relation-expr relation-exprset");} 
+	| {print("relation-exprset -> Epsilon");};
 relation-expr:
-	NOT expression comp expression {}
-	| NOT TRUE {}
-	| NOT FALSE {}
-	| NOT L_PAREN bool-expr R_PAREN {}
-	| expression comp expression {}
-	| TRUE {}
-	| FALSE {}
-	| L_PAREN bool-expr R_PAREN {};
+	NOT expression comp expression {print("relation-expr -> NOT expression comp expression");}
+	| NOT TRUE {print("relation-expr -> NOT TRUE");}
+	| NOT FALSE {print("relation-expr -> NOT FALSE");}
+	| NOT L_PAREN bool-expr R_PAREN {print("relation-expr -> NOT L_PAREN bool-expr R_PAREN");}
+	| expression comp expression {print("relation-expr -> expression comp expression");}
+	| TRUE {print("relation-expr -> TRUE");}
+	| FALSE {print("relation-expr -> FALSE");}
+	| L_PAREN bool-expr R_PAREN {print("relation-expr -> L_PAREN bool-expr R_PAREN");};
 comp:
-	EQ {} | NEQ {} | LT {} | GT {} | LTE {} | GTE {};
+	EQ {print("comp -> EQ");} 
+	| NEQ {print("comp -> NEQ");} 
+	| LT {print("comp -> LT");} 
+	| GT {print("comp -> GT");} 
+	| LTE {print("comp -> LTE");} 
+	| GTE {print("comp -> GTE");};
 expression:
-	multiplicative-expr multiplicative-exprset {};	
+	multiplicative-expr multiplicative-exprset {print("expression -> multiplicative-expr multiplicative-exprset");};	
 multiplicative-exprset:
-	addorsub multiplicative-expr multiplicative-exprset {} | {};
+	addorsub multiplicative-expr multiplicative-exprset {print("multiplicative-exprset -> addorsub multiplicative-expr multiplicative-exprset");} | {print("multiplicative-exprset -> Epsilon");};
 addorsub:
-	ADD {} | SUB {};
+	ADD {print("addorsub -> ADD");} 
+	| SUB {print("addorsub -> SUB");};
 multiplcative-expr:
-	term termset {};
+	term termset {print("multiplcative-expr -> term termset");};
 termset:
-	multordivormod term termset {} | {};
+	multordivormod term termset {print("termset -> multordivormod term termset");} 
+	| {print("termset -> multordivormod term termset");};
 multordivormod:
-	MULT {} | DIV {} | MOD {};
+	MULT {print("multordivormod -> MULT");} 
+	| DIV {print("multordivormod -> DIV");} 
+	| MOD {print("multordivormod -> MOD");};
 term:
-	termoption1 {} | termoption2 {};
+	termoption1 {print("term -> termoption1");} 
+	| termoption2 {print("term -> termoption2");};
 termoption1:
-	SUB var {} | sub NUMBER {} | SUB L_PAREN expression R_PAREN {} | var {} | NUMBER {} | L_PAREN expression R_PAREN {};
+	SUB var {print("termoption1 -> SUB var");} 
+	| SUB NUMBER {print("termoption1 -> SUB NUMBER");} 
+	| SUB L_PAREN expression R_PAREN {print("termoption1 -> SUB L_PAREN expression R_PAREN");} 
+	| var {print("termoption1 -> var");} 
+	| NUMBER {print("termoption1 -> NUMBER");} 
+	| L_PAREN expression R_PAREN {print("termoption1 -> L_PAREN expression R_PAREN");};
 termoption2:
-	IDENT L_PAREN R_PAREN {} | IDENT L_PAREN expressionset R_PAREN {};
+	IDENT L_PAREN R_PAREN {print("termoption2 -> IDENT L_PAREN R_PAREN");} 
+	| IDENT L_PAREN expressionset R_PAREN {print("termoption2 -> IDENT L_PAREN expressionset R_PAREN");};
 expressionset:
-	expression COMMA expressionset {} | expression {};
+	expression COMMA expressionset {print("expressionset -> expression COMMA expressionset");} 
+	| expression {print("expressionset -> expression");};
 var:
-	IDENT {} | IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET {};
-
+	IDENT {print("var -> IDENT");} 
+	| IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET {print("var -> IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET");};
 %%
 
 int main(int argc, char **argv) {
@@ -140,4 +165,5 @@ int main(int argc, char **argv) {
 void yyerror(const char *msg) {
    printf("** Line %d, position %d: %s\n", currLine, currPos, msg);
 }
+
 
