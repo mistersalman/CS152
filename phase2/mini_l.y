@@ -41,7 +41,7 @@ functionset:
 	function functionset { printf("functionset -> function functionset "); } 
 	| { printf("functionset -> Epsilon "); };
 function: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
-	FUNCTION IDENT %s SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { printf("function -> FUNCTION IDENT SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY ", $2); };
+	FUNCTION IDENT SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { printf("function -> FUNCTION IDENT %s SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY ", $2); };
 declarationset:
 	declaration SEMICOLON declarationset {printf("declarationset -> declaration SEMICOLON declarationset ");} 
 	| {printf("declarationset -> Epsilon ");};
@@ -76,7 +76,7 @@ whilestatement:
 dostatement:
 	DO BEGINLOOP statementset ENDLOOP WHILE bool-expr {printf("dostatement -> DO BEGINLOOP statementset ENDLOOP WHILE bool-expr ");};
 foreachstatement:
-	FOREACH IDENT %s IN IDENT %s BEGINLOOP statementset ENDLOOP {printf("foreachstatement -> FOREACH IDENT IN IDENT BEGINLOOP statementset ENDLOOP ", $2, $4);};
+	FOREACH IDENT IN IDENT BEGINLOOP statementset ENDLOOP {printf("foreachstatement -> FOREACH IDENT %s IN IDENT %s BEGINLOOP statementset ENDLOOP ", $2, $4);};
 readstatement:
 	READ varset {printf("readstatement -> varset ");};
 writestatement:
