@@ -41,7 +41,7 @@ functionset:
 	function functionset { printf("functionset -> function functionset "); } 
 	| { printf("functionset -> Epsilon "); };
 function: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
-	FUNCTION IDENT SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { printf("function -> FUNCTION IDENT SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY "); };
+	FUNCTION IDENT %s SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { printf("function -> FUNCTION IDENT SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY ", $2); };
 declarationset:
 	declaration SEMICOLON declarationset {printf("declarationset -> declaration SEMICOLON declarationset ");} 
 	| {printf("declarationset -> Epsilon ");};
@@ -52,8 +52,8 @@ declaration:
 	identifierset COLON INTEGER {printf("declaration -> identifierset COLON INTEGER ");} 
 	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("declaration -> identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER ");};
 identifierset:
-	IDENT COMMA identifierset {printf("identifierset -> IDENT COMMA identifierset ");} 
-	| IDENT {printf("identifierset -> IDENT ");};
+	IDENT COMMA identifierset {printf("identifierset -> IDENT %s COMMA identifierset ", $1);} 
+	| IDENT {printf("identifierset -> IDENT %s ", $1);};
 statement:
 	varstatement {printf("statement -> varstatement ");}
 	| ifstatement {printf("statement -> ifstatement ");}
@@ -76,7 +76,7 @@ whilestatement:
 dostatement:
 	DO BEGINLOOP statementset ENDLOOP WHILE bool-expr {printf("dostatement -> DO BEGINLOOP statementset ENDLOOP WHILE bool-expr ");};
 foreachstatement:
-	FOREACH IDENT IN IDENT BEGINLOOP statementset ENDLOOP {printf("foreachstatement -> FOREACH IDENT IN IDENT BEGINLOOP statementset ENDLOOP ");};
+	FOREACH IDENT %s IN IDENT %s BEGINLOOP statementset ENDLOOP {printf("foreachstatement -> FOREACH IDENT IN IDENT BEGINLOOP statementset ENDLOOP ", $2, $4);};
 readstatement:
 	READ varset {printf("readstatement -> varset ");};
 writestatement:
@@ -134,20 +134,20 @@ term:
 	| termoption2 {printf("term -> termoption2 ");};
 termoption1:
 	SUB var {printf("termoption1 -> SUB var ");} 
-	| SUB NUMBER {printf("termoption1 -> SUB NUMBER ");} 
+	| SUB NUMBER {printf("termoption1 -> SUB NUMBER %d", $2);} 
 	| SUB L_PAREN expression R_PAREN {printf("termoption1 -> SUB L_PAREN expression R_PAREN ");} 
 	| var {printf("termoption1 -> var ");} 
-	| NUMBER {printf("termoption1 -> NUMBER ");} 
+	| NUMBER {printf("termoption1 -> NUMBER %d", $1);} 
 	| L_PAREN expression R_PAREN {printf("termoption1 -> L_PAREN expression R_PAREN ");};
 termoption2:
-	IDENT L_PAREN R_PAREN {printf("termoption2 -> IDENT L_PAREN R_PAREN ");} 
-	| IDENT L_PAREN expressionset R_PAREN {printf("termoption2 -> IDENT L_PAREN expressionset R_PAREN ");};
+	IDENT L_PAREN R_PAREN {printf("termoption2 -> IDENT %s L_PAREN R_PAREN ", $1);} 
+	| IDENT L_PAREN expressionset R_PAREN {printf("termoption2 -> IDENT %s L_PAREN expressionset R_PAREN ", $1);};
 expressionset:
 	expression COMMA expressionset {printf("expressionset -> expression COMMA expressionset ");} 
 	| expression {printf("expressionset -> expression ");};
 var:
-	IDENT {printf("var -> IDENT ");} 
-	| IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET {printf("var -> IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET ");};
+	IDENT {printf("var -> IDENT %s ", $1);} 
+	| IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET {printf("var -> IDENT %s L_SQUARE_BRACKET expression R_SQUARE_BRACKET ", $1);};
 %%
 
 int main(int argc, char **argv) {
