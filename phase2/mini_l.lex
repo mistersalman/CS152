@@ -61,7 +61,7 @@ ID    [A-Za-z]([A-Za-z0-9_]*[A-Za-z0-9])*
 "false"	      {currPos += yyleng; return FALSE;}
 "return"	      {currPos += yyleng; return RETURN;}
 
-(\.{DIGIT}+)|({DIGIT}+(\.{DIGIT}*)?([eE][+-]?[0-9]+)?)  {currPos += yyleng; yylval.dval = atof(yytext); return number;}
+(\.{DIGIT}+)|({DIGIT}+(\.{DIGIT}*)?([eE][+-]?[0-9]+)?)  {currPos += yyleng; yylval.dval = atof(yytext); return NUMBER;}
 
 {ID}    {currPos += yyleng; yylval.cval = yytext; return IDENT;}
 
