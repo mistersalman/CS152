@@ -49,7 +49,7 @@ statementset:
 	statement SEMICOLON statementset {printf("statementset -> statement SEMICOLON statementset");} 
 	| statement SEMICOLON {printf("statementset -> statement SEMICOLON");};
 declaration:
-	identifierset SEMICOLON INTEGER {printf("declaration -> identifierset SEMICOLON INTEGER");} 
+	identifierset COLON INTEGER {printf("declaration -> identifierset SEMICOLON INTEGER");} 
 	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("declaration -> identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER");};
 identifierset:
 	IDENT COMMA identifierset {printf("identifierset -> IDENT COMMA identifierset");} 
