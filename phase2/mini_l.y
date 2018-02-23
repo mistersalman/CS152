@@ -52,7 +52,7 @@ statementset:
 	| statement SEMICOLON {printf("statementset -> statement SEMICOLON ");};
 declaration:
 	identifierset COLON INTEGER {printf("declaration -> identifierset COLON INTEGER ");} 
-	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("declaration -> identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER ");};
+	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("declaration -> identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER %d R_SQUARE_BRACKET OF INTEGER ", $6);};
 identifierset:
 	ident COMMA identifierset {printf("identifierset -> ident COMMA identifierset ");} 
 	| ident {printf("identifierset -> ident ");};
@@ -136,10 +136,10 @@ term:
 	| termoption2 {printf("term -> termoption2 ");};
 termoption1:
 	SUB var {printf("termoption1 -> SUB var ");} 
-	| SUB NUMBER {printf("termoption1 -> SUB NUMBER %d", $2);} 
+	| SUB NUMBER {printf("termoption1 -> SUB NUMBER %d ", $2);} 
 	| SUB L_PAREN expression R_PAREN {printf("termoption1 -> SUB L_PAREN expression R_PAREN ");} 
 	| var {printf("termoption1 -> var ");} 
-	| NUMBER {printf("termoption1 -> NUMBER %d", $1);} 
+	| NUMBER {printf("termoption1 -> NUMBER %d ", $1);} 
 	| L_PAREN expression R_PAREN {printf("termoption1 -> L_PAREN expression R_PAREN ");};
 termoption2:
 	ident L_PAREN R_PAREN {printf("termoption2 -> ident L_PAREN R_PAREN ");} 
