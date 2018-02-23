@@ -122,8 +122,8 @@ multiplicative-exprset:
 addorsub:
 	ADD {print("addorsub -> ADD");} 
 	| SUB {print("addorsub -> SUB");};
-multiplcative-expr:
-	term termset {print("multiplcative-expr -> term termset");};
+multiplicative-expr:
+	term termset {print("multiplicative-expr -> term termset");};
 termset:
 	multordivormod term termset {print("termset -> multordivormod term termset");} 
 	| {print("termset -> multordivormod term termset");};
