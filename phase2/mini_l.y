@@ -36,12 +36,12 @@
 
 %% 
 program:	
-	functionset { printf("program -> functionset\n "); };
+	functionset { printf("program -> functionset\n"); };
 functionset:
 	function functionset { printf("functionset -> function functionset\n"); } 
-	| { printf("functionset -> Epsilon\n "); };
+	| { printf("functionset -> Epsilon\n"); };
 function: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
-	FUNCTION ident SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { printf("function -> FUNCTION ident SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY\n "); };
+	FUNCTION ident SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { printf("function -> FUNCTION ident SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY\n"); };
 ident:
 	IDENT {printf("ident -> IDENT %s \n", $1);};
 declarationset:
