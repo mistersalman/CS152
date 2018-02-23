@@ -43,7 +43,7 @@ functionset:
 function: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
 	FUNCTION ident SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { printf("function -> FUNCTION ident SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY "); };
 ident:
-	IDENT {printf("ident -> IDENT %s", $1);};
+	IDENT {printf("ident -> IDENT %s ", $1);};
 declarationset:
 	declaration SEMICOLON declarationset {printf("declarationset -> declaration SEMICOLON declarationset ");} 
 	| {printf("declarationset -> Epsilon ");};
