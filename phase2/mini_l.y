@@ -103,8 +103,7 @@ relation-expr:
 	| NOT TRUE {printf("relation-expr -> NOT TRUE");}
 	| NOT FALSE {printf("relation-expr -> NOT FALSE");}
 	| NOT L_PAREN bool-expr R_PAREN {printf("relation-expr -> NOT L_PAREN bool-expr R_PAREN");}
-	| expression comp expression {printf("relation-expr -> expression comp expression");}
-	| TRUE {printf("relation-expr -> TRUE");}
+	| expression comp expression {printf("relation-expr -> expression comp expression");}	| TRUE {printf("relation-expr -> TRUE");}
 	| FALSE {printf("relation-expr -> FALSE");}
 	| L_PAREN bool-expr R_PAREN {printf("relation-expr -> L_PAREN bool-expr R_PAREN");};
 comp:
@@ -155,7 +154,7 @@ int main(int argc, char **argv) {
    if (argc > 1) {
       yyin = fopen(argv[1], "r");
       if (yyin == NULL){
-         printff("syntax: %s filename\n", argv[0]);
+         printf("syntax: %s filename\n", argv[0]);
       }//end if
    }//end if
    yyparse(); // Calls yylex() for tokens.
@@ -163,7 +162,7 @@ int main(int argc, char **argv) {
 }
 
 void yyerror(const char *msg) {
-   printff("** Line %d, position %d: %s\n", currLine, currPos, msg);
+   printf("** Line %d, position %d: %s\n", currLine, currPos, msg);
 }
 
 
