@@ -36,120 +36,122 @@
 
 %% 
 program:	
-	functionset { printf("program -> functionset "); };
+	functionset { printf("program -> functionset\n "); };
 functionset:
-	function functionset { printf("functionset -> function functionset "); } 
-	| { printf("functionset -> Epsilon "); };
+	function functionset { printf("functionset -> function functionset\n"); } 
+	| { printf("functionset -> Epsilon\n "); };
 function: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
-	FUNCTION ident SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { printf("function -> FUNCTION ident SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY "); };
+	FUNCTION ident SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { printf("function -> FUNCTION ident SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY\n "); };
 ident:
-	IDENT {printf("ident -> IDENT %s ", $1);};
+	IDENT {printf("ident -> IDENT %s \n", $1);};
 declarationset:
-	declaration SEMICOLON declarationset {printf("declarationset -> declaration SEMICOLON declarationset ");} 
-	| {printf("declarationset -> Epsilon ");};
+	declaration SEMICOLON declarationset {printf("declarationset -> declaration SEMICOLON declarationset \n");} 
+	| {printf("declarationset -> Epsilon \n");};
 statementset:
-	statement SEMICOLON statementset {printf("statementset -> statement SEMICOLON statementset ");} 
-	| statement SEMICOLON {printf("statementset -> statement SEMICOLON ");};
+	statement SEMICOLON statementset {printf("statementset -> statement SEMICOLON statementset \n");} 
+	| statement SEMICOLON {printf("statementset -> statement SEMICOLON \n");};
 declaration:
-	identifierset COLON INTEGER {printf("declaration -> identifierset COLON INTEGER ");} 
-	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("declaration -> identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER %d R_SQUARE_BRACKET OF INTEGER ", $5);};
+	identifierset COLON INTEGER {printf("declaration -> identifierset COLON INTEGER \n");} 
+	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("declaration -> identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER %d R_SQUARE_BRACKET OF INTEGER \n", $5);};
 identifierset:
-	ident COMMA identifierset {printf("identifierset -> ident COMMA identifierset ");} 
-	| ident {printf("identifierset -> ident ");};
+	ident COMMA identifierset {printf("identifierset -> ident COMMA identifierset \n");} 
+	| ident {printf("identifierset -> ident \n");};
 statement:
-	varstatement {printf("statement -> varstatement ");}
-	| ifstatement {printf("statement -> ifstatement ");}
-	| whilestatement {printf("statement -> whilestatement ");}
-	| dostatement {printf("statement -> dostatement ");}
-	| foreachstatement {printf("statement -> foreachstatement ");}
-	| readstatement {printf("statement -> readstatement ");}
-	| writestatement {printf("statement -> writestatement ");}
-	| continuestatement {printf("statement -> continuestatement ");}
-	| returnstatement{printf("statement -> returnstatement ");};
+	varstatement {printf("statement -> varstatement \n");}
+	| ifstatement {printf("statement -> ifstatement \n");}
+	| whilestatement {printf("statement -> whilestatement \n");}
+	| dostatement {printf("statement -> dostatement \n");}
+	| foreachstatement {printf("statement -> foreachstatement \n");}
+	| readstatement {printf("statement -> readstatement \n");}
+	| writestatement {printf("statement -> writestatement \n");}
+	| continuestatement {printf("statement -> continuestatement \n");}
+	| returnstatement{printf("statement -> returnstatement \n");};
 varstatement:
-	var ASSIGN expression {printf("varstatement -> var ASSIGN expression ");};
+	var ASSIGN expression {printf("varstatement -> var ASSIGN expression \n");};
 ifstatement:
-	IF bool-expr THEN statementset ifstatementelse {printf("ifstatement -> IF bool-expr THEN statementset ifstatementelse ");};
+	IF bool-expr THEN statementset ifstatementelse {printf("ifstatement -> IF bool-expr THEN statementset ifstatementelse \n");};
 ifstatementelse:
-	ELSE statementset ENDIF {printf("ifstatementelse -> ELSE statementset ENDIF ");} 	
-	| ENDIF {printf("ifstatementelse -> ENDIF ");};
+	ELSE statementset ENDIF {printf("ifstatementelse -> ELSE statementset ENDIF \n");} 	
+	| ENDIF {printf("ifstatementelse -> ENDIF \n");};
 whilestatement:
-	WHILE bool-expr BEGINLOOP statementset ENDLOOP {printf("whilestatement -> WHILE bool-expr BEGINLOOP statementset ENDLOOP ");};
+	WHILE bool-expr BEGINLOOP statementset ENDLOOP {printf("whilestatement -> WHILE bool-expr BEGINLOOP statementset ENDLOOP \n");};
 dostatement:
-	DO BEGINLOOP statementset ENDLOOP WHILE bool-expr {printf("dostatement -> DO BEGINLOOP statementset ENDLOOP WHILE bool-expr ");};
+	DO BEGINLOOP statementset ENDLOOP WHILE bool-expr {printf("dostatement -> DO BEGINLOOP statementset ENDLOOP WHILE bool-expr \n");};
 foreachstatement:
-	FOREACH ident IN ident BEGINLOOP statementset ENDLOOP {printf("foreachstatement -> FOREACH ident IN ident BEGINLOOP statementset ENDLOOP ");};
+	FOREACH ident IN ident BEGINLOOP statementset ENDLOOP {printf("foreachstatement -> FOREACH ident IN ident BEGINLOOP statementset ENDLOOP \n");};
 readstatement:
-	READ varset {printf("readstatement -> varset ");};
+	READ varset {printf("readstatement -> varset \n");};
 writestatement:
-	WRITE varset {printf("writestatement -> varset ");};
+	WRITE varset {printf("writestatement -> varset \n");};
 continuestatement:
-	CONTINUE {printf("continuestatement -> CONTINUE ");};
+	CONTINUE {printf("continuestatement -> CONTINUE \n");};
 returnstatement:
-	RETURN expression {printf("returnstatement -> RETURN expression ");};
+	RETURN expression {printf("returnstatement -> RETURN expression \n");};
 varset:
-	var COMMA varset {printf("varset -> var COMMA varset ");} 
-	| var {printf("varset -> var COMMA varset ");};
+	var COMMA varset {printf("varset -> var COMMA varset \n");} 
+	| var {printf("varset -> var COMMA varset \n");};
 bool-expr:
-	relation-and-expr relation-and-exprset {printf("bool-expr -> relation-and-expr relation-and-exprset ");};
+	relation-and-expr relation-and-exprset {printf("bool-expr -> relation-and-expr relation-and-exprset \n");};
 relation-and-exprset:
-	OR relation-and-expr relation-and-exprset {printf("relation-and-exprset -> OR relation-and-expr relation-and-exprset ");} 
-	| {printf("relation-and-exprset -> Epsilon ");};
+	OR relation-and-expr relation-and-exprset {printf("relation-and-exprset -> OR relation-and-expr relation-and-exprset \n");} 
+	| {printf("relation-and-exprset -> Epsilon \n");};
 relation-and-expr:
-	relation-expr relation-exprset {printf("relation-and-expr -> relation-expr relation-exprset ");};
+	relation-expr relation-exprset {printf("relation-and-expr -> relation-expr relation-exprset \n");};
 relation-exprset:
-	AND relation-expr relation-exprset {printf("relation-exprset -> AND relation-expr relation-exprset ");} 
-	| {printf("relation-exprset -> Epsilon ");};
+	AND relation-expr relation-exprset {printf("relation-exprset -> AND relation-expr relation-exprset \n");} 
+	| {printf("relation-exprset -> Epsilon \n");};
 relation-expr:
-	NOT expression comp expression {printf("relation-expr -> NOT expression comp expression ");}
-	| NOT TRUE {printf("relation-expr -> NOT TRUE ");}
-	| NOT FALSE {printf("relation-expr -> NOT FALSE ");}
-	| NOT L_PAREN bool-expr R_PAREN {printf("relation-expr -> NOT L_PAREN bool-expr R_PAREN ");}
-	| expression comp expression {printf("relation-expr -> expression comp expression ");}	| TRUE {printf("relation-expr -> TRUE ");}
-	| FALSE {printf("relation-expr -> FALSE ");}
-	| L_PAREN bool-expr R_PAREN {printf("relation-expr -> L_PAREN bool-expr R_PAREN ");};
+	NOT expression comp expression {printf("relation-expr -> NOT expression comp expression \n");}
+	| NOT TRUE {printf("relation-expr -> NOT TRUE \n");}
+	| NOT FALSE {printf("relation-expr -> NOT FALSE \n");}
+	| NOT L_PAREN bool-expr R_PAREN {printf("relation-expr -> NOT L_PAREN bool-expr R_PAREN \n");}
+	| expression comp expression {printf("relation-expr -> expression comp expression \n");} 
+	| TRUE {printf("relation-expr -> TRUE \n");}
+	| FALSE {printf("relation-expr -> FALSE \n");}
+	| L_PAREN bool-expr R_PAREN {printf("relation-expr -> L_PAREN bool-expr R_PAREN \n");};
 comp:
-	EQ {printf("comp -> EQ ");} 
-	| NEQ {printf("comp -> NEQ ");} 
-	| LT {printf("comp -> LT ");} 
-	| GT {printf("comp -> GT ");} 
-	| LTE {printf("comp -> LTE ");} 
-	| GTE {printf("comp -> GTE ");};
+	EQ {printf("comp -> EQ \n");} 
+	| NEQ {printf("comp -> NEQ \n");} 
+	| LT {printf("comp -> LT \n");} 
+	| GT {printf("comp -> GT \n");} 
+	| LTE {printf("comp -> LTE \n");} 
+	| GTE {printf("comp -> GTE \n");};
 expression:
-	multiplicative-expr multiplicative-exprset {printf("expression -> multiplicative-expr multiplicative-exprset ");};	
+	multiplicative-expr multiplicative-exprset {printf("expression -> multiplicative-expr multiplicative-exprset \n");};	
 multiplicative-exprset:
-	addorsub multiplicative-expr multiplicative-exprset {printf("multiplicative-exprset -> addorsub multiplicative-expr multiplicative-exprset ");} | {printf("multiplicative-exprset -> Epsilon ");};
+	addorsub multiplicative-expr multiplicative-exprset {printf("multiplicative-exprset -> addorsub multiplicative-expr multiplicative-exprset \n");} 
+	| {printf("multiplicative-exprset -> Epsilon \n");};
 addorsub:
-	ADD {printf("addorsub -> ADD ");} 
-	| SUB {printf("addorsub -> SUB ");};
+	ADD {printf("addorsub -> ADD \n");} 
+	| SUB {printf("addorsub -> SUB \n");};
 multiplicative-expr:
-	term termset {printf("multiplicative-expr -> term termset ");};
+	term termset {printf("multiplicative-expr -> term termset \n");};
 termset:
-	multordivormod term termset {printf("termset -> multordivormod term termset ");} 
-	| {printf("termset -> multordivormod term termset ");};
+	multordivormod term termset {printf("termset -> multordivormod term termset \n");} 
+	| {printf("termset -> multordivormod term termset \n");};
 multordivormod:
-	MULT {printf("multordivormod -> MULT ");} 
-	| DIV {printf("multordivormod -> DIV ");} 
-	| MOD {printf("multordivormod -> MOD ");};
+	MULT {printf("multordivormod -> MULT \n");} 
+	| DIV {printf("multordivormod -> DIV \n");} 
+	| MOD {printf("multordivormod -> MOD \n");};
 term:
-	termoption1 {printf("term -> termoption1 ");} 
-	| termoption2 {printf("term -> termoption2 ");};
+	termoption1 {printf("term -> termoption1 \n");} 
+	| termoption2 {printf("term -> termoption2 \n");};
 termoption1:
-	SUB var {printf("termoption1 -> SUB var ");} 
-	| SUB NUMBER {printf("termoption1 -> SUB NUMBER %d ", $2);} 
-	| SUB L_PAREN expression R_PAREN {printf("termoption1 -> SUB L_PAREN expression R_PAREN ");} 
-	| var {printf("termoption1 -> var ");} 
-	| NUMBER {printf("termoption1 -> NUMBER %d ", $1);} 
-	| L_PAREN expression R_PAREN {printf("termoption1 -> L_PAREN expression R_PAREN ");};
+	SUB var {printf("termoption1 -> SUB var \n");} 
+	| SUB NUMBER {printf("termoption1 -> SUB NUMBER %d \n", $2);} 
+	| SUB L_PAREN expression R_PAREN {printf("termoption1 -> SUB L_PAREN expression R_PAREN \n");} 
+	| var {printf("termoption1 -> var \n");} 
+	| NUMBER {printf("termoption1 -> NUMBER %d \n", $1);} 
+	| L_PAREN expression R_PAREN {printf("termoption1 -> L_PAREN expression R_PAREN \n");};
 termoption2:
-	ident L_PAREN R_PAREN {printf("termoption2 -> ident L_PAREN R_PAREN ");} 
-	| ident L_PAREN expressionset R_PAREN {printf("termoption2 -> ident L_PAREN expressionset R_PAREN ");};
+	ident L_PAREN R_PAREN {printf("termoption2 -> ident L_PAREN R_PAREN \n");} 
+	| ident L_PAREN expressionset R_PAREN {printf("termoption2 -> ident L_PAREN expressionset R_PAREN \n");};
 expressionset:
-	expression COMMA expressionset {printf("expressionset -> expression COMMA expressionset ");} 
-	| expression {printf("expressionset -> expression ");};
+	expression COMMA expressionset {printf("expressionset -> expression COMMA expressionset \n");} 
+	| expression {printf("expressionset -> expression \n");};
 var:
-	ident {printf("var -> ident ");} 
-	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {printf("var -> ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET ");};
+	ident {printf("var -> ident \n");} 
+	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {printf("var -> ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET \n");};
 %%
 
 int main(int argc, char **argv) {
