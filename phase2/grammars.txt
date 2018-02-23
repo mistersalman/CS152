@@ -7,12 +7,14 @@ Program:
 	[Program] -> [FunctionSet] 
 	[FunctionSet] -> [Function][FunctionSet] | E
 Function:
-	[Function] -> (function)(identifier)(;)(beginparams)[DeclarationSet](endparams)(beginlocals)[DeclarationSet](endlocals)(beginbody)[StatementSet](endbody)
+	[Function] -> (function)[Ident](;)(beginparams)[DeclarationSet](endparams)(beginlocals)[DeclarationSet](endlocals)(beginbody)[StatementSet](endbody)
 	[DeclarationSet] -> [Declaration](;)[DeclarationSet] | E
 	[StatementSet] -> [Statement](;)[StatementSet] | [Statement](;)
+Ident:
+	[Ident] -> (identifier)
 Declaration:
 	[Declaration] -> [IdentifierSet](;)(integer) | [IdentifierSet](:)(array)([)(number)(])(of)(integer)
-	[IdentifierSet] -> (identifier)(,)[IdentifierSet] | (identifier)
+	[IdentifierSet] -> [Ident](,)[IdentifierSet] | [Ident]
 Statement:
 	[Statement] -> [VarStatement] | [IfStatement] | [WhileStatement] | [DoStatement] | [ForeachStatement] | [ReadStatement] | [WriteStatement] | [ContinueStatement] | [ReturnStatement]
 	[VarStatement] -> [Var](:=)[Expression]
@@ -20,7 +22,7 @@ Statement:
 	[IfStatementElse] -> (else)[StatementSet](endif) | (endif)
 	[WhileStatement] -> (while)[Bool-Expr](beginloop)[StatementSet](endloop)
 	[DoStatement] -> (do)(beginloop)[StatementSet](endloop)(while)[Bool-Expr]
-	[ForeachStatement] -> (foreach)(identifier)(in)(identifier)(beginloop)[StatementSet](endloop)
+	[ForeachStatement] -> (foreach)[Ident](in)(identifier)(beginloop)[StatementSet](endloop)
 	[ReadStatement] -> [Varset]
 	[WriteStatement] -> [VarSet]
 	[ContinueStatement] -> (Continue)
@@ -47,7 +49,7 @@ Multiplicative-Expr:
 Term:
 	[Term] -> [TermOption1] | [TermOption2]
 	[TermOption1] -> (-)[Var] | (-)(number) | (-)(()[Expression]()) | [Var] | (number) | (()[Expression]())
-	[TermOption2] ->(identifier)(()()) | (identifier)(()[ExpressionSet]())
+	[TermOption2] -> [Ident](()()) | [Ident](()[ExpressionSet]())
 	[ExpressionSet] -> [Expression](,)[ExpressionSet] | [Expression]
 Var:  
-	[Var] -> (identifier) | (identifier)([)[Expression](])
+	[Var] -> [Ident] | [Ident]([)[Expression](])
