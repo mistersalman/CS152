@@ -61,6 +61,7 @@ statement:
 	| dostatement {print("statement -> dostatement");}
 	| foreachstatement {print("statement -> foreachstatement");}
 	| readstatement {print("statement -> readstatement");}
+	| writestatement {print("statement -> writestatement");}
 	| continuestatement {print("statement -> continuestatement");}
 	| returnstatement{print("statement -> returnstatement");};
 varstatement:
@@ -78,8 +79,9 @@ dostatement:
 foreachstatement:
 	FOREACH IDENT IN IDENT BEGINLOOP statementset ENDLOOP {print("foreachstatement -> FOREACH IDENT IN IDENT BEGINLOOP statementset ENDLOOP");};
 readstatement:
-	varset {print("readstatement -> varset");};
-
+	READ varset {print("readstatement -> READ varset");};
+writestatement:
+	WRITE varset {print("writestatement -> WRITE varset");};
 continuestatement:
 	CONTINUE {print("continuestatement -> CONTINUE");};
 returnstatement:
