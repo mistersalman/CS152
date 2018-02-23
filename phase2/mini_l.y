@@ -1,4 +1,4 @@
-5/* mini_l syntax parser
+/* mini_l syntax parser
    Written by Ryan Gray and Salman Azmi
    CS152 WINTER 18 */
 %{
@@ -52,7 +52,7 @@ statementset:
 	| statement SEMICOLON {printf("statementset -> statement SEMICOLON ");};
 declaration:
 	identifierset COLON INTEGER {printf("declaration -> identifierset COLON INTEGER ");} 
-	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("declaration -> identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER %d R_SQUARE_BRACKET OF INTEGER ", $6);};
+	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("declaration -> identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER %d R_SQUARE_BRACKET OF INTEGER ", $5);};
 identifierset:
 	ident COMMA identifierset {printf("identifierset -> ident COMMA identifierset ");} 
 	| ident {printf("identifierset -> ident ");};
