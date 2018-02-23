@@ -120,8 +120,8 @@ multiplicative-exprset:
 addorsub:
 	ADD {printf("addorsub -> ADD");} 
 	| SUB {printf("addorsub -> SUB");};
-multiplcative-expr:
-	term termset {printf("multiplcative-expr -> term termset");};
+multiplicative-expr:
+	term termset {printf("multiplicative-expr -> term termset");};
 termset:
 	multordivormod term termset {printf("termset -> multordivormod term termset");} 
 	| {printf("termset -> multordivormod term termset");};
