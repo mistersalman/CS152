@@ -4,16 +4,29 @@
 %{
  #include <stdio.h>
  #include <stdlib.h>
+ #include <unordered_map>
+ #include <stack>
+ #include <vector>
+ #include <string>
+ #include <iostream>
+ #include <sstream>
+ #include <fstream>
  void yyerror(const char *msg);
  extern int currLine;
  extern int currPos;
  FILE * yyin;
+
+ unordered_map<string, string> symbolTable; //key, value e.g. __label__0, myProgramLabel
 %}
 
 %union{
   double dval;
   char* cval;
-}
+  struct {
+  	? code;
+  	? place;
+  	? type;
+} terminalParams;
 
 %error-verbose
 %start program
@@ -33,126 +46,178 @@
 %left L_SQUARE_BRACKET R_SQUARE_BRACKET
 %left ASSIGN COMMA COLON SEMICOLON
 
+%type <terminalParams> program functionset functionname function declarationset statementset declaration
+%type <terminalParams> identifierset statement varstatement ifstatement ifstatementelse whilestatement
+%type <terminalParams> dostatement foreachstatement readstatement writestatement continuestatement returnstatement
+%type <terminalParams> varset bool-expr relation-and-exprset relation-and-expr relation-exprset
+%type <terminalParams> relation-expr comp expression multiplicative-exprset addorsub multiplicative-expr
+%type <terminalParams> termset multordivormod term termoption1 termoption2 expressionset var
 
 %% 
 program:	
-	functionset { printf("program -> functionset\n"); };
+	functionset {};
 functionset:
-	function functionset { printf("functionset -> function functionset\n"); } 
-	| { printf("functionset -> Epsilon\n"); };
-function: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
-	FUNCTION ident SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { printf("function -> FUNCTION ident SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY\n"); };
-ident:
-	IDENT {printf("ident -> IDENT %s \n", $1);};
+	functionname function functionset {} 
+	| {};
+functionname: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
+	FUNCTION ident SEMICOLON { printf("func "); };
+function:
+	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { printf("endfunc\n"); };
+//ident:
+//	IDENT {printf("%s", $1);};
 declarationset:
-	declaration SEMICOLON declarationset {printf("declarationset -> declaration SEMICOLON declarationset \n");} 
-	| {printf("declarationset -> Epsilon \n");};
+	declaration SEMICOLON declarationset {} 
+	| {};
 statementset:
-	statement SEMICOLON statementset {printf("statementset -> statement SEMICOLON statementset \n");} 
-	| statement SEMICOLON {printf("statementset -> statement SEMICOLON \n");};
+	statement SEMICOLON statementset {} 
+	| statement SEMICOLON {};
 declaration:
-	identifierset COLON INTEGER {printf("declaration -> identifierset COLON INTEGER \n");} 
-	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {printf("declaration -> identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER %d R_SQUARE_BRACKET OF INTEGER \n", $5);};
+	identifierset COLON INTEGER {} 
+	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {};
 identifierset:
-	ident COMMA identifierset {printf("identifierset -> ident COMMA identifierset \n");} 
-	| ident {printf("identifierset -> ident \n");};
+	IDENT COMMA identifierset {} 
+	| IDENT {};
 statement:
-	varstatement {printf("statement -> varstatement \n");}
-	| ifstatement {printf("statement -> ifstatement \n");}
-	| whilestatement {printf("statement -> whilestatement \n");}
-	| dostatement {printf("statement -> dostatement \n");}
-	| foreachstatement {printf("statement -> foreachstatement \n");}
-	| readstatement {printf("statement -> readstatement \n");}
-	| writestatement {printf("statement -> writestatement \n");}
-	| continuestatement {printf("statement -> continuestatement \n");}
-	| returnstatement{printf("statement -> returnstatement \n");};
+	varstatement {}
+	| ifstatement {}
+	| whilestatement {}
+	| dostatement {}
+	| foreachstatement {}
+	| readstatement {}
+	| writestatement {}
+	| continuestatement {}
+	| returnstatement{};
 varstatement:
-	var ASSIGN expression {printf("varstatement -> var ASSIGN expression \n");};
+	var ASSIGN expression {};
 ifstatement:
-	IF bool-expr THEN statementset ifstatementelse {printf("ifstatement -> IF bool-expr THEN statementset ifstatementelse \n");};
+	IF bool-expr THEN statementset ifstatementelse {};
 ifstatementelse:
-	ELSE statementset ENDIF {printf("ifstatementelse -> ELSE statementset ENDIF \n");} 	
-	| ENDIF {printf("ifstatementelse -> ENDIF \n");};
+	ELSE statementset ENDIF {} 	
+	| ENDIF {};
 whilestatement:
-	WHILE bool-expr BEGINLOOP statementset ENDLOOP {printf("whilestatement -> WHILE bool-expr BEGINLOOP statementset ENDLOOP \n");};
+	WHILE bool-expr BEGINLOOP statementset ENDLOOP {};
 dostatement:
-	DO BEGINLOOP statementset ENDLOOP WHILE bool-expr {printf("dostatement -> DO BEGINLOOP statementset ENDLOOP WHILE bool-expr \n");};
+	DO BEGINLOOP statementset ENDLOOP WHILE bool-expr {};
 foreachstatement:
-	FOREACH ident IN ident BEGINLOOP statementset ENDLOOP {printf("foreachstatement -> FOREACH ident IN ident BEGINLOOP statementset ENDLOOP \n");};
+	FOREACH IDENT IN IDENT BEGINLOOP statementset ENDLOOP {};
 readstatement:
-	READ varset {printf("readstatement -> varset \n");};
+	READ varset {};
 writestatement:
-	WRITE varset {printf("writestatement -> varset \n");};
+	WRITE varset {};
 continuestatement:
-	CONTINUE {printf("continuestatement -> CONTINUE \n");};
+	CONTINUE {};
 returnstatement:
-	RETURN expression {printf("returnstatement -> RETURN expression \n");};
+	RETURN expression {};
 varset:
-	var COMMA varset {printf("varset -> var COMMA varset \n");} 
-	| var {printf("varset -> var COMMA varset \n");};
+	var COMMA varset {} 
+	| var {};
 bool-expr:
-	relation-and-expr relation-and-exprset {printf("bool-expr -> relation-and-expr relation-and-exprset \n");};
+	relation-and-expr relation-and-exprset {};
 relation-and-exprset:
-	OR relation-and-expr relation-and-exprset {printf("relation-and-exprset -> OR relation-and-expr relation-and-exprset \n");} 
-	| {printf("relation-and-exprset -> Epsilon \n");};
+	OR relation-and-expr relation-and-exprset {} 
+	| {};
 relation-and-expr:
-	relation-expr relation-exprset {printf("relation-and-expr -> relation-expr relation-exprset \n");};
+	relation-expr relation-exprset {};
 relation-exprset:
-	AND relation-expr relation-exprset {printf("relation-exprset -> AND relation-expr relation-exprset \n");} 
-	| {printf("relation-exprset -> Epsilon \n");};
+	AND relation-expr relation-exprset {} 
+	| {};
 relation-expr:
-	NOT expression comp expression {printf("relation-expr -> NOT expression comp expression \n");}
-	| NOT TRUE {printf("relation-expr -> NOT TRUE \n");}
-	| NOT FALSE {printf("relation-expr -> NOT FALSE \n");}
-	| NOT L_PAREN bool-expr R_PAREN {printf("relation-expr -> NOT L_PAREN bool-expr R_PAREN \n");}
-	| expression comp expression {printf("relation-expr -> expression comp expression \n");} 
-	| TRUE {printf("relation-expr -> TRUE \n");}
-	| FALSE {printf("relation-expr -> FALSE \n");}
-	| L_PAREN bool-expr R_PAREN {printf("relation-expr -> L_PAREN bool-expr R_PAREN \n");};
+	NOT expression comp expression {}
+	| NOT TRUE {}
+	| NOT FALSE {}
+	| NOT L_PAREN bool-expr R_PAREN {}
+	| expression comp expression {} 
+	| TRUE {}
+	| FALSE {}
+	| L_PAREN bool-expr R_PAREN {};
 comp:
-	EQ {printf("comp -> EQ \n");} 
-	| NEQ {printf("comp -> NEQ \n");} 
-	| LT {printf("comp -> LT \n");} 
-	| GT {printf("comp -> GT \n");} 
-	| LTE {printf("comp -> LTE \n");} 
-	| GTE {printf("comp -> GTE \n");};
+	EQ {} 
+	| NEQ {} 
+	| LT {} 
+	| GT {} 
+	| LTE {} 
+	| GTE {};
 expression:
-	multiplicative-expr multiplicative-exprset {printf("expression -> multiplicative-expr multiplicative-exprset \n");};	
+	multiplicative-expr multiplicative-exprset {};	
 multiplicative-exprset:
-	addorsub multiplicative-expr multiplicative-exprset {printf("multiplicative-exprset -> addorsub multiplicative-expr multiplicative-exprset \n");} 
-	| {printf("multiplicative-exprset -> Epsilon \n");};
+	addorsub multiplicative-expr multiplicative-exprset {} 
+	| {};
 addorsub:
-	ADD {printf("addorsub -> ADD \n");} 
-	| SUB {printf("addorsub -> SUB \n");};
+	ADD {} 
+	| SUB {};
 multiplicative-expr:
-	term termset {printf("multiplicative-expr -> term termset \n");};
+	term termset {};
 termset:
-	multordivormod term termset {printf("termset -> multordivormod term termset \n");} 
-	| {printf("termset -> multordivormod term termset \n");};
+	multordivormod term termset {} 
+	| {};
 multordivormod:
-	MULT {printf("multordivormod -> MULT \n");} 
-	| DIV {printf("multordivormod -> DIV \n");} 
-	| MOD {printf("multordivormod -> MOD \n");};
+	MULT {} 
+	| DIV {} 
+	| MOD {};
 term:
-	termoption1 {printf("term -> termoption1 \n");} 
-	| termoption2 {printf("term -> termoption2 \n");};
+	termoption1 {} 
+	| termoption2 {};
 termoption1:
-	SUB var {printf("termoption1 -> SUB var \n");} 
-	| SUB NUMBER {printf("termoption1 -> SUB NUMBER %d \n", $2);} 
-	| SUB L_PAREN expression R_PAREN {printf("termoption1 -> SUB L_PAREN expression R_PAREN \n");} 
-	| var {printf("termoption1 -> var \n");} 
-	| NUMBER {printf("termoption1 -> NUMBER %d \n", $1);} 
-	| L_PAREN expression R_PAREN {printf("termoption1 -> L_PAREN expression R_PAREN \n");};
+	SUB var {} 
+	| SUB NUMBER {} 
+	| SUB L_PAREN expression R_PAREN {} 
+	| var {} 
+	| NUMBER {} 
+	| L_PAREN expression R_PAREN {};
 termoption2:
-	ident L_PAREN R_PAREN {printf("termoption2 -> ident L_PAREN R_PAREN \n");} 
-	| ident L_PAREN expressionset R_PAREN {printf("termoption2 -> ident L_PAREN expressionset R_PAREN \n");};
+	IDENT L_PAREN R_PAREN {} 
+	| IDENT L_PAREN expressionset R_PAREN {};
 expressionset:
-	expression COMMA expressionset {printf("expressionset -> expression COMMA expressionset \n");} 
-	| expression {printf("expressionset -> expression \n");};
+	expression COMMA expressionset {} 
+	| expression {};
 var:
-	ident {printf("var -> ident \n");} 
-	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {printf("var -> ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET \n");};
+	IDENT {} 
+	| IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET {};
 %%
+
+//we need a string library to make this stuff easier
+//and avoid using char array pointers as strings
+
+static int tempCount = 0;
+type newtemp() //type is of type symbol table entry point
+{
+	//create a new temp variabel name like:
+	// "__temp__" + tempCount++ + "\0";
+	//insert into symbol table
+	//keep looping on creation and symbol table
+	//insertion until it is unique and succeeds
+}
+
+static int labelCount = 0;
+string* newlabel()
+{
+	string* label = "__label__" + string(labelCount++);
+	return label;
+}
+
+bool symboltableinsert(string key, string value) 
+{
+	//check if symbol already exists
+	//if so throw duplicate variable error and return false
+	//otherwise insert into table and return true
+}
+
+type findsymbol(string key) 
+{
+	//iterate through symbol table
+	//use find() or any helpful iterator method
+	//return pointer to symbol entry
+}
+
+string gen(string instruction, string param1, string optionalParam2, string optionalParam3)
+{
+	string op = instruction + " " + param1;
+	if (optionalParam2 != "")
+		op += ", " + optionalParam2;
+	if (optionalParam3 != "")
+		op += ", " + optionalParam3;
+	op += "\n ";
+}
 
 int main(int argc, char **argv) {
    if (argc > 1) {
@@ -168,4 +233,3 @@ int main(int argc, char **argv) {
 void yyerror(const char *msg) {
    printf("** Line %d, position %d: %s\n", currLine, currPos, msg);
 }
-
