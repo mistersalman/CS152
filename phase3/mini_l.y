@@ -174,14 +174,18 @@ expressionset:
 term:
 	var { 
 		string temp = newtemp();
-		symbolentry position = symbolTableInsert(temp);
+		//symbolentry position = symbolTableInsert(temp);
+		symbolTable->push_back(temp);
+		int position = symbolTable->size() - 1;
 		$$.place = position;
 		/*printf(". %s\n", temp);*/ cout << ". " + temp << endl;
 		/*printf("= %s, %s", temp, $1.val);*/ cout << "= " + temp + ", " + $1.val << endl;
 	 } 
 	| NUMBER { 
 		string temp = newtemp();
-		symbolentry position = symbolTableInsert(temp);
+		//symbolentry position = symbolTableInsert(temp);
+		symbolTable->push_back(temp);
+		int position = symbolTable->size() - 1;
 		$$.place = position;
 		/*printf(". %s\n", temp);*/ cout << ". " + temp << endl;
 		/*printf("= %s, %s", temp, $1);*/ cout << "= " + temp + ", " + $1 << endl;
@@ -193,7 +197,10 @@ termset:
 	term {$$.place = $1.place;}
 	| termset multordivormodoraddorsub term {
 		string temp = newtemp();		
-		$$.place = symboltableinsert(temp);
+		//$$.place = symboltableinsert(temp);
+		symbolTable->push_back(temp);
+		int position = symbolTable->size() - 1;
+		$$.place = position;
 		/*printf(". %s\n", temp);*/ cout << ". " + temp << endl;
 		/*printf("%s %s, %s, %s\n", $2.val, temp, findSymbol($1.place), findSymbol($3.place));*/
 		cout << $2.val + " " + temp + ", " + findSymbol($1.place) + ", " findSymbol($3.place) << endl;
@@ -218,14 +225,16 @@ var:
 //we need a string library to make this stuff easier
 //and avoid using char array pointers as strings
 
-static int tempCount = 0;
-type newtemp() //type is of type symbol table entry point
+static int tempCount = -1;
+string newtemp() //type is of type symbol table entry point
 {
 	//create a new temp variabel name like:
 	// "__temp__" + tempCount++ + "\0";
 	//insert into symbol table
 	//keep looping on creation and symbol table
 	//insertion until it is unique and succeeds
+	tempCount++;
+	return "__temp__" + tempCount;
 }
 
 static int labelCount = 0;
@@ -235,18 +244,26 @@ string* newlabel()
 	return label;
 }
 
-bool symboltableinsert(string key, string value) 
+/*bool symboltableinsert(string key, string value) 
 {
 	//check if symbol already exists
 	//if so throw duplicate variable error and return false
 	//otherwise insert into table and return true
-}
+}*/
 
-type findsymbol(string key) 
+int findsymbol(string key) 
 {
 	//iterate through symbol table
 	//use find() or any helpful iterator method
 	//return pointer to symbol entry
+	for(int i = 0; i < symbolTable.size(); i++)
+	{
+		if(symbolTable->at(i).compare(key) == 0)
+		{
+			return i;
+		}
+	}
+	-1;	
 }
 
 string gen(string instruction, string param1, string optionalParam2, string optionalParam3)
