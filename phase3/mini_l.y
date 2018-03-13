@@ -69,7 +69,7 @@ functionname: //not sure if having a non-terminal named function and a terminal 
 function:
 	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { printf("endfunc\n"); };
 ident:
-	IDENT { $$.identItem = string($1); };
+	IDENT { $$.val = string($1); };
 declarationset:
 	declaration SEMICOLON declarationset {} 
 	| {};
@@ -100,11 +100,11 @@ declaration:
 identifierset:
 	ident { 
 		$$.identList = new vector<string>();
-		$$.identList->push_back($1.identItem); 
+		$$.identList->push_back($1.val); 
 		}
 	| ident COMMA identifierset { 
 		$$.identList = $3.identList;
-		$$.identList->push_back($1.identItem);
+		$$.identList->push_back($1.val);
 	 };
 
 statement:
@@ -152,7 +152,12 @@ andororornot:
 	| OR {$$.val = string("||");}
 	| NOT {$$.val = string("!");};
 relation-expr:
-	expression comp expression {} 
+	expression comp expression {
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$.place = symbolTable->size() - 1;
+		cout << $2.val << " " << temp << ", " << symbolTable->at($1.place) << ", " << symbolTable->at($1.place) << endl; 
+} 
 	| TRUE {$$.val = string("True"); }
 	| FALSE {$$.val = string("False"; )}
 	| L_PAREN bool-expr R_PAREN { };
@@ -169,8 +174,8 @@ expression:
 		$$.place = $1.place; 
 	};
 expressionset:
-	expression COMMA expressionset {} 
-	| expression {};
+	expression {$$.place = $1.place;}
+	| expression COMMA expressionset {$$.place = $1.place;};
 term:
 	var { 
 		string temp = newtemp();
@@ -191,7 +196,7 @@ term:
 		/*printf("= %s, %s", temp, $1);*/ cout << "= " + temp + ", " + $1 << endl;
 	} 
 	| ident L_PAREN R_PAREN { } 
-	| L_PAREN expression R_PAREN { }
+	| L_PAREN expression R_PAREN { $$.place = $2.place; }
 	| ident L_PAREN expressionset R_PAREN { };
 termset:
 	term {$$.place = $1.place;}
@@ -215,10 +220,10 @@ multordivormodoraddorsub:
 
 var:
 	ident { 
-		$$.val = findsymbol($1.identItem);		
+		$$.val = $1.val;		
 	} 
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {
-		$$.val = findsymbol($1.identItem);
+		$$.val = //WIP;
 	};
 %%
 
