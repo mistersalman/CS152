@@ -31,6 +31,8 @@
 
 } terminalParams;
 
+using namespace std; //don't wanna add std:: to everything
+
 %error-verbose
 %start program
 %token SUB ADD MULT DIV MOD GT LT GTE LTE EQ NEQ L_PAREN R_PAREN ASSIGN COLON SEMICOLON NOT AND OR 
@@ -63,7 +65,7 @@ functionset:
 	functionname function functionset {} 
 	| {};
 functionname: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
-	FUNCTION ident SEMICOLON { printf("func %s\n", $2); };
+	FUNCTION ident SEMICOLON { /*printf("func %s\n", $2);*/ cout << "func " + $2 << endl; };
 function:
 	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { printf("endfunc\n"); };
 ident:
@@ -78,21 +80,21 @@ declaration:
 	identifierset COLON INTEGER {
 		for (unsigned i = 0; i < $1.identList->size(); i++)
 		{
-			printf(". %s\n", $1.identList->at(i) );
+			/*printf(". %s\n", $1.identList->at(i) );*/ cout << ". " + $1.identList->at(i) << endl;
 			string* temp = newtemp();
 			insertToSymbolTable(temp);
-			printf(". %s\n", temp );
-			printf("= %s, %s\n", temp, $1.identList->at(i) );
+			/*printf(". %s\n", temp );*/ cout << ". " + temp << endl;
+			/*printf("= %s, %s\n", temp, $1.identList->at(i) );*/ cout << "= " + temp + ", " + $1.identList->at(i) << endl;
 		}
 	} 
 	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {
 		for (unsigned i = 0; i < $1.identList->size(); i++)
 		{
-			printf(".[] %s, %s \n", $1.identList->at(i), $5 );
+			/*printf(".[] %s, %s \n", $1.identList->at(i), $5 );*/ cout << ".[] " + $1.identList->at(i) + ", " + $5 << endl;
 			string* temp = newtemp();
 			insertToSymbolTable(temp); //of type int array
-			printf(". %s\n", temp );
-			printf("= %s, %s\n", temp, $1.identList->at(i) );
+			/*printf(". %s\n", temp );*/ cout << ". " + temp << endl;
+			/*printf("= %s, %s\n", temp, $1.identList->at(i) );*/ cout << "= " + temp + ", " + $1.identList->at(i) << endl;
 		}
 	};
 identifierset:
@@ -174,15 +176,15 @@ term:
 		string temp = newtemp();
 		symbolentry position = symbolTableInsert(temp);
 		$$.place = position;
-		printf(". %s\n", temp);
-		printf("= %s, %s", temp, $1.val);
+		/*printf(". %s\n", temp);*/ cout << ". " + temp << endl;
+		/*printf("= %s, %s", temp, $1.val);*/ cout << "= " + temp + ", " + $1.val << endl;
 	 } 
 	| NUMBER { 
 		string temp = newtemp();
 		symbolentry position = symbolTableInsert(temp);
 		$$.place = position;
-		printf(". %s\n", temp);
-		printf("= %s, %s", temp, $1);
+		/*printf(". %s\n", temp);*/ cout << ". " + temp << endl;
+		/*printf("= %s, %s", temp, $1);*/ cout << "= " + temp + ", " + $1 << endl;
 	} 
 	| ident L_PAREN R_PAREN { } 
 	| L_PAREN expression R_PAREN { }
@@ -192,8 +194,9 @@ termset:
 	| termset multordivormodoraddorsub term {
 		string temp = newtemp();		
 		$$.place = symboltableinsert(temp);
-		printf(". %s\n", temp);
-		printf("%s %s, %s, %s\n", $2.val, temp, findSymbol($1.place), findSymbol($3.place));		
+		/*printf(". %s\n", temp);*/ cout << ". " + temp << endl;
+		/*printf("%s %s, %s, %s\n", $2.val, temp, findSymbol($1.place), findSymbol($3.place));*/
+		cout << $2.val + " " + temp + ", " + findSymbol($1.place) + ", " findSymbol($3.place) << endl;
 	};
 multordivormodoraddorsub:
 	MULT {$$.val = string("*");} 
@@ -260,7 +263,7 @@ int main(int argc, char **argv) {
    if (argc > 1) {
       yyin = fopen(argv[1], "r");
       if (yyin == NULL){
-         printf("syntax: %s filename\n", argv[0]);
+         /*printf("syntax: %s filename\n", argv[0]);*/ cout << "Syntax: " + argv[0] + " filename" << endl;
       }//end if
    }//end if
    yyparse(); // Calls yylex() for tokens.
@@ -268,5 +271,6 @@ int main(int argc, char **argv) {
 }
 
 void yyerror(const char *msg) {
-   printf("** Line %d, position %d: %s\n", currLine, currPos, msg);
+   /*printf("** Line %d, position %d: %s\n", currLine, currPos, msg);*/
+   cout << "** Line " + currLine + ", position " + currPos + ": " + msg << endl;
 }
