@@ -16,7 +16,7 @@
  extern int currPos;
  FILE * yyin;
 
- unordered_map<string, string> symbolTable; //key, value e.g. __label__0, myProgramLabel
+ vector <string> symbolTable; //key, value e.g. __label__0
 %}
 
 %union{
