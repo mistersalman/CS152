@@ -23,9 +23,12 @@
   double dval;
   char* cval;
   struct {
-  	? code;
   	? place;
   	? type;
+	string identItem;
+	vector<string> identList;
+	string val;
+
 } terminalParams;
 
 %error-verbose
@@ -60,11 +63,11 @@ functionset:
 	functionname function functionset {} 
 	| {};
 functionname: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
-	FUNCTION ident SEMICOLON { printf("func "); };
+	FUNCTION ident SEMICOLON { printf("func %s\n", $2); };
 function:
 	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { printf("endfunc\n"); };
-//ident:
-//	IDENT {printf("%s", $1);};
+ident:
+	IDENT { $$.identItem = string($1); };
 declarationset:
 	declaration SEMICOLON declarationset {} 
 	| {};
@@ -72,11 +75,36 @@ statementset:
 	statement SEMICOLON statementset {} 
 	| statement SEMICOLON {};
 declaration:
-	identifierset COLON INTEGER {} 
-	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {};
+	identifierset COLON INTEGER {
+		for (unsigned i = 0; i < $1.identList->size(); i++)
+		{
+			printf(". %s\n", $1.identList->at(i) );
+			string* temp = newtemp();
+			insertToSymbolTable(temp);
+			printf(". %s\n", temp );
+			printf("= %s, %s\n", temp, $1.identList->at(i) );
+		}
+	} 
+	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {
+		for (unsigned i = 0; i < $1.identList->size(); i++)
+		{
+			printf(".[] %s, %s \n", $1.identList->at(i), $5 );
+			string* temp = newtemp();
+			insertToSymbolTable(temp); //of type int array
+			printf(". %s\n", temp );
+			printf("= %s, %s\n", temp, $1.identList->at(i) );
+		}
+	};
 identifierset:
-	IDENT COMMA identifierset {} 
-	| IDENT {};
+	ident { 
+		$$.identList = new vector<string>();
+		$$.identList->push_back($1.identItem); 
+		}
+	| ident COMMA identifierset { 
+		$$.identList = $3.identList;
+		$$.identList->push_back($1.identItem);
+	 };
+
 statement:
 	varstatement {}
 	| ifstatement {}
@@ -99,7 +127,7 @@ whilestatement:
 dostatement:
 	DO BEGINLOOP statementset ENDLOOP WHILE bool-expr {};
 foreachstatement:
-	FOREACH IDENT IN IDENT BEGINLOOP statementset ENDLOOP {};
+	FOREACH ident IN ident BEGINLOOP statementset ENDLOOP {};
 readstatement:
 	READ varset {};
 writestatement:
@@ -111,68 +139,77 @@ returnstatement:
 varset:
 	var COMMA varset {} 
 	| var {};
+
 bool-expr:
-	relation-and-expr relation-and-exprset {};
-relation-and-exprset:
-	OR relation-and-expr relation-and-exprset {} 
-	| {};
-relation-and-expr:
-	relation-expr relation-exprset {};
+	relation-exprset {};
 relation-exprset:
-	AND relation-expr relation-exprset {} 
-	| {};
+	relation-expr {} |
+	relation-exprset andororornot relation-expr {};
+andororornot:
+	AND {$$.val = string("&&"); }
+	| OR {$$.val = string("||");}
+	| NOT {$$.val = string("!");};
 relation-expr:
-	NOT expression comp expression {}
-	| NOT TRUE {}
-	| NOT FALSE {}
-	| NOT L_PAREN bool-expr R_PAREN {}
-	| expression comp expression {} 
-	| TRUE {}
-	| FALSE {}
-	| L_PAREN bool-expr R_PAREN {};
+	expression comp expression {} 
+	| TRUE {$$.val = string("True"); }
+	| FALSE {$$.val = string("False"; )}
+	| L_PAREN bool-expr R_PAREN { };
 comp:
-	EQ {} 
-	| NEQ {} 
-	| LT {} 
-	| GT {} 
-	| LTE {} 
-	| GTE {};
+	EQ { $$.val = string("==" ); } 
+	| NEQ { $$.val = string("!=" ); } 
+	| LT { $$.val = string("<" ); } 
+	| GT { $$.val = string(">" ); } 
+	| LTE { $$.val = string("<=" ); } 
+	| GTE { $$.val = string(">=" ); };
+
 expression:
-	multiplicative-expr multiplicative-exprset {};	
-multiplicative-exprset:
-	addorsub multiplicative-expr multiplicative-exprset {} 
-	| {};
-addorsub:
-	ADD {} 
-	| SUB {};
-multiplicative-expr:
-	term termset {};
-termset:
-	multordivormod term termset {} 
-	| {};
-multordivormod:
-	MULT {} 
-	| DIV {} 
-	| MOD {};
-term:
-	termoption1 {} 
-	| termoption2 {};
-termoption1:
-	SUB var {} 
-	| SUB NUMBER {} 
-	| SUB L_PAREN expression R_PAREN {} 
-	| var {} 
-	| NUMBER {} 
-	| L_PAREN expression R_PAREN {};
-termoption2:
-	IDENT L_PAREN R_PAREN {} 
-	| IDENT L_PAREN expressionset R_PAREN {};
+	termset { 
+		$$.place = $1.place; 
+	};
 expressionset:
 	expression COMMA expressionset {} 
 	| expression {};
+term:
+	var { 
+		string temp = newtemp();
+		symbolentry position = symbolTableInsert(temp);
+		$$.place = position;
+		printf(". %s\n", temp);
+		printf("= %s, %s", temp, $1.val);
+	 } 
+	| NUMBER { 
+		string temp = newtemp();
+		symbolentry position = symbolTableInsert(temp);
+		$$.place = position;
+		printf(". %s\n", temp);
+		printf("= %s, %s", temp, $1);
+	} 
+	| ident L_PAREN R_PAREN { } 
+	| L_PAREN expression R_PAREN { }
+	| ident L_PAREN expressionset R_PAREN { };
+termset:
+	term {$$.place = $1.place;}
+	| termset multordivormodoraddorsub term {
+		string temp = newtemp();		
+		$$.place = symboltableinsert(temp);
+		printf(". %s\n", temp);
+		printf("%s %s, %s, %s\n", $2.val, temp, findSymbol($1.place), findSymbol($3.place));		
+	};
+multordivormodoraddorsub:
+	MULT {$$.val = string("*");} 
+	| DIV {$$.val = string("/");} 
+	| MOD {$$.val = string("%");}
+	| ADD {$$.val = string("+");}
+	| SUB {$$.val = string("-");};
+
+
 var:
-	IDENT {} 
-	| IDENT L_SQUARE_BRACKET expression R_SQUARE_BRACKET {};
+	ident { 
+		$$.val = findsymbol($1.identItem);		
+	} 
+	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {
+		$$.val = findsymbol($1.identItem);
+	};
 %%
 
 //we need a string library to make this stuff easier
