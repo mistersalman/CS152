@@ -38,6 +38,7 @@
 	vector<exprParams> exprSet;
 
 } terminalParams;
+}
 
 using namespace std; //don't wanna add std:: to everything
 
