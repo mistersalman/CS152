@@ -13,6 +13,7 @@
  extern int currLine;
  extern int currPos;
  FILE * yyin;
+ using namespace std; //don't wanna add std:: to everything
 
  vector <string> symbolTable; //key, value e.g. __label__0
  vector <string> labelTable;
@@ -39,8 +40,6 @@
 
 } terminalParams;
 }
-
-using namespace std; //don't wanna add std:: to everything
 
 %error-verbose
 %start program
