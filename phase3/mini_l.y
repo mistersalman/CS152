@@ -62,7 +62,7 @@
 %type <terminalParams> program functionset functionname function declarationset statementset declaration
 %type <terminalParams> identifierset statement varstatement ifstatement whilestatement
 %type <terminalParams> dostatement readstatement writestatement continuestatement returnstatement
-%type <terminalParams> varset bool-expr relation-and-exprset relation-and-expr relation-exprset
+%type <terminalParams> varset bool-expr relation-exprset
 %type <terminalParams> relation-expr comp expression multordivormodoraddorsub
 %type <terminalParams> termset term expressionset var
 
