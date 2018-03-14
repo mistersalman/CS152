@@ -2,6 +2,8 @@
    Written by Ryan Gray and Salman Azmi
    CS152 WINTER 18 */
 %{
+#include <stdio.h> 
+  #include <stdlib.h> 
  void yyerror(const char *msg);
  extern int currLine;
  extern int currPos;
