@@ -23,11 +23,20 @@
   double dval;
   char* cval;
   struct {
-  	? place;
-  	? type;
-	string identItem;
-	vector<string> identList;
+		string type;
+		string index;
+		int place;
+	} varParams;
+	struct {
+		int place;
+	} exprParams;
+  struct {
+  	int place;
+  	string type;
 	string val;
+	vector<string> valSet;
+	vector<varParams> varSet;
+	vector<exprParams> exprSet;
 
 } terminalParams;
 
@@ -65,48 +74,47 @@ functionset:
 	functionname function functionset {} 
 	| {};
 functionname: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
-	FUNCTION ident SEMICOLON { /*printf("func %s\n", $2);*/ cout << "func " + $2 << endl; };
+	FUNCTION ident SEMICOLON { cout << "func " << $2 << endl; };
 function:
-	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { printf("endfunc\n"); };
+	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { cout << "endfunc" << endl; };
 ident:
 	IDENT { $$.val = string($1); };
 declarationset:
 	declaration SEMICOLON declarationset {} 
 	| {};
-statementset:
-	statement SEMICOLON statementset {} 
-	| statement SEMICOLON {};
 declaration:
 	identifierset COLON INTEGER {
-		for (unsigned i = 0; i < $1.identList->size(); i++)
+		for (unsigned i = 0; i < $1.valSet->size(); i++)
 		{
-			/*printf(". %s\n", $1.identList->at(i) );*/ cout << ". " + $1.identList->at(i) << endl;
+			cout << ". " + $1.valSet->at(i) << endl;
 			string* temp = newtemp();
-			insertToSymbolTable(temp);
-			/*printf(". %s\n", temp );*/ cout << ". " + temp << endl;
-			/*printf("= %s, %s\n", temp, $1.identList->at(i) );*/ cout << "= " + temp + ", " + $1.identList->at(i) << endl;
+			symbolTable->push_back(temp);
+			cout << ". " + temp << endl;
+			cout << "= " + temp + ", " + $1.valSet->at(i) << endl;
 		}
 	} 
 	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {
-		for (unsigned i = 0; i < $1.identList->size(); i++)
+		for (unsigned i = 0; i < $1.valSet->size(); i++)
 		{
-			/*printf(".[] %s, %s \n", $1.identList->at(i), $5 );*/ cout << ".[] " + $1.identList->at(i) + ", " + $5 << endl;
+			cout << ".[] " + $1.valSet->at(i) + ", " + $5 << endl;
 			string* temp = newtemp();
-			insertToSymbolTable(temp); //of type int array
-			/*printf(". %s\n", temp );*/ cout << ". " + temp << endl;
-			/*printf("= %s, %s\n", temp, $1.identList->at(i) );*/ cout << "= " + temp + ", " + $1.identList->at(i) << endl;
+			symbolTable->push_back(temp);
+			cout << ". " + temp << endl;
+			cout << "= " + temp + ", " + $1.valSet->at(i) << endl;
 		}
 	};
 identifierset:
 	ident { 
-		$$.identList = new vector<string>();
-		$$.identList->push_back($1.val); 
+		$$.valSet = new vector<string>();
+		$$.valSet->push_back($1.val); 
 		}
 	| ident COMMA identifierset { 
-		$$.identList = $3.identList;
-		$$.identList->push_back($1.val);
+		$$.valSet = $3.valSet;
+		$$.valSet->push_back($1.val);
 	 };
-
+statementset:
+	statement SEMICOLON statementset {} 
+	| statement SEMICOLON {};
 statement:
 	varstatement {}
 	| ifstatement {}
@@ -118,7 +126,14 @@ statement:
 	| continuestatement {}
 	| returnstatement{};
 varstatement:
-	var ASSIGN expression {};
+	//this covers the case of dst = src and dst[index] = src but not dst = src[index]
+	var ASSIGN expression {
+		if ($1.type == "ARRAY")
+			cout << "[]= " << symbolTable->at($1.place) << ", " << symbolTable->at($1.index) << ", " << symbolTable->at($3.place) << endl;
+		else {
+			cout << "= " << symbolTable->at($1.place) << ", " << symbolTable->at($3.place) << endl;
+		}
+	};
 ifstatement:
 	IF bool-expr THEN statementset ifstatementelse {};
 ifstatementelse:
@@ -130,23 +145,81 @@ dostatement:
 	DO BEGINLOOP statementset ENDLOOP WHILE bool-expr {};
 foreachstatement:
 	FOREACH ident IN ident BEGINLOOP statementset ENDLOOP {};
-readstatement:
-	READ varset {};
-writestatement:
-	WRITE varset {};
 continuestatement:
 	CONTINUE {};
+readstatement:
+	READ varset {
+		for (unsigned i = 0; i < $2.varSet.size(); i++)
+		{
+			if ($2.varSet->at(i).type == "ARRAY")
+				cout << ".[]< " << symbolTable->at($2.varSet->at(i).place) << $2.varSet->at(i).index << endl;
+			else
+				cout << ".< " << symbolTable->at($2.varSet->at(i).place) << endl;
+		}
+	};
+writestatement:
+	WRITE varset {
+		for (unsigned i = 0; i < $2.varSet.size(); i++)
+		{
+			if ($2.varSet->at(i).type == "ARRAY")
+				cout << ".[]< " << symbolTable->at($2.varSet->at(i).place) << $2.varSet->at(i).index << endl;
+			else
+				cout << ".< " << symbolTable->at($2.varSet->at(i).place) << endl;
+		}
+	};
 returnstatement:
-	RETURN expression {};
+	RETURN expression { 
+		cout << "ret " << symbolTable->at($2.place) << endl;
+	};
 varset:
-	var COMMA varset {} 
-	| var {};
+	var {
+		$$.varSet = new vector<varParams>();
+		varParams var;
+		var.place = $1.place;
+		var.type = $1.type;
+		var.index = $1.index;
+		$$.varSet->push_back(var);
+	}
+	| var COMMA varset {
+		varParams var;
+		var.place = $1.place;
+		var.type = $1.type;
+		var.index = $1.index;
+		$$.varSet->push_back(var);
+	};
+var:
+	ident { 
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$.place = symbolTable->size() - 1;
+		$$.type = "VALUE";
+		$$.index = "";
+		cout << ". " << temp << endl;
+	} 
+	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$.place = symbolTable->size() - 1;
+		$$.type = "ARRAY"
+		$$.index = symbolTable->at($3.place)
+		cout << ". " << temp << endl;
+	};
+
 
 bool-expr:
-	relation-exprset {};
+	relation-exprset {$$.place = $1.place;};
 relation-exprset:
-	relation-expr {} |
-	relation-exprset andororornot relation-expr {};
+	relation-expr {$$.place = $1.place;} |
+	relation-exprset andororornot relation-expr {
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$.place = symbolTable->size() - 1;
+		cout << ". " + temp << endl;
+		if ($2val == "!")
+			cout << $2.val << temp << symbolTable->at($1.place) << ", " << symbolTable->at($3.place) << endl;
+		else
+			cout << $2.val + " " + temp + ", " + symbolTable->at($1.place) + ", " symbolTable->at($3.place) << endl;
+	};
 andororornot:
 	AND {$$.val = string("&&"); }
 	| OR {$$.val = string("||");}
@@ -156,11 +229,23 @@ relation-expr:
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$.place = symbolTable->size() - 1;
+		cout << ". " + temp << endl;
 		cout << $2.val << " " << temp << ", " << symbolTable->at($1.place) << ", " << symbolTable->at($1.place) << endl; 
-} 
-	| TRUE {$$.val = string("True"); }
-	| FALSE {$$.val = string("False"; )}
-	| L_PAREN bool-expr R_PAREN { };
+	} 
+	| TRUE {
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$.place = symbolTable->size() - 1; 
+		cout << ". " + temp << endl;
+		cout << "= " << temp << ", " << "1"; 
+		}
+	| FALSE {
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$.place = symbolTable->size() - 1; 
+		cout << ". " + temp << endl;
+		cout << "= " << temp << ", " << "0"; }
+	| L_PAREN bool-expr R_PAREN { $$.place = $2.place; };
 comp:
 	EQ { $$.val = string("==" ); } 
 	| NEQ { $$.val = string("!=" ); } 
@@ -174,41 +259,61 @@ expression:
 		$$.place = $1.place; 
 	};
 expressionset:
-	expression {$$.place = $1.place;}
-	| expression COMMA expressionset {$$.place = $1.place;};
+	expression {
+		$$.exprSet = new vector<exprParams>();
+		exprParams expr;
+		expr.place = $1.place;
+		$$.exprSet->push_back(expr);
+	}
+	| expression COMMA expressionset {
+		exprParams expr;
+		expr.place = $1.place;
+		$$.exprSet->push_back(expr);		
+	};
 term:
 	var { 
 		string temp = newtemp();
-		//symbolentry position = symbolTableInsert(temp);
 		symbolTable->push_back(temp);
-		int position = symbolTable->size() - 1;
-		$$.place = position;
-		/*printf(". %s\n", temp);*/ cout << ". " + temp << endl;
-		/*printf("= %s, %s", temp, $1.val);*/ cout << "= " + temp + ", " + $1.val << endl;
+		$$.place = symbolTable->size() - 1;
+		cout << ". " + temp << endl;
+		cout << "= " + temp + ", " + $1.val << endl;
 	 } 
 	| NUMBER { 
 		string temp = newtemp();
-		//symbolentry position = symbolTableInsert(temp);
 		symbolTable->push_back(temp);
-		int position = symbolTable->size() - 1;
-		$$.place = position;
-		/*printf(". %s\n", temp);*/ cout << ". " + temp << endl;
-		/*printf("= %s, %s", temp, $1);*/ cout << "= " + temp + ", " + $1 << endl;
+		$$.place = symbolTable->size() - 1;	
+		cout << ". " + temp << endl;
+		cout << "= " + temp + ", " + $1 << endl;
 	} 
-	| ident L_PAREN R_PAREN { } 
-	| L_PAREN expression R_PAREN { $$.place = $2.place; }
-	| ident L_PAREN expressionset R_PAREN { };
+	| ident L_PAREN R_PAREN { 
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$.place = symbolTable->size() - 1;	
+		cout << ". " << temp << endl;
+		cout << "call " << $1.val << ", " << temp << endl;
+	 } 
+	| L_PAREN expression R_PAREN { 
+		$$.place = $2.place; 
+		}
+	| ident L_PAREN expressionset R_PAREN { 
+		for (unsigned i = 0; i < $3.exprSet.size(); i++)
+		{
+			cout << "param " << symbolTable->at($3.experSet->at(i).place) << endl;
+		}
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$.place = symbolTable->size() - 1;	
+		cout << ". " << temp << endl;
+		cout << "call " << $1.val << ", " << temp << endl;
+	 };
 termset:
 	term {$$.place = $1.place;}
 	| termset multordivormodoraddorsub term {
 		string temp = newtemp();		
-		//$$.place = symboltableinsert(temp);
 		symbolTable->push_back(temp);
-		int position = symbolTable->size() - 1;
-		$$.place = position;
-		/*printf(". %s\n", temp);*/ cout << ". " + temp << endl;
-		/*printf("%s %s, %s, %s\n", $2.val, temp, findSymbol($1.place), findSymbol($3.place));*/
-		cout << $2.val + " " + temp + ", " + findSymbol($1.place) + ", " findSymbol($3.place) << endl;
+		$$.place = symbolTable->size() - 1;
+		cout << ". " + temp << endl;
+		cout << $2.val + " " + temp + ", " + symbolTable->at($1.place) + ", " symbolTable->at($3.place) << endl;
 	};
 multordivormodoraddorsub:
 	MULT {$$.val = string("*");} 
@@ -217,14 +322,6 @@ multordivormodoraddorsub:
 	| ADD {$$.val = string("+");}
 	| SUB {$$.val = string("-");};
 
-
-var:
-	ident { 
-		$$.val = $1.val;		
-	} 
-	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {
-		$$.val = //WIP;
-	};
 %%
 
 //we need a string library to make this stuff easier
