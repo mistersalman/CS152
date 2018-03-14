@@ -15,8 +15,10 @@
  FILE * yyin;
  using namespace std; //don't wanna add std:: to everything
 
- vector <string> symbolTable; //key, value e.g. __label__0
+ vector <string> symbolTable; 
  vector <string> labelTable;
+ vector <string> functionTable;
+ vector <string> variableTable;
 %}
 
 %union{
