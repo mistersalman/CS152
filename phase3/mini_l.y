@@ -63,7 +63,7 @@
 %type <terminalParams> identifierset statement varstatement ifstatement ifstatementelse whilestatement
 %type <terminalParams> dostatement foreachstatement readstatement writestatement continuestatement returnstatement
 %type <terminalParams> varset bool-expr relation-and-exprset relation-and-expr relation-exprset
-%type <terminalParams> relation-expr comp expression multiplicative-exprset addorsub multiplicative-expr
+%type <terminalParams> relation-expr comp expression multiplicative-exprset multordivormodoraddorsub multiplicative-expr
 %type <terminalParams> termset multordivormod term termoption1 termoption2 expressionset var
 
 %% 
