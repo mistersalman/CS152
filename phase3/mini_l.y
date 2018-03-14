@@ -4,8 +4,6 @@
 %{
  #include <stdio.h>
  #include <stdlib.h>
- #include <unordered_map>
- #include <stack>
  #include <vector>
  #include <string>
  #include <iostream>
@@ -17,6 +15,7 @@
  FILE * yyin;
 
  vector <string> symbolTable; //key, value e.g. __label__0
+ vector <string> labelTable;
 %}
 
 %union{
@@ -115,12 +114,12 @@ identifierset:
 statementset:
 	statement SEMICOLON statementset {} 
 	| statement SEMICOLON {};
+//pulled out foreach loops because I don't know how to implement ident in ident as a boolean expression
 statement:
 	varstatement {}
 	| ifstatement {}
 	| whilestatement {}
 	| dostatement {}
-	| foreachstatement {}
 	| readstatement {}
 	| writestatement {}
 	| continuestatement {}
@@ -135,18 +134,59 @@ varstatement:
 		}
 	};
 ifstatement:
-	IF bool-expr THEN statementset ifstatementelse {};
-ifstatementelse:
-	ELSE statementset ENDIF {} 	
-	| ENDIF {};
+	IF bool-expr THEN statementset ELSE statementset ENDIF {
+		string label1 = newlabel();
+		string label2 = newlabel();
+		string label3 = newlabel();
+		cout << "?:= " << label1 << ", " << symbolTable->at($2.place) << endl;
+		cout << ":= " << label2 << endl;
+		cout << ": " << label1 << endl;
+		//cout << $4.code;
+		cout << ":= " << label3;
+		cout << ": " << label2;
+		//cout << $6.code;
+		cout << ": " << label3 << endl;
+
+	}
+	| IF bool-expr THEN statementset ENDIF {
+		string label1 = newlabel();
+		string label2 = newlabel();
+		cout << "?:= " << label1 << ", " << symbolTable->at($2.place) << endl;
+		cout << ":= " << label2 << endl;
+		cout << ": " << label1 << endl;
+		//cout << $4.code;
+		cout << ": " << label2;
+	} ;
 whilestatement:
-	WHILE bool-expr BEGINLOOP statementset ENDLOOP {};
+	WHILE bool-expr BEGINLOOP statementset ENDLOOP {
+		string label1 = newlabel();
+		string label2 = newlabel();
+		string label3 = newlabel();
+		labelTable->push_back(label3);
+		cout << ": " << label1 << endl;
+		cout << "?:= " << label2 << ", " << symbolTable->at($2.place) << endl;
+		cout << ":= " << label3 << endl;
+		cout << ": " << label2 << endl;
+		//cout << $4.code << endl;
+		cout << ": " << label1 << endl;
+		cout << ": " << label3 << endl;		
+	};
 dostatement:
-	DO BEGINLOOP statementset ENDLOOP WHILE bool-expr {};
-foreachstatement:
-	FOREACH ident IN ident BEGINLOOP statementset ENDLOOP {};
+	DO BEGINLOOP statementset ENDLOOP WHILE bool-expr {
+		string label1 = newlabel();
+		string label2 = newlabel();
+		labelTable->push_back(label2);
+		cout << ": " << label1 << endl;
+		//cout << $3.code;
+		cout << "?:= " << label1 << ", " << symbolTable->at($6.place) << endl;
+		cout << ": " << label2 << endl;
+	};
+
 continuestatement:
-	CONTINUE {};
+	CONTINUE {
+		cout << ";= " << labelTable->at(labelTable->size() - 1) << endl;
+		labelTable->pop_back();
+	};
 readstatement:
 	READ varset {
 		for (unsigned i = 0; i < $2.varSet.size(); i++)
@@ -237,14 +277,14 @@ relation-expr:
 		symbolTable->push_back(temp);
 		$$.place = symbolTable->size() - 1; 
 		cout << ". " + temp << endl;
-		cout << "= " << temp << ", " << "1"; 
+		cout << "= " << temp << ", " << "true"; 
 		}
 	| FALSE {
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$.place = symbolTable->size() - 1; 
 		cout << ". " + temp << endl;
-		cout << "= " << temp << ", " << "0"; }
+		cout << "= " << temp << ", " << "false"; }
 	| L_PAREN bool-expr R_PAREN { $$.place = $2.place; };
 comp:
 	EQ { $$.val = string("==" ); } 
