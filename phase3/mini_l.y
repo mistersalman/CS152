@@ -13,18 +13,18 @@
  extern int currLine;
  extern int currPos;
  struct varParams {
-	string* type;
-	string* index;
-	int* place;
+	string type;
+	string index;
+	int place;
 	};
  struct exprParams {
-	int* place;
+	int place;
 	};
 struct semanticValues {
-  	int* place;
-  	string* type;
-	string* val;
-	string* index;
+  	int place;
+  	string type;
+	string val;
+	string index;
 	vector<string>* valSet;
 	vector<varParams>* varSet;
 	vector<exprParams>* exprSet;
