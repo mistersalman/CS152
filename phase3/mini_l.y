@@ -120,7 +120,7 @@ functionset:
 	| {};
 functionname: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
 	FUNCTION ident SEMICOLON { 
-		functionTable->push_back((*$2->val));
+		functionTable->push_back(*($2->val));
 		keywordTable->push_back("beginparams"); keywordTable->push_back("endParams"); keywordTable->push_back("beginlocals"); 
 		keywordTable->push_back("endlocals"); keywordTable->push_back("beginbody"); keywordTable->push_back("endbody"); 
 		keywordTable->push_back("function"); keywordTable->push_back("integer"); keywordTable->push_back("array"); 
@@ -130,7 +130,7 @@ functionname: //not sure if having a non-terminal named function and a terminal 
 		keywordTable->push_back("beginloop"); keywordTable->push_back("endloop"); keywordTable->push_back("continue"); 
 		keywordTable->push_back("read"); keywordTable->push_back("write"); keywordTable->push_back("true");
 		keywordTable->push_back("false"); keywordTable->push_back("return"); 
-		cout << "func " << (*$2->val) << endl; 
+		cout << "func " << *($2->val) << endl; 
 	};
 function:
 	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { 	
