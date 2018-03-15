@@ -7,21 +7,19 @@
  #include <vector>
  #include <string>
  #include <iostream>
- #include <sstream>
- #include <fstream>
  void yyerror(const char *msg);
  extern int currLine;
  extern int currPos;
  FILE * yyin;
  using namespace std; //don't wanna add std:: to everything
-struct {
-		string type;
-		string index;
-		int place;
-	} varParams;
-	struct {
-		int place;
-	} exprParams;
+struct varParams {
+	string type;
+	string index;
+	int place;
+	};
+struct exprParams {
+	int place;
+	};
  vector <string>* symbolTable; 
  vector <string>* labelTable;
  vector <string>* functionTable;
@@ -40,7 +38,7 @@ struct {
 	vector<varParams>* varSet;
 	vector<exprParams>* exprSet;
 
-} terminalParams;
+	} terminalParams;
 }
 
 %error-verbose
