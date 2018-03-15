@@ -86,6 +86,7 @@ bool findKeyword(string val)
   	int place;
   	string type;
 	string val;
+	string index;
 	vector<string>* valSet;
 	vector<varParams>* varSet;
 	vector<exprParams>* exprSet;
