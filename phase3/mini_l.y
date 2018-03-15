@@ -30,24 +30,24 @@ struct semanticValues {
 	vector<exprParams>* exprSet;
 	} terminalParams;
  
- vector <string>* symbolTable; 
- vector <string>* labelTable;
- vector <string>* functionTable;
- vector <string>* variableTable;
- vector <string>* keywordTable;
+ vector <string*>* symbolTable; 
+ vector <string*>* labelTable;
+ vector <string*>* functionTable;
+ vector <string*>* variableTable;
+ vector <string*>* keywordTable;
  
  static int tempCount = -1;
 string newtemp()
 {
 	tempCount++;
-	return "__temp__" + tempCount;
+	return new string("__temp__" + tempCount);
 }
 
 static int labelCount = -1;
 string newlabel()
 {
 	labelCount++;
-	return "__label__" + labelCount;
+	return new string("__label__" + labelCount);
 }
 
 bool findVariable(string val) 
