@@ -80,7 +80,17 @@ bool findKeyword(string val)
 }
 
 %}
-
+%code requires {
+struct terminalParams {
+  	int place;
+  	string type;
+	string val;
+	string index;
+	vector<string>* valSet;
+	vector<varParams>* varSet;
+	vector<exprParams>* exprSet;
+	};
+}
 %union{
 double dval;
 char* cval;
