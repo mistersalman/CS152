@@ -63,9 +63,9 @@
 %left ASSIGN COMMA COLON SEMICOLON
 
 %type <terminalParams> program functionset functionname function declarationset statementset declaration
-%type <terminalParams> identifierset statement varstatement ifstatement whilestatement
+%type <terminalParams> ident identifierset statement varstatement ifstatement whilestatement
 %type <terminalParams> dostatement readstatement writestatement continuestatement returnstatement
-%type <terminalParams> varset bool-expr relation-exprset
+%type <terminalParams> varset bool-expr relation-exprset andorornot
 %type <terminalParams> relation-expr comp expression multordivormodoraddorsub
 %type <terminalParams> termset term expressionset var
 
