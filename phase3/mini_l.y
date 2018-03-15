@@ -86,7 +86,7 @@ bool findKeyword(string val)
 	}
 	return 0;
 }
-#include "y.tab.c"
+
 %}
 
 %language "c++"
