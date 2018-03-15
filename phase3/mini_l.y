@@ -7,24 +7,76 @@
  #include <vector>
  #include <string>
  #include <iostream>
+ int yylex(void);
  void yyerror(const char *msg);
  extern int currLine;
  extern int currPos;
  FILE * yyin;
  using namespace std; //don't wanna add std:: to everything
-struct varParams {
+ struct varParams {
 	string type;
 	string index;
 	int place;
 	};
-struct exprParams {
+ struct exprParams {
 	int place;
 	};
+ 
  vector <string>* symbolTable; 
  vector <string>* labelTable;
  vector <string>* functionTable;
  vector <string>* variableTable;
  vector <string>* keywordTable;
+ 
+ static int tempCount = -1;
+string newtemp()
+{
+	tempCount++;
+	return "__temp__" + tempCount;
+}
+
+static int labelCount = -1;
+string newlabel()
+{
+	labelCount++;
+	return "__label__" + labelCount;
+}
+
+bool findVariable(string val) 
+{
+	for(int i = 0; i < variableTable->size(); i++)
+	{
+		if(variableTable->at(i).compare(val) == 0)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+bool findFunction(string val)
+{
+	for(int i = 0; i < functionTable->size(); i++)
+	{
+		if(functionTable->at(i).compare(val) == 0)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+bool findKeyword(string val)
+{
+	for(int i = 0; i < keywordTable->size(); i++)
+	{
+		if(keywordTable->at(i).compare(val) == 0)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
 %}
 
 %union{
@@ -396,55 +448,7 @@ multordivormodoraddorsub:
 //we need a string library to make this stuff easier
 //and avoid using char array pointers as strings
 
-static int tempCount = -1;
-string newtemp()
-{
-	tempCount++;
-	return "__temp__" + tempCount;
-}
 
-static int labelCount = -1;
-string newlabel()
-{
-	labelCount++;
-	return "__label__" + labelCount;
-}
-
-bool findVariable(string val) 
-{
-	for(int i = 0; i < variableTable->size(); i++)
-	{
-		if(variableTable->at(i).compare(val) == 0)
-		{
-			return 1;
-		}
-	}
-	return 0;
-}
-
-bool findFunction(string val)
-{
-	for(int i = 0; i < functionTable->size(); i++)
-	{
-		if(functionTable->at(i).compare(val) == 0)
-		{
-			return 1;
-		}
-	}
-	return 0;
-}
-
-bool findKeyword(string val)
-{
-	for(int i = 0; i < keywordTable->size(); i++)
-	{
-		if(keywordTable->at(i).compare(val) == 0)
-		{
-			return 1;
-		}
-	}
-	return 0;
-}
 
 int main(int argc, char **argv) {
    if (argc > 1) {
