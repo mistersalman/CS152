@@ -410,7 +410,7 @@ term:
 			yyerror("Calling a function not previously defined.");
 		string temp = newtemp();
 		symbolTable->push_back(temp);
-		$->place = symbolTable->size() - 1;	
+		$$->place = symbolTable->size() - 1;	
 		cout << ". " << temp << endl;
 		cout << "call " << $1->val << ", " << temp << endl;
 	 } 
@@ -422,7 +422,7 @@ term:
 			yyerror("Calling a function not previously defined.");
 		for (unsigned i = 0; i < $3->exprSet->size(); i++)
 		{
-			cout << "param " << symbolTable->at($3->exprSet->at(i)->place) << endl;
+			cout << "param " << symbolTable->at($3->exprSet->at(i).place) << endl;
 		}
 		string temp = newtemp();
 		symbolTable->push_back(temp);
