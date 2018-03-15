@@ -19,6 +19,7 @@
  vector <string> labelTable;
  vector <string> functionTable;
  vector <string> variableTable;
+ vector <string> keywordTable;
 %}
 
 %union{
@@ -70,14 +71,32 @@
 
 %% 
 program:	
-	functionset {};
+	functionset { 
+		if (!findFunction("main"))
+			yyerror("Main function has not been defined.");			
+	};
 functionset:
 	functionname function functionset {} 
 	| {};
 functionname: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
-	FUNCTION ident SEMICOLON { cout << "func " << $2 << endl; };
+	FUNCTION ident SEMICOLON { 
+		functionTable->push_back($2.val);
+		keywordTable->push_back("beginparams"); keywordTable->push_back("endParams"); keywordTable->push_back("beginlocals"); 
+		keywordTable->push_back("endlocals"); keywordTable->push_back("beginbody"); keywordTable->push_back("endbody"); 
+		keywordTable->push_back("function"); keywordTable->push_back("integer"); keywordTable->push_back("array"); 
+		keywordTable->push_back("of"); keywordTable->push_back("if"); keywordTable->push_back("then");
+		keywordTable->push_back("endif"); keywordTable->push_back("else"); keywordTable->push_back("while"); 
+		keywordTable->push_back("do"); keywordTable->push_back("foreach"); keywordTable->push_back("in"); 
+		keywordTable->push_back("beginloop"); keywordTable->push_back("endloop"); keywordTable->push_back("continue"); 
+		keywordTable->push_back("read"); keywordTable->push_back("write"); keywordTable->push_back("true");
+		keywordTable->push_back("false"); keywordTable->push_back("return"); 
+		cout << "func " << $2 << endl; 
+	};
 function:
-	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { cout << "endfunc" << endl; };
+	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { 
+	
+	cout << "endfunc" << endl; 
+	};
 ident:
 	IDENT { $$.val = string($1); };
 declarationset:
@@ -87,6 +106,11 @@ declaration:
 	identifierset COLON INTEGER {
 		for (unsigned i = 0; i < $1.valSet->size(); i++)
 		{
+			if (findVariable($1.valSet->at(i))) //also needs to check if variable is same name as mini-l program itself
+				yyerror("Variable is multiply-defined.");
+			if (findKeyword($1.valSet->at(i)))
+				yyerror("Declared a variable the same name as a reserved keyword.");
+			variableTable->push_back($1.valSet->at(i));
 			cout << ". " + $1.valSet->at(i) << endl;
 			string* temp = newtemp();
 			symbolTable->push_back(temp);
@@ -97,6 +121,13 @@ declaration:
 	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {
 		for (unsigned i = 0; i < $1.valSet->size(); i++)
 		{
+			if ($5 < 1)
+				yyerror("Declared an array of size <= 0");
+			if (findVariable($1.valSet->at(i))) //also needs to check if variable is same name as mini-l program itself
+				yyerror("Variable is multiply-defined.");
+			if (findKeyword($1.valSet->at(i)))
+				yyerror("Declared a variable the same name as a reserved keyword.");
+			variableTable->push_back($1.valSet->at(i));
 			cout << ".[] " + $1.valSet->at(i) + ", " + $5 << endl;
 			string* temp = newtemp();
 			symbolTable->push_back(temp);
@@ -186,6 +217,8 @@ dostatement:
 
 continuestatement:
 	CONTINUE {
+		if (labelTable.size() < 1)
+			yyerror("continue statement not within a loop.");
 		cout << ";= " << labelTable->at(labelTable->size() - 1) << endl;
 		labelTable->pop_back();
 	};
@@ -231,6 +264,8 @@ varset:
 	};
 var:
 	ident { 
+		if (!findVariable($1.val))
+			yyerror("Using a variable not previously declared.");
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$.place = symbolTable->size() - 1;
@@ -239,6 +274,8 @@ var:
 		cout << ". " << temp << endl;
 	} 
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {
+		if (!findVariable($1.val))
+			yyerror("Using a variable not previously declared.");
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$.place = symbolTable->size() - 1;
@@ -328,6 +365,8 @@ term:
 		cout << "= " + temp + ", " + $1 << endl;
 	} 
 	| ident L_PAREN R_PAREN { 
+		if (!findFunction($1.val))
+			yyerror("Calling a function not previously defined.");
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$.place = symbolTable->size() - 1;	
@@ -338,6 +377,8 @@ term:
 		$$.place = $2.place; 
 		}
 	| ident L_PAREN expressionset R_PAREN { 
+		if (!findFunction($1.val))
+			yyerror("Calling a function not previously defined.");
 		for (unsigned i = 0; i < $3.exprSet.size(); i++)
 		{
 			cout << "param " << symbolTable->at($3.experSet->at(i).place) << endl;
@@ -370,13 +411,8 @@ multordivormodoraddorsub:
 //and avoid using char array pointers as strings
 
 static int tempCount = -1;
-string newtemp() //type is of type symbol table entry point
+string newtemp()
 {
-	//create a new temp variabel name like:
-	// "__temp__" + tempCount++ + "\0";
-	//insert into symbol table
-	//keep looping on creation and symbol table
-	//insertion until it is unique and succeeds
 	tempCount++;
 	return "__temp__" + tempCount;
 }
@@ -388,36 +424,40 @@ string* newlabel()
 	return label;
 }
 
-/*bool symboltableinsert(string key, string value) 
+bool findVariable(string val) 
 {
-	//check if symbol already exists
-	//if so throw duplicate variable error and return false
-	//otherwise insert into table and return true
-}*/
-
-int findsymbol(string key) 
-{
-	//iterate through symbol table
-	//use find() or any helpful iterator method
-	//return pointer to symbol entry
-	for(int i = 0; i < symbolTable.size(); i++)
+	for(int i = 0; i < variableTable.size(); i++)
 	{
-		if(symbolTable->at(i).compare(key) == 0)
+		if(variableTable->at(i).compare(val) == 0)
 		{
-			return i;
+			return 1;
 		}
 	}
-	-1;	
+	return 0;
 }
 
-string gen(string instruction, string param1, string optionalParam2, string optionalParam3)
+bool findFunction(string val)
 {
-	string op = instruction + " " + param1;
-	if (optionalParam2 != "")
-		op += ", " + optionalParam2;
-	if (optionalParam3 != "")
-		op += ", " + optionalParam3;
-	op += "\n ";
+	for(int i = 0; i < functionTable.size(); i++)
+	{
+		if(functionTable->at(i).compare(val) == 0)
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
+bool findKeyword(string val)
+{
+	for(int i = 0; i < keywordTable.size(); i++)
+	{
+		if(keywordTable->at(i).compare(val) == 0)
+		{
+			return 1;
+		}
+	}
+	return 0;
 }
 
 int main(int argc, char **argv) {
