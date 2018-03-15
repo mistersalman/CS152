@@ -21,10 +21,10 @@
 	int place;
 	};
 struct semanticValues {
-  	int place;
-  	string type;
+  	int* place;
+  	string* type;
 	string* val;
-	string index;
+	string* index;
 	vector<string>* valSet;
 	vector<varParams>* varSet;
 	vector<exprParams>* exprSet;
@@ -120,13 +120,21 @@ functionset:
 	| {};
 functionname: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
 	FUNCTION ident SEMICOLON { 
-		cout << "success" << endl;
-		cout << (*$2->val) << endl;
+		functionTable->push_back((*$2->val));
+		keywordTable->push_back("beginparams"); keywordTable->push_back("endParams"); keywordTable->push_back("beginlocals"); 
+		keywordTable->push_back("endlocals"); keywordTable->push_back("beginbody"); keywordTable->push_back("endbody"); 
+		keywordTable->push_back("function"); keywordTable->push_back("integer"); keywordTable->push_back("array"); 
+		keywordTable->push_back("of"); keywordTable->push_back("if"); keywordTable->push_back("then");
+		keywordTable->push_back("endif"); keywordTable->push_back("else"); keywordTable->push_back("while"); 
+		keywordTable->push_back("do"); keywordTable->push_back("foreach"); keywordTable->push_back("in"); 
+		keywordTable->push_back("beginloop"); keywordTable->push_back("endloop"); keywordTable->push_back("continue"); 
+		keywordTable->push_back("read"); keywordTable->push_back("write"); keywordTable->push_back("true");
+		keywordTable->push_back("false"); keywordTable->push_back("return"); 
+		cout << "func " << (*$2->val) << endl; 
 	};
 function:
-	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { 
-	
-	cout << "endfunc" << endl; 
+	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { 	
+		cout << "endfunc" << endl; 
 	};
 ident:
 	IDENT {$$->val = new string($1); };
