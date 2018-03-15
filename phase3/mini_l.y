@@ -10,7 +10,7 @@
  using namespace std; //don't wanna add std:: to everything
  void yyerror(const char *msg);
  extern "C" int yyparse (void);
- extern "C" int yylex();
+ extern "C" int yylex(void);
  extern int currLine;
  extern int currPos;
  FILE * yyin;
@@ -90,7 +90,6 @@ bool findKeyword(string val)
 
 %}
 
-%language "c++"
 %define api.value.type variant
 
 
