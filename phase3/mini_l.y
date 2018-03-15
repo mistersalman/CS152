@@ -141,7 +141,7 @@ function:
 	cout << "endfunc" << endl; 
 	};
 ident:
-	IDENT { $$->val = new string($1); };
+	IDENT { $$->val = string($1); };
 declarationset:
 	declaration SEMICOLON declarationset {} 
 	| {};
