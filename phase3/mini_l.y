@@ -284,7 +284,7 @@ relation-exprset:
 		if ($2val == "!")
 			cout << $2.val << temp << symbolTable->at($1.place) << ", " << symbolTable->at($3.place) << endl;
 		else
-			cout << $2.val + " " + temp + ", " + symbolTable->at($1.place) + ", " symbolTable->at($3.place) << endl;
+			cout << $2.val << " " << temp << ", " << symbolTable->at($1.place) << ", " symbolTable->at($3.place) << endl;
 	};
 andororornot:
 	AND {$$.val = string("&&"); }
@@ -295,21 +295,21 @@ relation-expr:
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$.place = symbolTable->size() - 1;
-		cout << ". " + temp << endl;
+		cout << ". " << temp << endl;
 		cout << $2.val << " " << temp << ", " << symbolTable->at($1.place) << ", " << symbolTable->at($1.place) << endl; 
 	} 
 	| TRUE {
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$.place = symbolTable->size() - 1; 
-		cout << ". " + temp << endl;
+		cout << ". " << temp << endl;
 		cout << "= " << temp << ", " << "true"; 
 		}
 	| FALSE {
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$.place = symbolTable->size() - 1; 
-		cout << ". " + temp << endl;
+		cout << ". " << temp << endl;
 		cout << "= " << temp << ", " << "false"; }
 	| L_PAREN bool-expr R_PAREN { $$.place = $2.place; };
 comp:
@@ -341,15 +341,15 @@ term:
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$.place = symbolTable->size() - 1;
-		cout << ". " + temp << endl;
-		cout << "= " + temp + ", " + $1.val << endl;
+		cout << ". " << temp << endl;
+		cout << "= " << temp << ", " << $1.val << endl;
 	 } 
 	| NUMBER { 
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$.place = symbolTable->size() - 1;	
-		cout << ". " + temp << endl;
-		cout << "= " + temp + ", " + $1 << endl;
+		cout << ". " << temp << endl;
+		cout << "= " << temp << ", " << $1 << endl;
 	} 
 	| ident L_PAREN R_PAREN { 
 		if (!findFunction($1.val))
@@ -383,7 +383,7 @@ termset:
 		symbolTable->push_back(temp);
 		$$.place = symbolTable->size() - 1;
 		cout << ". " + temp << endl;
-		cout << $2.val + " " + temp + ", " + symbolTable->at($1.place) + ", " symbolTable->at($3.place) << endl;
+		cout << $2.val << " " << temp << ", " << symbolTable->at($1.place) << ", " << symbolTable->at($3.place) << endl;
 	};
 multordivormodoraddorsub:
 	MULT {$$.val = string("*");} 
