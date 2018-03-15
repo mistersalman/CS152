@@ -83,7 +83,7 @@ bool findKeyword(string val)
 %union{
 double dval;
 char* cval;
-struct *{
+struct a*{
   	int place;
   	string type;
 	string val;
