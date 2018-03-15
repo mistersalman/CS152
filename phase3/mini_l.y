@@ -387,8 +387,7 @@ termset:
 	};
 multordivormodoraddorsub:
 	MULT {$$.val = string("*");} 
-	| DIV {$$.val = string("/");} 
-	| MOD {$$.val = string("%");}
+	| DIV {$$.val = string("/");} 	| MOD {$$.val = string("%");}
 	| ADD {$$.val = string("+");}
 	| SUB {$$.val = string("-");};
 
@@ -398,22 +397,22 @@ multordivormodoraddorsub:
 //and avoid using char array pointers as strings
 
 static int tempCount = -1;
-string newtemp()
+inline string newtemp()
 {
 	tempCount++;
 	return "__temp__" + tempCount;
 }
 
 static int labelCount = -1;
-string newlabel()
+inline string newlabel()
 {
 	labelCount++;
 	return "__label__" + labelCount;
 }
 
-bool findVariable(string val) 
+inline bool findVariable(string val) 
 {
-	for(int i = 0; i < variableTable.size(); i++)
+	for(int i = 0; i < variableTable->size(); i++)
 	{
 		if(variableTable->at(i).compare(val) == 0)
 		{
@@ -423,9 +422,9 @@ bool findVariable(string val)
 	return 0;
 }
 
-bool findFunction(string val)
+inline bool findFunction(string val)
 {
-	for(int i = 0; i < functionTable.size(); i++)
+	for(int i = 0; i < functionTable->size(); i++)
 	{
 		if(functionTable->at(i).compare(val) == 0)
 		{
@@ -435,9 +434,9 @@ bool findFunction(string val)
 	return 0;
 }
 
-bool findKeyword(string val)
+inline bool findKeyword(string val)
 {
-	for(int i = 0; i < keywordTable.size(); i++)
+	for(int i = 0; i < keywordTable->size(); i++)
 	{
 		if(keywordTable->at(i).compare(val) == 0)
 		{
