@@ -143,13 +143,45 @@ declarationset:
 	| {};
 declaration:
 	identifierset COLON INTEGER {
+		for (unsigned i = 0; i < $1->valSet->size(); i++)
+		{
+			if (findVariable($1->valSet->at(i))) //also needs to check if variable is same name as mini-l program itself
+				yyerror("Variable is multiply-defined.");
+			if (findKeyword($1->valSet->at(i)))
+				yyerror("Declared a variable the same name as a reserved keyword.");
+			variableTable->push_back($1->valSet->at(i));
+			cout << ". " << $1->valSet->at(i) << endl;
+			string temp = newtemp();
+			symbolTable->push_back(temp);
+			cout << ". " << temp << endl;
+			cout << "= " << temp << ", " << $1->valSet->at(i) << endl;
+		}
 	} 
 	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {
+		for (unsigned i = 0; i < $1->valSet->size(); i++)
+		{
+			if ($5 < 1)
+				yyerror("Declared an array of size <= 0");
+			if (findVariable($1->valSet->at(i))) //also needs to check if variable is same name as mini-l program itself
+				yyerror("Variable is multiply-defined.");
+			if (findKeyword($1->valSet->at(i)))
+				yyerror("Declared a variable the same name as a reserved keyword.");
+			variableTable->push_back($1->valSet->at(i));
+			cout << ".[] " << $1->valSet->at(i) << ", " << $5 << endl;
+			string temp = newtemp();
+			symbolTable->push_back(temp);
+			cout << ". " << temp << endl;
+			cout << "= " << temp << ", " << $1->valSet->at(i) << endl;
+		}
 	};
 identifierset:
 	ident { 
+		$$->valSet = new vector<string>();
+		$$->valSet->push_back($1->val);
 		}
 	| ident COMMA identifierset { 
+		$$->valSet = $3->valSet;
+		$$->valSet->push_back($1->val);
 	 };
 statementset:
 	statement SEMICOLON statementset {} 
