@@ -54,20 +54,10 @@
 
 %left BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY FUNCTION 
 %left INTEGER ARRAY OF IF THEN ENDIF ELSE WHILE DO FOREACH IN BEGINLOOP ENDLOOP CONTINUE READ WRITE RETURN
-%left MOD GT LT GTE LTE EQ NEQ
-%left NOT AND OR TRUE FALSE
-%left SUB ADD
-%left MULT DIV
-%left L_PAREN R_PAREN
-%left L_SQUARE_BRACKET R_SQUARE_BRACKET
-%left ASSIGN COMMA COLON SEMICOLON
+%left MOD GT LT GTE LTE EQ NEQ NOT AND OR TRUE FALSE SUB ADD MULT DIV L_PAREN R_PAREN
+%left L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN COMMA COLON SEMICOLON
 
-%type <terminalParams> program functionset functionname function declarationset statementset declaration
-%type <terminalParams> ident identifierset statement varstatement ifstatement whilestatement
-%type <terminalParams> dostatement readstatement writestatement continuestatement returnstatement
-%type <terminalParams> varset bool-expr relation-exprset andorornot
-%type <terminalParams> relation-expr comp expression multordivormodoraddorsub
-%type <terminalParams> termset term expressionset var
+%type <terminalParams> program functionset functionname function ident declarationset declaration identifierset statementset statement varstatement ifstatement whilestatement dostatement continuestatement readstatement writestatement  returnstatement varset var bool-expr relation-exprset andorornot relation-expr comp expression expressionset term termset multordivormodoraddorsub
 
 %% 
 program:	
