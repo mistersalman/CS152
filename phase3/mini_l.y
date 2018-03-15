@@ -21,15 +21,7 @@
  struct exprParams {
 	int place;
 	};
- struct terminalParams {
-  	int place;
-  	string type;
-	string val;
-	vector<string>* valSet;
-	vector<varParams>* varSet;
-	vector<exprParams>* exprSet;
-
-	};
+ 
  vector <string>* symbolTable; 
  vector <string>* labelTable;
  vector <string>* functionTable;
@@ -90,6 +82,14 @@ bool findKeyword(string val)
 %union{
   double dval;
   char* cval;
+  struct {
+  	int place;
+  	string type;
+	string val;
+	vector<string>* valSet;
+	vector<varParams>* varSet;
+	vector<exprParams>* exprSet;
+	} terminalParams;
 }
 
 %error-verbose
