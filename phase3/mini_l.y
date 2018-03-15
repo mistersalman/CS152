@@ -199,41 +199,127 @@ statement:
 varstatement:
 	//this covers the case of dst = src and dst[index] = src but not dst = src[index]
 	var ASSIGN expression {
+		if (*($1->type) == "ARRAY")
+			cout << "[]= " << symbolTable->at(*($1->place)) << ", " << *($1->index) << ", " << symbolTable->at(*($3->place)) << endl;
+		else {
+			cout << "= " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
+		}
 	};
 ifstatement:
 	IF bool-expr THEN statementset ELSE statementset ENDIF {
-
+		string label1 = newlabel();
+		string label2 = newlabel();
+		string label3 = newlabel();
+		cout << "?:= " << label1 << ", " << symbolTable->at(*($2->place)) << endl;
+		cout << ":= " << label2 << endl;
+		cout << ": " << label1 << endl;
+		//cout << $4.val;
+		cout << ":= " << label3;
+		cout << ": " << label2;
+		//cout << $6.val;
+		cout << ": " << label3 << endl;
 	}
 	| IF bool-expr THEN statementset ENDIF {
+		string label1 = newlabel();
+		string label2 = newlabel();
+		cout << "?:= " << label1 << ", " << symbolTable->at(*($2->place)) << endl;
+		cout << ":= " << label2 << endl;
+		cout << ": " << label1 << endl;
+		//cout << $4.code;
+		cout << ": " << label2;
 	} ;
 whilestatement:
-	WHILE bool-expr BEGINLOOP statementset ENDLOOP {	
+	WHILE bool-expr BEGINLOOP statementset ENDLOOP {
+		string label1 = newlabel();
+		string label2 = newlabel();
+		string label3 = newlabel();
+		labelTable->push_back(label3);
+		cout << ": " << label1 << endl;
+		cout << "?:= " << label2 << ", " << symbolTable->at(*($2->place)) << endl;
+		cout << ":= " << label3 << endl;
+		cout << ": " << label2 << endl;
+		//cout << $4.code << endl;
+		cout << ": " << label1 << endl;
+		cout << ": " << label3 << endl;		
 	};
 dostatement:
 	DO BEGINLOOP statementset ENDLOOP WHILE bool-expr {
+		string label1 = newlabel();
+		string label2 = newlabel();
+		labelTable->push_back(label2);
+		cout << ": " << label1 << endl;
+		//cout << $3.code;
+		cout << "?:= " << label1 << ", " << symbolTable->at(*($6->place)) << endl;
+		cout << ": " << label2 << endl;
 	};
 
 continuestatement:
 	CONTINUE {
+		if (labelTable->size() < 1)
+			yyerror("continue statement not within a loop.");
+		cout << ";= " << labelTable->at(labelTable->size() - 1) << endl;
+		labelTable->pop_back();
 	};
 readstatement:
 	READ varset {
+		for (unsigned i = 0; i < $2->varSet->size(); i++)
+		{
+			if (*($2->varSet->at(i).type) == "ARRAY")
+				cout << ".[]< " << symbolTable->at(*($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
+			else
+				cout << ".< " << symbolTable->at(*($2->varSet->at(i).place)) << endl;
+		}
 	};
 writestatement:
 	WRITE varset {
+		for (unsigned i = 0; i < $2->varSet->size(); i++)
+		{
+			if (*($2->varSet->at(i).type) == "ARRAY")
+				cout << ".[]> " << symbolTable->at(*($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
+			else
+				cout << ".> " << symbolTable->at(*($2->varSet->at(i).place)) << endl;
+		}
 	};
 returnstatement:
 	RETURN expression { 
+		cout << "ret " << symbolTable->at(*($2->place)) << endl;
 	};
 varset:
 	var {
+		$$->varSet = new vector<varParams>();
+		varParams var;
+		var.place = $1->place;
+		var.type = $1->type;
+		var.index = $1->index;
+		$$->varSet->push_back(var);
 	}
 	| var COMMA varset {
+		varParams var;
+		var.place = $1->place;
+		var.type = $1->type;
+		var.index = $1->index;
+		$$->varSet->push_back(var);
 	};
 var:
 	ident { 
+		if (!findVariable(*($1->val)))
+			yyerror("Using a variable not previously declared.");
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$->place = new int( symbolTable->size() - 1);
+		$$->type = new string ("VALUE");
+		$$->index = new string("");
+		cout << ". " << temp << endl;
 	} 
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {
+		if (!findVariable(*($1->val)))
+			yyerror("Using a variable not previously declared.");
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$->place = new int( symbolTable->size() - 1);
+		$$->type = new string("ARRAY");
+		$$->index = new string(symbolTable->at(*($3->place)));
+		cout << ". " << temp << endl;
 	};
 
 
