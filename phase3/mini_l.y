@@ -2,10 +2,10 @@
    Written by Ryan Gray and Salman Azmi
    CS152 WINTER 18 */
 %{
- #include <stdio.h>
- #include <stdlib.h>
  #include <vector>
  #include <string>
+ #include <stdio.h>
+ #include <stdlib.h>
  #include <iostream>
  int yylex(void);
  void yyerror(const char *msg);
@@ -319,7 +319,7 @@ var:
 		symbolTable->push_back(temp);
 		$$.place = symbolTable->size() - 1;
 		$$.type = "ARRAY"
-		$$.index = symbolTable->at($3.place)
+		$$.index = symbolTable->at($3.place);
 		cout << ". " << temp << endl;
 	};
 
@@ -336,7 +336,7 @@ relation-exprset:
 		if ($2.val == "!")
 			cout << $2.val << temp << symbolTable->at($1.place) << ", " << symbolTable->at($3.place) << endl;
 		else
-			cout << $2.val << " " << temp << ", " << symbolTable->at($1.place) << ", " symbolTable->at($3.place) << endl;
+			cout << $2.val << " " << temp << ", " << symbolTable->at($1.place) << ", " << symbolTable->at($3.place) << endl;
 	};
 andororornot:
 	AND {$$.val = string("&&"); }
@@ -420,7 +420,7 @@ term:
 			yyerror("Calling a function not previously defined.");
 		for (unsigned i = 0; i < $3.exprSet->size(); i++)
 		{
-			cout << "param " << symbolTable->at($3.experSet->at(i).place) << endl;
+			cout << "param " << symbolTable->at($3.exprSet->at(i).place) << endl;
 		}
 		string temp = newtemp();
 		symbolTable->push_back(temp);
