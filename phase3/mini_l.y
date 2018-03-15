@@ -109,7 +109,12 @@ struct semanticValues* terminalParams;
 %left MOD GT LT GTE LTE EQ NEQ NOT AND OR TRUE FALSE SUB ADD MULT DIV L_PAREN R_PAREN
 %left L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN COMMA COLON SEMICOLON
 
-%type <terminalParams> program functionset functionname function1 function2 ident declarationset declaration identifierset statementset statement varstatement ifstatement whilestatement dostatement continuestatement readstatement writestatement  returnstatement varset var bool-expr relation-exprset andororornot relation-expr comp expression expressionset term termset multordivormodoraddorsub
+%type <terminalParams> program functionset functionname function1 function2 ident declarationset 
+%type <terminalParams> declaration identifierset statementset statement varstatement ifstatement 
+%type <terminalParams> whilestatement dostatement continuestatement readstatement writestatement  
+%type <terminalParams> returnstatement varset var bool-expr relation-exprset andororornot 
+%type <terminalParams> relation-expr comp expression expressionset term termset 
+%type <terminalParams> multordivormodoraddorsub
 
 %% 
 program:	
@@ -121,15 +126,15 @@ functionset:
 functionname: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
 	FUNCTION ident SEMICOLON { 
 		functionTable->push_back(*($2->val));
-		keywordTable->push_back("beginparams"); keywordTable->push_back("endParams"); keywordTable->push_back("beginlocals"); 
-		keywordTable->push_back("endlocals"); keywordTable->push_back("beginbody"); keywordTable->push_back("endbody"); 
-		keywordTable->push_back("function"); keywordTable->push_back("integer"); keywordTable->push_back("array"); 
-		keywordTable->push_back("of"); keywordTable->push_back("if"); keywordTable->push_back("then");
-		keywordTable->push_back("endif"); keywordTable->push_back("else"); keywordTable->push_back("while"); 
-		keywordTable->push_back("do"); keywordTable->push_back("foreach"); keywordTable->push_back("in"); 
-		keywordTable->push_back("beginloop"); keywordTable->push_back("endloop"); keywordTable->push_back("continue"); 
-		keywordTable->push_back("read"); keywordTable->push_back("write"); keywordTable->push_back("true");
-		keywordTable->push_back("false"); keywordTable->push_back("return"); 
+		//keywordTable->push_back("beginparams"); keywordTable->push_back("endParams"); keywordTable->push_back("beginlocals"); 
+		//keywordTable->push_back("endlocals"); keywordTable->push_back("beginbody"); keywordTable->push_back("endbody"); 
+		//keywordTable->push_back("function"); keywordTable->push_back("integer"); keywordTable->push_back("array"); 
+		//keywordTable->push_back("of"); keywordTable->push_back("if"); keywordTable->push_back("then");
+		//keywordTable->push_back("endif"); keywordTable->push_back("else"); keywordTable->push_back("while"); 
+		//keywordTable->push_back("do"); keywordTable->push_back("foreach"); keywordTable->push_back("in"); 
+		//keywordTable->push_back("beginloop"); keywordTable->push_back("endloop"); keywordTable->push_back("continue"); 
+		//keywordTable->push_back("read"); keywordTable->push_back("write"); keywordTable->push_back("true");
+		//keywordTable->push_back("false"); keywordTable->push_back("return"); 
 		cout << "func " << *($2->val) << endl; 
 	};
 function1:
