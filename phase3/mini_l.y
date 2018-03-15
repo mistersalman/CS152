@@ -77,7 +77,7 @@ functionname: //not sure if having a non-terminal named function and a terminal 
 		keywordTable->push_back("beginloop"); keywordTable->push_back("endloop"); keywordTable->push_back("continue"); 
 		keywordTable->push_back("read"); keywordTable->push_back("write"); keywordTable->push_back("true");
 		keywordTable->push_back("false"); keywordTable->push_back("return"); 
-		cout << "func " << $2 << endl; 
+		cout << "func " << $2.val << endl; 
 	};
 function:
 	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { 
@@ -98,11 +98,11 @@ declaration:
 			if (findKeyword($1.valSet->at(i)))
 				yyerror("Declared a variable the same name as a reserved keyword.");
 			variableTable->push_back($1.valSet->at(i));
-			cout << ". " + $1.valSet->at(i) << endl;
-			string* temp = newtemp();
+			cout << ". " << $1.valSet->at(i) << endl;
+			string temp = newtemp();
 			symbolTable->push_back(temp);
-			cout << ". " + temp << endl;
-			cout << "= " + temp + ", " + $1.valSet->at(i) << endl;
+			cout << ". " << temp << endl;
+			cout << "= " << temp << ", " << $1.valSet->at(i) << endl;
 		}
 	} 
 	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {
@@ -115,11 +115,11 @@ declaration:
 			if (findKeyword($1.valSet->at(i)))
 				yyerror("Declared a variable the same name as a reserved keyword.");
 			variableTable->push_back($1.valSet->at(i));
-			cout << ".[] " + $1.valSet->at(i) + ", " + $5 << endl;
-			string* temp = newtemp();
+			cout << ".[] " << $1.valSet->at(i) << ", " << $5 << endl;
+			string temp = newtemp();
 			symbolTable->push_back(temp);
-			cout << ". " + temp << endl;
-			cout << "= " + temp + ", " + $1.valSet->at(i) << endl;
+			cout << ". " << temp << endl;
+			cout << "= " << temp << ", " << $1.valSet->at(i) << endl;
 		}
 	};
 identifierset:
@@ -450,7 +450,7 @@ int main(int argc, char **argv) {
    if (argc > 1) {
       yyin = fopen(argv[1], "r");
       if (yyin == NULL){
-         /*printf("syntax: %s filename\n", argv[0]);*/ cout << "Syntax: " + argv[0] + " filename" << endl;
+         /*printf("syntax: %s filename\n", argv[0]);*/ cout << "Syntax: " << argv[0] << " filename" << endl;
       }//end if
    }//end if
    yyparse(); // Calls yylex() for tokens.
@@ -459,5 +459,5 @@ int main(int argc, char **argv) {
 
 void yyerror(const char *msg) {
    /*printf("** Line %d, position %d: %s\n", currLine, currPos, msg);*/
-   cout << "** Line " + currLine + ", position " + currPos + ": " + msg << endl;
+   cout << "** Line " << currLine << ", position " << currPos + ": " << msg << endl;
 }
