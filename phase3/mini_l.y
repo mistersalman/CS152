@@ -9,8 +9,7 @@
  #include <iostream>
  using namespace std; //don't wanna add std:: to everything
  void yyerror(const char *msg);
- extern "C" int yyparse (void);
- extern "C" int yylex(void);
+ int yylex(void);
  extern int currLine;
  extern int currPos;
  FILE * yyin;
@@ -22,15 +21,7 @@
  struct exprParams {
 	int place;
 	};
- struct terminalParams {
-  	int place;
-  	string type;
-	string val;
-	string index;
-	vector<string>* valSet;
-	vector<varParams>* varSet;
-	vector<exprParams>* exprSet;
-	};
+ 
  vector <string>* symbolTable; 
  vector <string>* labelTable;
  vector <string>* functionTable;
@@ -90,18 +81,27 @@ bool findKeyword(string val)
 
 %}
 
-%language "c++"
-%define api.value.type variant
-
-
+%union{
+double dval;
+char* cval;
+struct {
+  	int place;
+  	string type;
+	string val;
+	string index;
+	vector<string>* valSet;
+	vector<varParams>* varSet;
+	vector<exprParams>* exprSet;
+	} terminalParams;
+}
 
 %error-verbose
 %start program
 %token SUB ADD MULT DIV MOD GT LT GTE LTE EQ NEQ L_PAREN R_PAREN ASSIGN COLON SEMICOLON NOT AND OR 
 %token L_SQUARE_BRACKET R_SQUARE_BRACKET COMMA BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY FUNCTION
 %token INTEGER ARRAY OF IF THEN ENDIF ELSE WHILE DO FOREACH IN BEGINLOOP ENDLOOP CONTINUE READ WRITE TRUE FALSE RETURN
-%token <double> NUMBER
-%token <char*> IDENT
+%token <dval> NUMBER
+%token <cval> IDENT
 
 %left BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY FUNCTION 
 %left INTEGER ARRAY OF IF THEN ENDIF ELSE WHILE DO FOREACH IN BEGINLOOP ENDLOOP CONTINUE READ WRITE RETURN
