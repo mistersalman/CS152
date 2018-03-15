@@ -30,11 +30,11 @@ struct semanticValues {
 	vector<exprParams>* exprSet;
 	} terminalParams;
  
- vector <string*>* symbolTable; 
- vector <string*>* labelTable;
- vector <string*>* functionTable;
- vector <string*>* variableTable;
- vector <string*>* keywordTable;
+ vector <string>* symbolTable; 
+ vector <string>* labelTable;
+ vector <string>* functionTable;
+ vector <string>* variableTable;
+ vector <string>* keywordTable;
  
  static int tempCount = -1;
 string newtemp()
