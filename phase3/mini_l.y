@@ -137,10 +137,10 @@ function:
 		cout << "endfunc" << endl; 
 	};
 ident:
-	IDENT {$$->val = new string($1); };
+	IDENT {$$->val = new string($1); cout << "ident->IDENT" << endl; };
 declarationset:
-	declaration SEMICOLON declarationset {} 
-	| {};
+	declaration SEMICOLON declarationset { cout << "declarationSet-> declaration SEMICOLON declarationset" << endl;} 
+	| { cout << "Epsilon" << endl;};
 declaration:
 	identifierset COLON INTEGER {
 		for (unsigned i = 0; i < $1->valSet->size(); i++)
@@ -454,7 +454,6 @@ multordivormodoraddorsub:
 
 
 int main(int argc, char **argv) {
-   cout << "made it to main function" << endl;
    yyparse(); // Calls yylex() for tokens.
    return 0;
 }
