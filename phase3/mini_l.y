@@ -238,29 +238,55 @@ var:
 
 
 bool-expr:
-	relation-exprset {};
+	relation-exprset {$$->place = $1->place;};
 relation-exprset:
-	relation-expr {} |
+	relation-expr {$$->place = $1->place;} |
 	relation-exprset andororornot relation-expr {
+	string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$->place = new int(symbolTable->size() - 1);
+		cout << ". " << temp << endl;
+		if (*($2->val) == "!")
+			cout << *($2->val) << temp << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
+		else
+			cout << *($2->val) << " " << temp << ", " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;	
 	};
 andororornot:
-	AND {}
-	| OR {}
-	| NOT {};
+	AND {$$->val = new string("&&");}
+	| OR {$$->val = new string("||");}
+	| NOT {$$->val = new string("!");};
 relation-expr:
 	expression comp expression {
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$->place = new int(symbolTable->size() - 1);
+		cout << ". " << temp << endl;
+		cout << *($2->val) << " " << temp << ", " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($1->place)) << endl; 
 	} 
 	| TRUE {
-		}
-	| FALSE {}
-	| L_PAREN bool-expr R_PAREN {};
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$->place = new int(symbolTable->size() - 1); 
+		cout << ". " << temp << endl;
+		cout << "= " << temp << ", " << "true";
+	}
+	| FALSE {
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$->place = new int(symbolTable->size() - 1); 
+		cout << ". " << temp << endl;
+		cout << "= " << temp << ", " << "false";
+	}
+	| L_PAREN bool-expr R_PAREN {
+		$$->place = $2->place;
+	};
 comp:
-	EQ { } 
-	| NEQ { } 
-	| LT {} 
-	| GT {} 
-	| LTE { } 
-	| GTE {  };
+	EQ {$$->val = new string("==" );} 
+	| NEQ {$$->val = new string("!=" );} 
+	| LT {$$->val = new string("<" );} 
+	| GT {$$->val = new string(">" );} 
+	| LTE {$$->val = new string("<=" );} 
+	| GTE {$$->val = new string(">=" );};
 
 expression:
 	termset { 
