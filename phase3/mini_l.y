@@ -12,7 +12,6 @@
  int yylex(void);
  extern int currLine;
  extern int currPos;
- FILE * yyin;
  struct varParams {
 	string type;
 	string index;
