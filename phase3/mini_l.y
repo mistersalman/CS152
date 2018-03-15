@@ -200,7 +200,7 @@ varstatement:
 	//this covers the case of dst = src and dst[index] = src but not dst = src[index]
 	var ASSIGN expression {
 		if ($1.type == "ARRAY")
-			cout << "[]= " << symbolTable->at($1.place) << ", " << symbolTable->at($1.index) << ", " << symbolTable->at($3.place) << endl;
+			cout << "[]= " << symbolTable->at($1.place) << ", " << $1.index << ", " << symbolTable->at($3.place) << endl;
 		else {
 			cout << "= " << symbolTable->at($1.place) << ", " << symbolTable->at($3.place) << endl;
 		}
