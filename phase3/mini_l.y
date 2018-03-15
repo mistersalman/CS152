@@ -14,7 +14,14 @@
  extern int currPos;
  FILE * yyin;
  using namespace std; //don't wanna add std:: to everything
-
+struct {
+		string type;
+		string index;
+		int place;
+	} varParams;
+	struct {
+		int place;
+	} exprParams;
  vector <string>* symbolTable; 
  vector <string>* labelTable;
  vector <string>* functionTable;
@@ -25,14 +32,6 @@
 %union{
   double dval;
   char* cval;
-  struct {
-		string type;
-		string index;
-		int place;
-	} varParams;
-	struct {
-		int place;
-	} exprParams;
   struct {
   	int place;
   	string type;
