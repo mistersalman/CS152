@@ -318,7 +318,7 @@ var:
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$.place = symbolTable->size() - 1;
-		$$.type = "ARRAY"
+		$$.type = "ARRAY";
 		$$.index = symbolTable->at($3.place);
 		cout << ". " << temp << endl;
 	};
@@ -454,7 +454,7 @@ int main(int argc, char **argv) {
    if (argc > 1) {
       yyin = fopen(argv[1], "r");
       if (yyin == NULL){
-         /*printf("syntax: %s filename\n", argv[0]);*/ cout << "Syntax: " << argv[0] << " filename" << endl;
+         cout << "Syntax: " << argv[0] << " filename" << endl;
       }//end if
    }//end if
    yyparse(); // Calls yylex() for tokens.
@@ -462,6 +462,5 @@ int main(int argc, char **argv) {
 }
 
 void yyerror(const char *msg) {
-   /*printf("** Line %d, position %d: %s\n", currLine, currPos, msg);*/
-   cout << "** Line " << currLine << ", position " << currPos + ": " << msg << endl;
+   cout << "** Line " << currLine << ", position " << currPos << ": " << msg << endl;
 }
