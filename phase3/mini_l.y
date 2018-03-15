@@ -291,16 +291,16 @@ varset:
 	var {
 		$$->varSet = new vector<varParams>();
 		varParams var;
-		var->place = $1->place;
-		var->type = $1->type;
-		var->index = $1->index;
+		var.place = $1->place;
+		var.type = $1->type;
+		var.index = $1->index;
 		$$->varSet->push_back(var);
 	}
 	| var COMMA varset {
 		varParams var;
-		var->place = $1->place;
-		var->type = $1->type;
-		var->index = $1->index;
+		var.place = $1->place;
+		var.type = $1->type;
+		var.index = $1->index;
 		$$->varSet->push_back(var);
 	};
 var:
@@ -382,12 +382,12 @@ expressionset:
 	expression {
 		$$->exprSet = new vector<exprParams>();
 		exprParams expr;
-		expr->place = $1->place;
+		expr.place = $1->place;
 		$$->exprSet->push_back(expr);
 	}
 	| expression COMMA expressionset {
 		exprParams expr;
-		expr->place = $1->place;
+		expr.place = $1->place;
 		$$->exprSet->push_back(expr);		
 	};
 term:
@@ -410,7 +410,7 @@ term:
 			yyerror("Calling a function not previously defined.");
 		string temp = newtemp();
 		symbolTable->push_back(temp);
-		$->.place = symbolTable->size() - 1;	
+		$->place = symbolTable->size() - 1;	
 		cout << ". " << temp << endl;
 		cout << "call " << $1->val << ", " << temp << endl;
 	 } 
