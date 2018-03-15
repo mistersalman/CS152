@@ -121,6 +121,7 @@ functionset:
 functionname: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
 	FUNCTION ident SEMICOLON { 
 		cout << "success" << endl;
+		cout << $2->val << endl;
 	};
 function:
 	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { 
@@ -128,7 +129,7 @@ function:
 	cout << "endfunc" << endl; 
 	};
 ident:
-	IDENT { };
+	IDENT {$$->val = string($1); };
 declarationset:
 	declaration SEMICOLON declarationset {} 
 	| {};
