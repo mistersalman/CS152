@@ -60,8 +60,7 @@ bool findVariable(string val)
 			return 1;
 		}
 	}
-	return 0;
-}
+	return 0;}
 
 bool findFunction(string val)
 {
@@ -121,7 +120,7 @@ functionset:
 	| {};
 functionname: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
 	FUNCTION ident SEMICOLON { 
-		functionTable->push_back($2.val);
+		functionTable->push_back($2->val);
 		keywordTable->push_back("beginparams"); keywordTable->push_back("endParams"); keywordTable->push_back("beginlocals"); 
 		keywordTable->push_back("endlocals"); keywordTable->push_back("beginbody"); keywordTable->push_back("endbody"); 
 		keywordTable->push_back("function"); keywordTable->push_back("integer"); keywordTable->push_back("array"); 
@@ -139,51 +138,51 @@ function:
 	cout << "endfunc" << endl; 
 	};
 ident:
-	IDENT { $$.val = string($1); };
+	IDENT { $$->val = string($1); };
 declarationset:
 	declaration SEMICOLON declarationset {} 
 	| {};
 declaration:
 	identifierset COLON INTEGER {
-		for (unsigned i = 0; i < $1.valSet->size(); i++)
+		for (unsigned i = 0; i < $1->valSet->size(); i++)
 		{
-			if (findVariable($1.valSet->at(i))) //also needs to check if variable is same name as mini-l program itself
+			if (findVariable($1->valSet->at(i))) //also needs to check if variable is same name as mini-l program itself
 				yyerror("Variable is multiply-defined.");
-			if (findKeyword($1.valSet->at(i)))
+			if (findKeyword($1->valSet->at(i)))
 				yyerror("Declared a variable the same name as a reserved keyword.");
-			variableTable->push_back($1.valSet->at(i));
-			cout << ". " << $1.valSet->at(i) << endl;
+			variableTable->push_back($1->valSet->at(i));
+			cout << ". " << $1->valSet->at(i) << endl;
 			string temp = newtemp();
 			symbolTable->push_back(temp);
 			cout << ". " << temp << endl;
-			cout << "= " << temp << ", " << $1.valSet->at(i) << endl;
+			cout << "= " << temp << ", " << $1->valSet->at(i) << endl;
 		}
 	} 
 	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {
-		for (unsigned i = 0; i < $1.valSet->size(); i++)
+		for (unsigned i = 0; i < $1->valSet->size(); i++)
 		{
 			if ($5 < 1)
 				yyerror("Declared an array of size <= 0");
-			if (findVariable($1.valSet->at(i))) //also needs to check if variable is same name as mini-l program itself
+			if (findVariable($1->valSet->at(i))) //also needs to check if variable is same name as mini-l program itself
 				yyerror("Variable is multiply-defined.");
-			if (findKeyword($1.valSet->at(i)))
+			if (findKeyword($1->valSet->at(i)))
 				yyerror("Declared a variable the same name as a reserved keyword.");
-			variableTable->push_back($1.valSet->at(i));
-			cout << ".[] " << $1.valSet->at(i) << ", " << $5 << endl;
+			variableTable->push_back($1->valSet->at(i));
+			cout << ".[] " << $1->valSet->at(i) << ", " << $5 << endl;
 			string temp = newtemp();
 			symbolTable->push_back(temp);
 			cout << ". " << temp << endl;
-			cout << "= " << temp << ", " << $1.valSet->at(i) << endl;
+			cout << "= " << temp << ", " << $1->valSet->at(i) << endl;
 		}
 	};
 identifierset:
 	ident { 
-		$$.valSet = new vector<string>();
-		$$.valSet->push_back($1.val); 
+		$$->valSet = new vector<string>();
+		$$->valSet->push_back($1->val); 
 		}
 	| ident COMMA identifierset { 
-		$$.valSet = $3.valSet;
-		$$.valSet->push_back($1.val);
+		$$->valSet = $3->valSet;
+		$$->valSet->push_back($1->val);
 	 };
 statementset:
 	statement SEMICOLON statementset {} 
@@ -201,10 +200,10 @@ statement:
 varstatement:
 	//this covers the case of dst = src and dst[index] = src but not dst = src[index]
 	var ASSIGN expression {
-		if ($1.type == "ARRAY")
-			cout << "[]= " << symbolTable->at($1.place) << ", " << $1.index << ", " << symbolTable->at($3.place) << endl;
+		if ($1->type == "ARRAY")
+			cout << "[]= " << symbolTable->at($1->place) << ", " << $1->index << ", " << symbolTable->at($3->place) << endl;
 		else {
-			cout << "= " << symbolTable->at($1.place) << ", " << symbolTable->at($3.place) << endl;
+			cout << "= " << symbolTable->at($1->place) << ", " << symbolTable->at($3->place) << endl;
 		}
 	};
 ifstatement:
