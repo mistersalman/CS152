@@ -143,6 +143,7 @@ declarationset:
 	| { cout << "Epsilon" << endl;};
 declaration:
 	identifierset COLON INTEGER {
+	cout << "declaration -> identifierset COLON INTEGER" << endl;
 		for (unsigned i = 0; i < $1->valSet->size(); i++)
 		{
 			if (findVariable($1->valSet->at(i))) //also needs to check if variable is same name as mini-l program itself
@@ -158,6 +159,7 @@ declaration:
 		}
 	} 
 	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {
+	cout << "declaration -> identifierset COLON ARRAY BRACKET NUMBER BRACKET OF INTEGER" << endl;
 		for (unsigned i = 0; i < $1->valSet->size(); i++)
 		{
 			if ($5 < 1)
@@ -176,10 +178,12 @@ declaration:
 	};
 identifierset:
 	ident { 
+		cout << "identifierset -> ident" << endl;
 		$$->valSet = new vector<string>();
 		$$->valSet->push_back(*($1->val));
 		}
 	| ident COMMA identifierset { 
+		cout << "identifierset -> ident COMMA identifierset" << endl;
 		$$->valSet = $3->valSet;
 		$$->valSet->push_back(*($1->val));
 	 };
