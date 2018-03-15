@@ -114,8 +114,8 @@ struct semanticValues* terminalParams;
 %% 
 program:	
 	functionset { 
-		if (!findFunction("main"))
-			yyerror("Main function has not been defined.");			
+		//if (!findFunction("main"))
+		//	yyerror("Main function has not been defined.");			
 	};
 functionset:
 	functionname function functionset {} 
@@ -455,7 +455,7 @@ multordivormodoraddorsub:
 
 
 int main(int argc, char **argv) {
-   
+   cout << "made it to main function" << endl;
    yyparse(); // Calls yylex() for tokens.
    return 0;
 }
