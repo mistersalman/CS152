@@ -7,12 +7,12 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include <iostream>
+ using namespace std; //don't wanna add std:: to everything
  int yylex(void);
  void yyerror(const char *msg);
  extern int currLine;
  extern int currPos;
  FILE * yyin;
- using namespace std; //don't wanna add std:: to everything
  struct varParams {
 	string type;
 	string index;
