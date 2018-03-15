@@ -267,20 +267,20 @@ readstatement:
 	READ varset {
 		for (unsigned i = 0; i < $2->varSet->size(); i++)
 		{
-			if ($2->varSet->at(i)->type == "ARRAY")
-				cout << ".[]< " << symbolTable->at($2->varSet->at(i)->place) << $2->varSet->at(i)->index << endl;
+			if ($2->varSet->at(i).type == "ARRAY")
+				cout << ".[]< " << symbolTable->at($2->varSet->at(i).place) << $2->varSet->at(i).index << endl;
 			else
-				cout << ".< " << symbolTable->at($2->varSet->at(i)->place) << endl;
+				cout << ".< " << symbolTable->at($2->varSet->at(i).place) << endl;
 		}
 	};
 writestatement:
 	WRITE varset {
 		for (unsigned i = 0; i < $2->varSet->size(); i++)
 		{
-			if ($2->varSet->at(i)->type == "ARRAY")
-				cout << ".[]< " << symbolTable->at($2->varSet->at(i).place) << $2->varSet->at(i)->index << endl;
+			if ($2->varSet->at(i).type == "ARRAY")
+				cout << ".[]< " << symbolTable->at($2->varSet->at(i).place) << $2->varSet->at(i).index << endl;
 			else
-				cout << ".< " << symbolTable->at($2->varSet->at(i)->place) << endl;
+				cout << ".< " << symbolTable->at($2->varSet->at(i).place) << endl;
 		}
 	};
 returnstatement:
