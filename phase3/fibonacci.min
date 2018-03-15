@@ -1,4 +1,3 @@
-
 function fibonacci;
 beginparams
 	k : integer;
