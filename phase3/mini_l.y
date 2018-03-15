@@ -9,7 +9,7 @@
  #include <iostream>
  using namespace std; //don't wanna add std:: to everything
  void yyerror(const char *msg);
- int yylex(void);
+ FILE* yyin;
  extern int currLine;
  extern int currPos;
  struct varParams {
