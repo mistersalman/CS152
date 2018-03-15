@@ -15,11 +15,11 @@
  FILE * yyin;
  using namespace std; //don't wanna add std:: to everything
 
- vector <string> symbolTable; 
- vector <string> labelTable;
- vector <string> functionTable;
- vector <string> variableTable;
- vector <string> keywordTable;
+ vector <string>* symbolTable; 
+ vector <string>* labelTable;
+ vector <string>* functionTable;
+ vector <string>* variableTable;
+ vector <string>* keywordTable;
 %}
 
 %union{
@@ -37,9 +37,9 @@
   	int place;
   	string type;
 	string val;
-	vector<string> valSet;
-	vector<varParams> varSet;
-	vector<exprParams> exprSet;
+	vector<string>* valSet;
+	vector<varParams>* varSet;
+	vector<exprParams>* exprSet;
 
 } terminalParams;
 }
@@ -417,11 +417,11 @@ string newtemp()
 	return "__temp__" + tempCount;
 }
 
-static int labelCount = 0;
-string* newlabel()
+static int labelCount = -1;
+string newlabel()
 {
-	string* label = "__label__" + string(labelCount++);
-	return label;
+	labelCount++;
+	return "__label__" + labelCount;
 }
 
 bool findVariable(string val) 
