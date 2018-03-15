@@ -9,7 +9,7 @@
  #include <iostream>
  using namespace std; //don't wanna add std:: to everything
  void yyerror(const char *msg);
- FILE* yyin;
+ int yylex(void);
  extern int currLine;
  extern int currPos;
  struct varParams {
@@ -452,12 +452,7 @@ multordivormodoraddorsub:
 
 
 int main(int argc, char **argv) {
-   if (argc > 1) {
-      yyin = fopen(argv[1], "r");
-      if (yyin == NULL){
-         cout << "Syntax: " << argv[0] << " filename" << endl;
-      }//end if
-   }//end if
+   
    yyparse(); // Calls yylex() for tokens.
    return 0;
 }
