@@ -89,7 +89,7 @@ bool findKeyword(string val)
 	return 0;
 }
 
-FILE* yyTemp;
+extern FILE* yyin;
 %}
 %union{
 double dval;
@@ -461,8 +461,8 @@ multordivormodoraddorsub:
 
 int main(int argc, char **argv) {
    if (argc > 1) {
-      	 yyTemp = fopen(argv[1], "r");
-   	 if (yyTemp == NULL){
+      	 yyin = fopen(argv[1], "r");
+   	 if (yyin == NULL){
          	printf("syntax: %s filename\n", argv[0]);
       }//end if
 
