@@ -264,34 +264,75 @@ comp:
 
 expression:
 	termset { 
+		$$->place = $1->place;
 	};
 expressionset:
 	expression {
+		$$->exprSet = new vector<exprParams>();
+		exprParams expr;
+		expr.place = $1->place;
+		$$->exprSet->push_back(expr);
 	}
 	| expression COMMA expressionset {
-		
+		exprParams expr;
+		expr.place = $1->place;
+		$$->exprSet->push_back(expr);	
 	};
 term:
 	var { 
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$->place = new int(symbolTable->size() - 1);
+		cout << ". " << temp << endl;
+		cout << "= " << temp << ", " << *($1->val) << endl;
 	 } 
 	| NUMBER { 
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$->place = new int(symbolTable->size() - 1);	
+		cout << ". " << temp << endl;
+		cout << "= " << temp << ", " << $1 << endl;
 	} 
 	| ident L_PAREN R_PAREN { 
+		if (!findFunction(*($1->val)))
+			yyerror("Calling a function not previously defined.");
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$->place = new int(symbolTable->size() - 1);	
+		cout << ". " << temp << endl;
+		cout << "call " << *($1->val) << ", " << temp << endl;
 	 } 
 	| L_PAREN expression R_PAREN { 
-		}
+		$$->place = $2->place; 
+	}
 	| ident L_PAREN expressionset R_PAREN { 
-
+		if (!findFunction(*($1->val)))
+			yyerror("Calling a function not previously defined.");
+		for (unsigned i = 0; i < $3->exprSet->size(); i++)
+		{
+			cout << "param " << symbolTable->at(*($3->exprSet->at(i).place)) << endl;
+		}
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$->place = new int(symbolTable->size() - 1);	
+		cout << ". " << temp << endl;
+		cout << "call " << *($1->val) << ", " << temp << endl;
 	 };
 termset:
-	term {}
+	term { $$->place = $1->place;}
 	| termset multordivormodoraddorsub term {
+		string temp = newtemp();		
+		symbolTable->push_back(temp);
+		$$->place = new int(symbolTable->size() - 1);
+		cout << ". " << temp << endl;
+		cout << *($2->val) << " " << temp << ", " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
 	};
 multordivormodoraddorsub:
-	MULT {} 
-	| DIV {} 	| MOD {}
-	| ADD {}
-	| SUB {};
+	MULT {$$->val = new string("*");} 
+	| DIV {$$->val = new string("/");} 	
+	| MOD {$$->val = new string("%");}
+	| ADD {$$->val = new string("+");}
+	| SUB {$$->val = new string("-");};
 
 %%
 
