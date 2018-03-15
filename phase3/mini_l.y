@@ -58,7 +58,7 @@ bool findVariable(string val)
 {
 	for(int i = 0; i < variableTable->size(); i++)
 	{
-		if(variableTable->at(i)->compare(val) == 0)
+		if(variableTable->at(i).compare(val) == 0)
 		{
 			return 1;
 		}
@@ -70,7 +70,7 @@ bool findFunction(string val)
 {
 	for(int i = 0; i < functionTable->size(); i++)
 	{
-		if(functionTable->at(i)->compare(val) == 0)
+		if(functionTable->at(i).compare(val) == 0)
 
 {
 			return 1;
@@ -83,7 +83,7 @@ bool findKeyword(string val)
 {
 	for(int i = 0; i < keywordTable->size(); i++)
 	{
-		if(keywordTable->at(i)->compare(val) == 0)
+		if(keywordTable->at(i).compare(val) == 0)
 		{
 			return 1;
 		}
