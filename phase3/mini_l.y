@@ -9,6 +9,7 @@
  #include <iostream>
  using namespace std; //don't wanna add std:: to everything
  void yyerror(const char *msg);
+ extern "C" int yyparse (void);
  extern int currLine;
  extern int currPos;
  FILE * yyin;
