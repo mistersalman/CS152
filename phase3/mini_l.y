@@ -13,12 +13,12 @@
  extern int currLine;
  extern int currPos;
  struct varParams {
-	string type;
-	string index;
-	int place;
+	string* type;
+	string* index;
+	int* place;
 	};
  struct exprParams {
-	int place;
+	int* place;
 	};
 struct semanticValues {
   	int* place;
