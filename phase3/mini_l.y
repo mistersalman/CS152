@@ -40,21 +40,25 @@ struct semanticValues {
 string newtemp()
 {
 	tempCount++;
-	return new string("__temp__" + tempCount);
+	//return new string("__temp__" + tempCount);
+	string nT = "__temp__" + tempCount;
+	return nT;
 }
 
 static int labelCount = -1;
 string newlabel()
 {
 	labelCount++;
-	return new string("__label__" + labelCount);
+	//return new string("__label__" + labelCount);
+	string nL = "__label__" + labelCount;
+	return nL;
 }
 
 bool findVariable(string val) 
 {
 	for(int i = 0; i < variableTable->size(); i++)
 	{
-		if(variableTable->at(i).compare(val) == 0)
+		if(variableTable->at(i)->compare(val) == 0)
 		{
 			return 1;
 		}
@@ -66,7 +70,7 @@ bool findFunction(string val)
 {
 	for(int i = 0; i < functionTable->size(); i++)
 	{
-		if(functionTable->at(i).compare(val) == 0)
+		if(functionTable->at(i)->compare(val) == 0)
 
 {
 			return 1;
@@ -79,7 +83,7 @@ bool findKeyword(string val)
 {
 	for(int i = 0; i < keywordTable->size(); i++)
 	{
-		if(keywordTable->at(i).compare(val) == 0)
+		if(keywordTable->at(i)->compare(val) == 0)
 		{
 			return 1;
 		}
