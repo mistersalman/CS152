@@ -67,7 +67,8 @@ bool findFunction(string val)
 	for(int i = 0; i < functionTable->size(); i++)
 	{
 		if(functionTable->at(i).compare(val) == 0)
-		{
+
+{
 			return 1;
 		}
 	}
@@ -85,7 +86,7 @@ bool findKeyword(string val)
 	}
 	return 0;
 }
-#include "y.tab.h"
+#include "y.tab.c"
 %}
 
 %language "c++"
