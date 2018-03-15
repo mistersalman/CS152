@@ -92,7 +92,7 @@ bool findKeyword(string val)
 %union{
 double dval;
 char* cval;
-struct semanticValues terminalParams;
+struct semanticValues* terminalParams;
 }
 
 %error-verbose
