@@ -90,6 +90,7 @@ bool findKeyword(string val)
 
 %}
 
+%language "c++"
 %define api.value.type variant
 
 
