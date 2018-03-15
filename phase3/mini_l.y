@@ -21,6 +21,15 @@
  struct exprParams {
 	int place;
 	};
+struct semanticValues {
+  	int place;
+  	string type;
+	string val;
+	string index;
+	vector<string>* valSet;
+	vector<varParams>* varSet;
+	vector<exprParams>* exprSet;
+	} terminalParams;
  
  vector <string>* symbolTable; 
  vector <string>* labelTable;
@@ -83,15 +92,7 @@ bool findKeyword(string val)
 %union{
 double dval;
 char* cval;
-struct a*{
-  	int place;
-  	string type;
-	string val;
-	string index;
-	vector<string>* valSet;
-	vector<varParams>* varSet;
-	vector<exprParams>* exprSet;
-	} terminalParams;
+struct semanticValues terminalParams;
 }
 
 %error-verbose
