@@ -109,14 +109,14 @@ struct semanticValues* terminalParams;
 %left MOD GT LT GTE LTE EQ NEQ NOT AND OR TRUE FALSE SUB ADD MULT DIV L_PAREN R_PAREN
 %left L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN COMMA COLON SEMICOLON
 
-%type <terminalParams> program functionset functionname function ident declarationset declaration identifierset statementset statement varstatement ifstatement whilestatement dostatement continuestatement readstatement writestatement  returnstatement varset var bool-expr relation-exprset andororornot relation-expr comp expression expressionset term termset multordivormodoraddorsub
+%type <terminalParams> program functionset functionname function1 function2 ident declarationset declaration identifierset statementset statement varstatement ifstatement whilestatement dostatement continuestatement readstatement writestatement  returnstatement varset var bool-expr relation-exprset andororornot relation-expr comp expression expressionset term termset multordivormodoraddorsub
 
 %% 
 program:	
 	functionset { 		
 	};
 functionset:
-	functionname function functionset {} 
+	functionname function1 function2 functionset {} 
 	| {};
 functionname: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
 	FUNCTION ident SEMICOLON { 
@@ -132,8 +132,12 @@ functionname: //not sure if having a non-terminal named function and a terminal 
 		keywordTable->push_back("false"); keywordTable->push_back("return"); 
 		cout << "func " << *($2->val) << endl; 
 	};
-function:
-	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { 	
+function1:
+	BEGIN_PARAMS { 	
+		cout << "function1 -> BEGIN_PARAMS" << endl; 
+	};
+function2:
+	declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { 	
 		cout << "endfunc" << endl; 
 	};
 ident:
