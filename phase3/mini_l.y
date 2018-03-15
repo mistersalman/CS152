@@ -204,14 +204,14 @@ dostatement:
 
 continuestatement:
 	CONTINUE {
-		if (labelTable.size() < 1)
+		if (labelTable->size() < 1)
 			yyerror("continue statement not within a loop.");
 		cout << ";= " << labelTable->at(labelTable->size() - 1) << endl;
 		labelTable->pop_back();
 	};
 readstatement:
 	READ varset {
-		for (unsigned i = 0; i < $2.varSet.size(); i++)
+		for (unsigned i = 0; i < $2.varSet->size(); i++)
 		{
 			if ($2.varSet->at(i).type == "ARRAY")
 				cout << ".[]< " << symbolTable->at($2.varSet->at(i).place) << $2.varSet->at(i).index << endl;
@@ -221,7 +221,7 @@ readstatement:
 	};
 writestatement:
 	WRITE varset {
-		for (unsigned i = 0; i < $2.varSet.size(); i++)
+		for (unsigned i = 0; i < $2.varSet->size(); i++)
 		{
 			if ($2.varSet->at(i).type == "ARRAY")
 				cout << ".[]< " << symbolTable->at($2.varSet->at(i).place) << $2.varSet->at(i).index << endl;
@@ -281,7 +281,7 @@ relation-exprset:
 		symbolTable->push_back(temp);
 		$$.place = symbolTable->size() - 1;
 		cout << ". " + temp << endl;
-		if ($2val == "!")
+		if ($2.val == "!")
 			cout << $2.val << temp << symbolTable->at($1.place) << ", " << symbolTable->at($3.place) << endl;
 		else
 			cout << $2.val << " " << temp << ", " << symbolTable->at($1.place) << ", " symbolTable->at($3.place) << endl;
@@ -366,7 +366,7 @@ term:
 	| ident L_PAREN expressionset R_PAREN { 
 		if (!findFunction($1.val))
 			yyerror("Calling a function not previously defined.");
-		for (unsigned i = 0; i < $3.exprSet.size(); i++)
+		for (unsigned i = 0; i < $3.exprSet->size(); i++)
 		{
 			cout << "param " << symbolTable->at($3.experSet->at(i).place) << endl;
 		}
@@ -397,20 +397,20 @@ multordivormodoraddorsub:
 //and avoid using char array pointers as strings
 
 static int tempCount = -1;
-inline string newtemp()
+string newtemp()
 {
 	tempCount++;
 	return "__temp__" + tempCount;
 }
 
 static int labelCount = -1;
-inline string newlabel()
+string newlabel()
 {
 	labelCount++;
 	return "__label__" + labelCount;
 }
 
-inline bool findVariable(string val) 
+bool findVariable(string val) 
 {
 	for(int i = 0; i < variableTable->size(); i++)
 	{
@@ -422,7 +422,7 @@ inline bool findVariable(string val)
 	return 0;
 }
 
-inline bool findFunction(string val)
+bool findFunction(string val)
 {
 	for(int i = 0; i < functionTable->size(); i++)
 	{
@@ -434,7 +434,7 @@ inline bool findFunction(string val)
 	return 0;
 }
 
-inline bool findKeyword(string val)
+bool findKeyword(string val)
 {
 	for(int i = 0; i < keywordTable->size(); i++)
 	{
