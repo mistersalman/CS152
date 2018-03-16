@@ -11,7 +11,6 @@
  extern int currPos;
  extern FILE* yyin;
  stringstream mil_code;
- static bool isBeginParams = true;
  vector <string>* symbolTable = new vector<string>(); 
  vector <string>* labelTable = new vector<string>();
  vector <string>* functionTable = new vector<string>();
@@ -92,8 +91,8 @@ struct semanticValues terminalParams;
 %left MOD GT LT GTE LTE EQ NEQ NOT AND OR TRUE FALSE SUB ADD MULT DIV L_PAREN R_PAREN
 %left L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN COMMA COLON SEMICOLON
 
-%type <terminalParams> program functionset functionname function ident declarationset 
-%type <terminalParams> declaration identifierset statementset statement varstatement ifstatement1 /*ifstatement2*/ ifstatement3 
+%type <terminalParams> program functionset functionname function ident declarationsetp declarationsetl 
+%type <terminalParams> declarationp declarationl identifierset statementset statement varstatement ifstatement1 /*ifstatement2*/ ifstatement3 
 %type <terminalParams> whilestatement1 whilestatement2 dostatement1 dostatement2 continuestatement readstatement writestatement  
 %type <terminalParams> returnstatement varset var bool-expr relation-exprset andororornot 
 %type <terminalParams> relation-expr comp expression expressionset term termset 
@@ -122,7 +121,7 @@ functionname: //not sure if having a non-terminal named function and a terminal 
 	};
 	
 function:
-	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { 	
+	BEGIN_PARAMS declarationsetp END_PARAMS BEGIN_LOCALS declarationsetl END_LOCALS BEGIN_BODY statementset END_BODY { 	
 		mil_code << "endfunc" << endl; 
 	};
 ident:
@@ -130,10 +129,10 @@ ident:
 		$$.val = new string($1); 
 		
 		};
-declarationset:
-	declaration SEMICOLON declarationset { } 
+declarationsetp:
+	declarationp SEMICOLON declarationsetp { } 
 	| {};
-declaration:
+declarationp:
 	identifierset COLON INTEGER {
 		for (unsigned i = 0; i < $1.valSet->size(); i++)
 		{
@@ -145,14 +144,13 @@ declaration:
 			mil_code << ". " << $1.valSet->at(i) << endl;
 			string temp = newtemp();
 			symbolTable->push_back(temp);
-			if(symbolTable->size() == 1 && isBeginParams)
+			if(symbolTable->size() == 1)
 			{
 				mil_code << "= " << $1.valSet->at(i) << ", " << "$0" << endl;
 			}
 			mil_code << ". " << temp << endl;
 			mil_code << "= " << temp << ", " << $1.valSet->at(i) << endl;
 		}
-		isBeginParams = false;
 	} 
 	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {
 		for (unsigned i = 0; i < $1.valSet->size(); i++)
@@ -167,16 +165,51 @@ declaration:
 			mil_code << ".[] " << $1.valSet->at(i) << ", " << $5 << endl;
 			string temp = newtemp();
 			symbolTable->push_back(temp);
-			if(symbolTable->size() == 1 && isBeginParams)
+			if(symbolTable->size() == 1)
 			{
 				mil_code << "= " << $1.valSet->at(i) << ", " << "$0" << endl;
 			}
 			mil_code << ". " << temp << endl;
 			mil_code << "= " << temp << ", " << $1.valSet->at(i) << endl;
 		}
-		isBeginParams = false;
-	}
-	| {isBeginParams = false;};
+	};
+	
+declarationsetl:
+	declarationl SEMICOLON declarationsetl { } 
+	| {};
+declarationl:
+	identifierset COLON INTEGER {
+		for (unsigned i = 0; i < $1.valSet->size(); i++)
+		{
+			if (findVariable($1.valSet->at(i))) //also needs to check if variable is same name as mini-l program itself
+				yyerror("Variable is multiply-defined.");
+			if (findKeyword($1.valSet->at(i)))
+				yyerror("Declared a variable the same name as a reserved keyword.");
+			variableTable->push_back($1.valSet->at(i));
+			mil_code << ". " << $1.valSet->at(i) << endl;
+			string temp = newtemp();
+			symbolTable->push_back(temp);
+			mil_code << ". " << temp << endl;
+			mil_code << "= " << temp << ", " << $1.valSet->at(i) << endl;
+		}
+	} 
+	| identifierset COLON ARRAY L_SQUARE_BRACKET NUMBER R_SQUARE_BRACKET OF INTEGER {
+		for (unsigned i = 0; i < $1.valSet->size(); i++)
+		{
+			if ($5 < 1)
+				yyerror("Declared an array of size <= 0");
+			if (findVariable($1.valSet->at(i))) //also needs to check if variable is same name as mini-l program itself
+				yyerror("Variable is multiply-defined.");
+			if (findKeyword($1.valSet->at(i)))
+				yyerror("Declared a variable the same name as a reserved keyword.");
+			variableTable->push_back($1.valSet->at(i));
+			mil_code << ".[] " << $1.valSet->at(i) << ", " << $5 << endl;
+			string temp = newtemp();
+			symbolTable->push_back(temp);
+			mil_code << ". " << temp << endl;
+			mil_code << "= " << temp << ", " << $1.valSet->at(i) << endl;
+		}
+	};
 identifierset:
 	ident { 
 		$$.valSet = new vector<string>();
