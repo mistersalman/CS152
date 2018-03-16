@@ -291,14 +291,14 @@ writestatement:
 		for (unsigned i = 0; i < $2->varSet->size(); i++)
 		{
 			if (*($2->varSet->at(i).type) == "ARRAY")
-				cout << ".[]> " << symbolTable->at(*($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
+				cout << ".[]> " << symbolTable->at(stoi(*($2->varSet->at(i).place))) << *($2->varSet->at(i).index) << endl;
 			else
-				cout << ".> " << symbolTable->at(*($2->varSet->at(i).place)) << endl;
+				cout << ".> " << symbolTable->at(stoi(*($2->varSet->at(i).place))) << endl;
 		}
 	};
 returnstatement:
 	RETURN expression { 
-		cout << "ret " << symbolTable->at(*($2->place)) << endl;
+		cout << "ret " << symbolTable->at(stoi(*($2->place))) << endl;
 	};
 varset:
 	var {
