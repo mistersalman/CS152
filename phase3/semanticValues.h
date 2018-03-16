@@ -12,6 +12,7 @@
 	string* type;
 	string* index;
 	int* place;
+	string* val;
 	};
  struct exprParams {
 	int* place;
