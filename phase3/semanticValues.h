@@ -24,5 +24,5 @@ struct semanticValues {
 	  vector<string>* valSet;
 	  vector<varParams>* varSet;
 	  vector<exprParams>* exprSet;
-} 
+}
 #endif
