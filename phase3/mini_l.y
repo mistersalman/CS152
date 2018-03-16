@@ -16,13 +16,13 @@
  struct varParams {
 	string* type;
 	string* index;
-	int* place;
+	int place;
 	};
  struct exprParams {
-	int* place;
+	int place;
 	};
 struct semanticValues {
-  	int* place;
+  	int place;
   	string* type;
 	string* val;
 	string* index;
