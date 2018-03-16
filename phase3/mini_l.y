@@ -467,7 +467,7 @@ termset:
 	| termset multordivormodoraddorsub term {
 		string temp = newtemp();		
 		symbolTable->push_back(temp);
-		$$->place = new int(symbolTable->size() - 1);
+		*($$->place) = new int(symbolTable->size() - 1);
 		cout << ". " << temp << endl;
 		cout << *($2->val) << " " << temp << ", " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
 	};
