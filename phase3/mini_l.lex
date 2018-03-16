@@ -3,6 +3,7 @@
    /* Written by Sal n Ryan */
 
 %{   
+   #include "semanticValues.h"
    #include "y.tab.h"
    int currLine = 1, currPos = 1;
 %}
