@@ -1,4 +1,4 @@
-/* mini_l syntax parser
+* mini_l syntax parser
    Written by Ryan Gray and Salman Azmi
    CS152 WINTER 18 */
 %{
@@ -16,13 +16,13 @@
  struct varParams {
 	string* type;
 	string* index;
-	string* place;
+	int* place;
 	};
  struct exprParams {
-	string* place;
+	int* place;
 	};
 struct semanticValues {
-  	string* place;
+  	int* place;
   	string* type;
 	string* val;
 	string* index;
@@ -213,9 +213,9 @@ varstatement:
 	var ASSIGN expression {
 		cout << "varstatement -> var ASSIGN expression " << endl;
 		if (*($1->type) == "ARRAY")
-			cout << "[]= " << symbolTable->at(stoi(*($1->place))) << ", " << *($1->index) << ", " << symbolTable->at(stoi(*($3->place))) << endl;
+			cout << "[]= " << symbolTable->at(*($1->place)) << ", " << *($1->index) << ", " << symbolTable->at(*($3->place)) << endl;
 		else {
-			cout << "= " << symbolTable->at(stoi(*($1->place))) << ", " << symbolTable->at(stoi(*($3->place))) << endl;
+			cout << "= " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
 		}
 	};
 ifstatement:
@@ -224,7 +224,7 @@ ifstatement:
 		string label1 = newlabel();
 		string label2 = newlabel();
 		string label3 = newlabel();
-		cout << "?:= " << label1 << ", " << symbolTable->at(stoi(*($2->place))) << endl;
+		cout << "?:= " << label1 << ", " << symbolTable->at(*($2->place)) << endl;
 		cout << ":= " << label2 << endl;
 		cout << ": " << label1 << endl;
 		//cout << $4.val;
@@ -237,7 +237,7 @@ ifstatement:
 		cout << "ifstatement -> IF bool-expr THEN statementset ENDIF" << endl;
 		string label1 = newlabel();
 		string label2 = newlabel();
-		cout << "?:= " << label1 << ", " << symbolTable->at(stoi(*($2->place))) << endl;
+		cout << "?:= " << label1 << ", " << symbolTable->at(*($2->place)) << endl;
 		cout << ":= " << label2 << endl;
 		cout << ": " << label1 << endl;
 		//cout << $4.code;
@@ -251,7 +251,7 @@ whilestatement:
 		string label3 = newlabel();
 		labelTable->push_back(label3);
 		cout << ": " << label1 << endl;
-		cout << "?:= " << label2 << ", " << symbolTable->at(stoi(*($2->place))) << endl;
+		cout << "?:= " << label2 << ", " << symbolTable->at(*($2->place)) << endl;
 		cout << ":= " << label3 << endl;
 		cout << ": " << label2 << endl;
 		//cout << $4.code << endl;
@@ -265,7 +265,7 @@ dostatement:
 		labelTable->push_back(label2);
 		cout << ": " << label1 << endl;
 		//cout << $3.code;
-		cout << "?:= " << label1 << ", " << symbolTable->at(stoi(*($6->place))) << endl;
+		cout << "?:= " << label1 << ", " << symbolTable->at(*($6->place)) << endl;
 		cout << ": " << label2 << endl;
 	};
 
@@ -281,9 +281,9 @@ readstatement:
 		for (unsigned i = 0; i < $2->varSet->size(); i++)
 		{
 			if (*($2->varSet->at(i).type) == "ARRAY")
-				cout << ".[]< " << symbolTable->at(stoi(*($2->varSet->at(i).place))) << *($2->varSet->at(i).index) << endl;
+				cout << ".[]< " << symbolTable->at(*($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
 			else
-				cout << ".< " << symbolTable->at(stoi(*($2->varSet->at(i).place))) << endl;
+				cout << ".< " << symbolTable->at(*($2->varSet->at(i).place)) << endl;
 		}
 	};
 writestatement:
@@ -291,14 +291,14 @@ writestatement:
 		for (unsigned i = 0; i < $2->varSet->size(); i++)
 		{
 			if (*($2->varSet->at(i).type) == "ARRAY")
-				cout << ".[]> " << symbolTable->at(stoi(*($2->varSet->at(i).place))) << *($2->varSet->at(i).index) << endl;
+				cout << ".[]> " << symbolTable->at(*($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
 			else
-				cout << ".> " << symbolTable->at(stoi(*($2->varSet->at(i).place))) << endl;
+				cout << ".> " << symbolTable->at(*($2->varSet->at(i).place)) << endl;
 		}
 	};
 returnstatement:
 	RETURN expression { 
-		cout << "ret " << symbolTable->at(stoi(*($2->place))) << endl;
+		cout << "ret " << symbolTable->at(*($2->place)) << endl;
 	};
 varset:
 	var {
@@ -325,7 +325,7 @@ var:
 			yyerror("Using a variable not previously declared.");
 		string temp = newtemp();
 		symbolTable->push_back(temp);
-		$$->place = new string( to_string(symbolTable->size() - 1));
+		$$->place = new int( symbolTable->size() - 1);
 		$$->type = new string ("VALUE");
 		$$->index = new string("0");
 		cout << ". " << temp << endl;
@@ -335,9 +335,9 @@ var:
 			yyerror("Using a variable not previously declared.");
 		string temp = newtemp();
 		symbolTable->push_back(temp);
-		$$->place = new string( to_string(symbolTable->size() - 1));
+		$$->place = new int( symbolTable->size() - 1);
 		$$->type = new string("ARRAY");
-		$$->index = new string(symbolTable->at(stoi(*($3->place))));
+		$$->index = new string(symbolTable->at(*($3->place)));
 		cout << ". " << temp << endl;
 	};
 
@@ -349,12 +349,12 @@ relation-exprset:
 	relation-exprset andororornot relation-expr {
 	string temp = newtemp();
 		symbolTable->push_back(temp);
-		$$->place = new string( to_string(symbolTable->size() - 1));
+		$$->place = new int(symbolTable->size() - 1);
 		cout << ". " << temp << endl;
 		if (*($2->val) == "!")
-			cout << *($2->val) << temp << symbolTable->at(stoi(*($1->place))) << ", " << symbolTable->at(stoi(*($3->place))) << endl;
+			cout << *($2->val) << temp << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
 		else
-			cout << *($2->val) << " " << temp << ", " << symbolTable->at(stoi(*($1->place))) << ", " << symbolTable->at(stoi(*($3->place))) << endl;	
+			cout << *($2->val) << " " << temp << ", " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;	
 	};
 andororornot:
 	AND {$$->val = new string("&&");}
@@ -365,21 +365,21 @@ relation-expr:
 		cout << "relation-expr-> expression comp expression" << endl; 
 		string temp = newtemp();
 		symbolTable->push_back(temp);
-		$$->place = new string( to_string(symbolTable->size() - 1));
+		$$->place = new int(symbolTable->size() - 1);
 		cout << ". " << temp << endl;
-		cout << *($2->val) << " " << temp << ", " << symbolTable->at(stoi(*($1->place))) << ", " << symbolTable->at(stoi(*($1->place))) << endl; 
+		cout << *($2->val) << " " << temp << ", " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($1->place)) << endl; 
 	} 
 	| TRUE {
 		string temp = newtemp();
 		symbolTable->push_back(temp);
-		$$->place = new string( to_string(symbolTable->size() - 1));
+		$$->place = new int(symbolTable->size() - 1); 
 		cout << ". " << temp << endl;
 		cout << "= " << temp << ", " << "true";
 	}
 	| FALSE {
 		string temp = newtemp();
 		symbolTable->push_back(temp);
-		$$->place = new string( to_string(symbolTable->size() - 1));
+		$$->place = new int(symbolTable->size() - 1); 
 		cout << ". " << temp << endl;		cout << "= " << temp << ", " << "false";
 	}
 	| L_PAREN bool-expr R_PAREN {
@@ -419,8 +419,8 @@ term:
 		cout << "before symboltable push" << endl;
 		symbolTable->push_back(temp);
 		cout << "before segfault?" << endl;
-		$$->place = new string(to_string(symbolTable->size() - 1));
-		cout << *($$->place) << endl;
+		//$$->place = new int(symbolTable->size() - 1);
+		//cout << *($$->place) << endl;
 		cout << "after segfault?" << endl;
 		cout << ". " << temp << endl;
 		cout << "= " << temp << ", " << $1 << endl;
@@ -429,7 +429,7 @@ term:
 		cout << "term -> var" << endl;
 		string temp = newtemp();
 		symbolTable->push_back(temp);
-		$$->place = new string( to_string(symbolTable->size() - 1));
+		$$->place = new int(symbolTable->size() - 1);
 		cout << ". " << temp << endl;
 		cout << "= " << temp << ", " << *($1->val) << endl;
 	 } 
@@ -438,7 +438,7 @@ term:
 			yyerror("Calling a function not previously defined.");
 		string temp = newtemp();
 		symbolTable->push_back(temp);
-		$$->place = new string( to_string(symbolTable->size() - 1));	
+		$$->place = new int(symbolTable->size() - 1);	
 		cout << ". " << temp << endl;
 		cout << "call " << *($1->val) << ", " << temp << endl;
 	 } 
@@ -450,11 +450,11 @@ term:
 			yyerror("Calling a function not previously defined.");
 		for (unsigned i = 0; i < $3->exprSet->size(); i++)
 		{
-			cout << "param " << symbolTable->at(stoi(*($3->exprSet->at(i).place))) << endl;
+			cout << "param " << symbolTable->at(*($3->exprSet->at(i).place)) << endl;
 		}
 		string temp = newtemp();
 		symbolTable->push_back(temp);
-		$$->place = new string( to_string(symbolTable->size() - 1));	
+		$$->place = new int(symbolTable->size() - 1);	
 		cout << ". " << temp << endl;
 		cout << "call " << *($1->val) << ", " << temp << endl;
 	 };
@@ -463,9 +463,9 @@ termset:
 	| termset multordivormodoraddorsub term {
 		string temp = newtemp();		
 		symbolTable->push_back(temp);
-		$$->place = new string( to_string(symbolTable->size() - 1));
+		$$->place = new int(symbolTable->size() - 1);
 		cout << ". " << temp << endl;
-		cout << *($2->val) << " " << temp << ", " << symbolTable->at(stoi(*($1->place))) << ", " << symbolTable->at(stoi(*($3->place))) << endl;
+		cout << *($2->val) << " " << temp << ", " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
 	};
 multordivormodoraddorsub:
 	MULT {$$->val = new string("*");} 
