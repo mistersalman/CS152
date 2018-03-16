@@ -12,6 +12,7 @@
  int yylex(void);
  extern int currLine;
  extern int currPos;
+ extern FILE* yyin;
  struct varParams {
 	string* type;
 	string* index;
@@ -89,7 +90,7 @@ bool findKeyword(string val)
 	return 0;
 }
 
-extern FILE* yyin;
+
 %}
 %union{
 double dval;
