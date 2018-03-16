@@ -420,7 +420,7 @@ term:
 		symbolTable->push_back(temp);
 		cout << "before segfault?" << endl;
 		//$$->place = new int(symbolTable->size() - 1);
-		cout << *($$->place) << endl;
+		//cout << *($$->place) << endl;
 		cout << "after segfault?" << endl;
 		cout << ". " << temp << endl;
 		cout << "= " << temp << ", " << $1 << endl;
