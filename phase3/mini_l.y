@@ -455,8 +455,8 @@ int main(int argc, char **argv) {
    string code = mil_code.str();
    ofstream outFile;
    outFile.open("code.mil");
-   File << code;
-   File.close();
+   outFile << code;
+   outFile.close();
    
    return 0;
 }
