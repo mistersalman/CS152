@@ -146,9 +146,6 @@ function:
 	};
 ident:
 	IDENT { 
-		cout << "before seg fault" << endl;
-		int* pntr = new int(1);
-		cout << "AFTER SEG FAULT" << endl;
 		$$->val = new string($1); 
 		cout << "ident->IDENT" << endl; 
 		
@@ -427,7 +424,7 @@ term:
 		symbolTable->push_back(temp);
 		cout << "before segfault?" << endl;
 		//$$->place = 1;
-		//$$->place = new int(symbolTable->size() - 1);
+		*($$->place) = new int(symbolTable->size() - 1);
 		//cout << *($$->place) << endl;
 		cout << "after segfault?" << endl;
 		cout << ". " << temp << endl;
