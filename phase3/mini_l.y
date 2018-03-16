@@ -92,7 +92,7 @@ struct semanticValues terminalParams;
 %left L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN COMMA COLON SEMICOLON
 
 %type <terminalParams> program functionset functionname function ident declarationset 
-%type <terminalParams> declaration identifierset statementset statement varstatement ifstatement 
+%type <terminalParams> declaration identifierset statementset statement varstatement ifstatement1 ifstatement2 ifstatement3 
 %type <terminalParams> whilestatement dostatement continuestatement readstatement writestatement  
 %type <terminalParams> returnstatement varset var bool-expr relation-exprset andororornot 
 %type <terminalParams> relation-expr comp expression expressionset term termset 
@@ -165,6 +165,10 @@ declaration:
 			mil_code << ".[] " << $1.valSet->at(i) << ", " << $5 << endl;
 			string temp = newtemp();
 			symbolTable->push_back(temp);
+			if(symbolTable->size() == 1)
+			{
+				mil_code << "= " << $1.valSet->at(i) << ", " << "$0" << endl;
+			}
 			mil_code << ". " << temp << endl;
 			mil_code << "= " << temp << ", " << $1.valSet->at(i) << endl;
 		}
@@ -184,7 +188,7 @@ statementset:
 //pulled out foreach loops because I don't know how to implement ident in ident as a boolean expression
 statement:
 	varstatement {}
-	| ifstatement {}
+	| ifstatement1 ifstatement2 ifstatement3 {}
 	| whilestatement {}
 	| dostatement {}
 	| readstatement {}
@@ -200,29 +204,28 @@ varstatement:
 			mil_code << "= " << symbolTable->at(*($1.place)) << ", " << symbolTable->at(*($3.place)) << endl;
 		}
 	};
-ifstatement:
-	IF bool-expr THEN statementset ELSE statementset ENDIF {
+ifstatement1:
+	IF bool-expr THEN  {
 		string label1 = newlabel();
 		string label2 = newlabel();
-		string label3 = newlabel();
+		labelTable->push_back(label2);
 		mil_code << "?:= " << label1 << ", " << symbolTable->at(*($2.place)) << endl;
 		mil_code << ":= " << label2 << endl;
 		mil_code << ": " << label1 << endl;
-		
+	} ;
+ifstatement2:
+	statementset ELSE {	
+		string label3 = newlabel();
+		labelTable->push_back(label3);
 		mil_code << ":= " << label3;
 		mil_code << ": " << label2;
-		
-		mil_code << ": " << label3 << endl;
 	}
-	| IF bool-expr THEN statementset ENDIF {
-		string label1 = newlabel();
-		string label2 = newlabel();
-		mil_code << "?:= " << label1 << ", " << symbolTable->at(*($2.place)) << endl;
-		mil_code << ":= " << label2 << endl;
-		mil_code << ": " << label1 << endl;
-		
-		mil_code << ": " << label2;
-	} ;
+	| {};
+ifstatement3:
+	statementset ENDIF {		
+		mil_code << ": " << labelTable.at(labelTable->size() - 1);
+	}
+
 whilestatement:
 	WHILE bool-expr BEGINLOOP statementset ENDLOOP {
 	
