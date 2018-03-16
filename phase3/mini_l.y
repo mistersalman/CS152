@@ -148,7 +148,10 @@ ident:
 	IDENT { 
 		$$->val = new string($1); 
 		cout << "ident->IDENT" << endl; 
-		
+		cout << "before seg" << endl;
+		int* ptr = NULL;
+		ptr = new int(1);
+		cout << "after seg" << endl;
 		};
 declarationset:
 	declaration SEMICOLON declarationset { cout << "declarationset-> declaration SEMICOLON declarationset" << endl;} 
@@ -424,7 +427,7 @@ term:
 		symbolTable->push_back(temp);
 		cout << "before segfault?" << endl;
 		//$$->place = 1;
-		*($$->place) = (symbolTable->size() - 1);
+		//$$->place = new int(symbolTable->size() - 1);
 		//cout << *($$->place) << endl;
 		cout << "after segfault?" << endl;
 		cout << ". " << temp << endl;
