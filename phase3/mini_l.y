@@ -16,13 +16,13 @@
  struct varParams {
 	string* type;
 	string* index;
-	int* place;
+	int place;
 	};
  struct exprParams {
-	int* place;
+	int place;
 	};
 struct semanticValues {
-  	int* place;
+  	int place;
   	string* type;
 	string* val;
 	string* index;
@@ -31,7 +31,7 @@ struct semanticValues {
 	vector<exprParams>* exprSet;
 	} terminalParams;
  
- vector <string>* symbolTable = new vector<string>(); 
+ vector <string> symbolTable = new vector<string>(); 
  vector <string>* labelTable = new vector<string>();
  vector <string>* functionTable = new vector<string>();
  vector <string>* variableTable = new vector<string>();
@@ -216,9 +216,9 @@ varstatement:
 	var ASSIGN expression {
 		cout << "varstatement -> var ASSIGN expression " << endl;
 		if (*($1->type) == "ARRAY")
-			cout << "[]= " << symbolTable->at(*($1->place)) << ", " << *($1->index) << ", " << symbolTable->at(*($3->place)) << endl;
+			cout << "[]= " << symbolTable.at(($1->place)) << ", " << *($1->index) << ", " << symbolTable.at(($3->place)) << endl;
 		else {
-			cout << "= " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
+			cout << "= " << symbolTable.at(($1->place)) << ", " << symbolTable.at(($3->place)) << endl;
 		}
 	};
 ifstatement:
@@ -227,7 +227,7 @@ ifstatement:
 		string label1 = newlabel();
 		string label2 = newlabel();
 		string label3 = newlabel();
-		cout << "?:= " << label1 << ", " << symbolTable->at(*($2->place)) << endl;
+		cout << "?:= " << label1 << ", " << symbolTable.at(($2->place)) << endl;
 		cout << ":= " << label2 << endl;
 		cout << ": " << label1 << endl;
 		
@@ -240,7 +240,7 @@ ifstatement:
 		cout << "ifstatement -> IF bool-expr THEN statementset ENDIF" << endl;
 		string label1 = newlabel();
 		string label2 = newlabel();
-		cout << "?:= " << label1 << ", " << symbolTable->at(*($2->place)) << endl;
+		cout << "?:= " << label1 << ", " << symbolTable.at(($2->place)) << endl;
 		cout << ":= " << label2 << endl;
 		cout << ": " << label1 << endl;
 		
@@ -254,7 +254,7 @@ whilestatement:
 		string label3 = newlabel();
 		labelTable->push_back(label3);
 		cout << ": " << label1 << endl;
-		cout << "?:= " << label2 << ", " << symbolTable->at(*($2->place)) << endl;
+		cout << "?:= " << label2 << ", " << symbolTable.at(($2->place)) << endl;
 		cout << ":= " << label3 << endl;
 		cout << ": " << label2 << endl;
 		
