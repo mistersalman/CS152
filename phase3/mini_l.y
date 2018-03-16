@@ -429,7 +429,7 @@ termset:
 		string temp = newtemp();		
 		symbolTable->push_back(temp);
 		$$.place = new int(symbolTable->size() - 1);
-		cout << "test " << *($$.place) << endl;
+		//cout << "test " << *($$.place) << endl;
 		cout << ". " << temp << endl;
 		cout << *($2.val) << " " << temp << ", " << symbolTable->at(*($1.place)) << ", " << symbolTable->at(*($3.place)) << endl;
 	};
