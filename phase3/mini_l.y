@@ -340,7 +340,7 @@ var:
 		symbolTable.push_back(temp);
 		$$->place = symbolTable.size() - 1;
 		$$->type = new string("ARRAY");
-		$$->index = new string(symbolTable.at(*($3->place)));
+		$$->index = new string(symbolTable.at(($3->place)));
 		cout << ". " << temp << endl;
 	};
 
@@ -351,7 +351,7 @@ relation-exprset:
 	relation-expr {cout << "relation-exprset -> relation-expr" << endl; $$->place = $1->place;} |
 	relation-exprset andororornot relation-expr {
 	string temp = newtemp();
-		symbolTable->push_back(temp);
+		symbolTable.push_back(temp);
 		$$->place = symbolTable.size() - 1;
 		cout << ". " << temp << endl;
 		if (*($2->val) == "!")
@@ -420,7 +420,7 @@ term:
 		cout << "term -> NUMBER" << endl;
 		string temp = newtemp();
 		cout << "before symboltable push" << endl;
-		symbolTable->push_back(temp);
+		symbolTable.push_back(temp);
 		cout << "before segfault?" << endl;
 		//$$->place = 1;
 		//$$->place = symbolTable.size() - 1;
