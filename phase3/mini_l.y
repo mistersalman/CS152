@@ -147,8 +147,8 @@ function:
 ident:
 	IDENT {$$->val = new string($1); cout << "ident->IDENT" << endl; };
 declarationset:
-	declaration SEMICOLON declarationset { cout << "declarationSet-> declaration SEMICOLON declarationset" << endl;} 
-	| { cout << "Epsilon" << endl;};
+	declaration SEMICOLON declarationset { cout << "declarationset-> declaration SEMICOLON declarationset" << endl;} 
+	| { cout << "declarationset -> Epsilon" << endl;};
 declaration:
 	identifierset COLON INTEGER {
 	cout << "declaration -> identifierset COLON INTEGER" << endl;
@@ -211,6 +211,7 @@ statement:
 varstatement:
 	//this covers the case of dst = src and dst[index] = src but not dst = src[index]
 	var ASSIGN expression {
+		cout << "varstatement -> var ASSIGN expression " << endl;
 		if (*($1->type) == "ARRAY")
 			cout << "[]= " << symbolTable->at(*($1->place)) << ", " << *($1->index) << ", " << symbolTable->at(*($3->place)) << endl;
 		else {
@@ -219,6 +220,7 @@ varstatement:
 	};
 ifstatement:
 	IF bool-expr THEN statementset ELSE statementset ENDIF {
+		cout << "ifstatement -> IF bool-expr THENstatementset ELSE statementset ENDIF" << endl;
 		string label1 = newlabel();
 		string label2 = newlabel();
 		string label3 = newlabel();
@@ -232,6 +234,7 @@ ifstatement:
 		cout << ": " << label3 << endl;
 	}
 	| IF bool-expr THEN statementset ENDIF {
+		cout << "ifstatement -> IF bool-expr THEN statementset ENDIF" << endl;
 		string label1 = newlabel();
 		string label2 = newlabel();
 		cout << "?:= " << label1 << ", " << symbolTable->at(*($2->place)) << endl;
@@ -242,6 +245,7 @@ ifstatement:
 	} ;
 whilestatement:
 	WHILE bool-expr BEGINLOOP statementset ENDLOOP {
+	
 		string label1 = newlabel();
 		string label2 = newlabel();
 		string label3 = newlabel();
@@ -298,6 +302,7 @@ returnstatement:
 	};
 varset:
 	var {
+		cout << "varset -> var" << endl;
 		$$->varSet = new vector<varParams>();
 		varParams var;
 		var.place = $1->place;
@@ -306,6 +311,7 @@ varset:
 		$$->varSet->push_back(var);
 	}
 	| var COMMA varset {
+		cout << "varset->var COMMA varset" << endl;
 		varParams var;
 		var.place = $1->place;
 		var.type = $1->type;
@@ -314,6 +320,7 @@ varset:
 	};
 var:
 	ident { 
+		cout << "var->ident" << endl;
 		if (!findVariable(*($1->val)))
 			yyerror("Using a variable not previously declared.");
 		string temp = newtemp();
@@ -336,9 +343,9 @@ var:
 
 
 bool-expr:
-	relation-exprset {$$->place = $1->place;};
+	relation-exprset {cout << "bool-expr-> relation-exprset" endl; $$->place = $1->place;};
 relation-exprset:
-	relation-expr {$$->place = $1->place;} |
+	relation-expr {cout << "relation-exprset -> relation-expr" << endl; $$->place = $1->place;} |
 	relation-exprset andororornot relation-expr {
 	string temp = newtemp();
 		symbolTable->push_back(temp);
@@ -355,6 +362,7 @@ andororornot:
 	| NOT {$$->val = new string("!");};
 relation-expr:
 	expression comp expression {
+		cout << "relation-expr-> expression comp expression" << endl; 
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$->place = new int(symbolTable->size() - 1);
@@ -376,22 +384,25 @@ relation-expr:
 		cout << "= " << temp << ", " << "false";
 	}
 	| L_PAREN bool-expr R_PAREN {
+		cout << "relation-expr -> LPAREN bool-expre RPAREN" << endl;
 		$$->place = $2->place;
 	};
 comp:
 	EQ {$$->val = new string("==" );} 
 	| NEQ {$$->val = new string("!=" );} 
-	| LT {$$->val = new string("<" );} 
+	| LT {cout << "comp -> LT" << endl; $$->val = new string("<" );} 
 	| GT {$$->val = new string(">" );} 
 	| LTE {$$->val = new string("<=" );} 
 	| GTE {$$->val = new string(">=" );};
 
 expression:
 	termset { 
+		cout << "expression -> termset" << endl;
 		$$->place = $1->place;
 	};
 expressionset:
 	expression {
+		cout << "expressionsset -> expression" << endl;
 		$$->exprSet = new vector<exprParams>();
 		exprParams expr;
 		expr.place = $1->place;
@@ -404,6 +415,7 @@ expressionset:
 	};
 term:
 	var { 
+		cout << "term -> var" << endl;
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$->place = new int(symbolTable->size() - 1);
@@ -411,6 +423,7 @@ term:
 		cout << "= " << temp << ", " << *($1->val) << endl;
 	 } 
 	| NUMBER { 
+		cout << "term -> var" << endl;
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$->place = new int(symbolTable->size() - 1);	
@@ -443,7 +456,7 @@ term:
 		cout << "call " << *($1->val) << ", " << temp << endl;
 	 };
 termset:
-	term { $$->place = $1->place;}
+	term {cout "termset -> term" << endl;  $$->place = $1->place;}
 	| termset multordivormodoraddorsub term {
 		string temp = newtemp();		
 		symbolTable->push_back(temp);
