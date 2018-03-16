@@ -145,7 +145,7 @@ function:
 		cout << "endfunc" << endl; 
 	};
 ident:
-	IDENT {$$->val = new string($1); cout << "ident->IDENT" << endl; };
+	IDENT { cout << "it went here" << endl; $$->val = new string($1); cout << "ident->IDENT" << endl; };
 declarationset:
 	declaration SEMICOLON declarationset { cout << "declarationset-> declaration SEMICOLON declarationset" << endl;} 
 	| { cout << "declarationset -> Epsilon" << endl;};
