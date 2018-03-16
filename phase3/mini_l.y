@@ -111,7 +111,7 @@ struct semanticValues* terminalParams;
 %left MOD GT LT GTE LTE EQ NEQ NOT AND OR TRUE FALSE SUB ADD MULT DIV L_PAREN R_PAREN
 %left L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN COMMA COLON SEMICOLON
 
-%type <terminalParams> program functionset functionname function ident declarationset 
+%type <terminalParams> program functionset function ident declarationset 
 %type <terminalParams> declaration identifierset statementset statement varstatement ifstatement 
 %type <terminalParams> whilestatement dostatement continuestatement readstatement writestatement  
 %type <terminalParams> returnstatement varset var bool-expr relation-exprset andororornot 
@@ -135,7 +135,7 @@ function:
 		cout << "endfunc" << endl; 
 	};*/
 functionset:
-	{} | function functionset {};
+	{ cout << "functionset -> Epsilon" << endl;} | function functionset { cout << "functionset -> function functionset" << endl;};
 function:
 	FUNCTION ident SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY {
 		cout << "function" << endl;
@@ -158,24 +158,24 @@ declaration:
 	};
 identifierset:
 	ident { 
-		
+			cout << "identifierset -> ident" << endl;
 		}
 	| ident COMMA identifierset { 
-		
+		cout << "identifierset -> ident" << endl;
 	 };
 statementset:
-	statement SEMICOLON statementset {} 
-	| statement SEMICOLON {};
+	statement SEMICOLON statementset { cout << "statementset -> statement SEMICOLON statementset" << endl;} 
+	| statement SEMICOLON { cout << "statement SEMICOLON" << endl;};
 //pulled out foreach loops because I don't know how to implement ident in ident as a boolean expression
 statement:
-	varstatement {}
-	| ifstatement {}
-	| whilestatement {}
-	| dostatement {}
-	| readstatement {}
-	| writestatement {}
-	| continuestatement {}
-	| returnstatement{};
+	varstatement { cout << "statement -> varstatement" << endl;}
+	| ifstatement {cout << "statement -> varstatement" << endl;}
+	| whilestatement {cout << "statement -> varstatement" << endl;}
+	| dostatement {cout << "statement -> varstatement" << endl;}
+	| readstatement {cout << "statement -> varstatement" << endl;}
+	| writestatement {cout << "statement -> varstatement" << endl;}
+	| continuestatement {cout << "statement -> varstatement" << endl;}
+	| returnstatement{cout << "statement -> varstatement" << endl;};
 varstatement:
 	//this covers the case of dst = src and dst[index] = src but not dst = src[index]
 	var ASSIGN expression {
