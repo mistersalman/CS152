@@ -118,7 +118,7 @@ program:
 	functionset { 		
 	};
 functionset:
-	function functionset {} 
+	functionname function functionset {} 
 	| {};
 functionname: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
 	FUNCTION ident SEMICOLON { 
