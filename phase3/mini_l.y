@@ -148,10 +148,6 @@ ident:
 	IDENT { 
 		$$->val = new string($1); 
 		cout << "ident->IDENT" << endl; 
-		cout << "before seg" << endl;
-		int* ptr = NULL;
-		ptr = new int(1);
-		cout << "after seg" << endl;
 		};
 declarationset:
 	declaration SEMICOLON declarationset { cout << "declarationset-> declaration SEMICOLON declarationset" << endl;} 
