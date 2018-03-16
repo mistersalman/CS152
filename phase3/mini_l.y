@@ -2,12 +2,9 @@
    Written by Ryan Gray and Salman Azmi
    CS152 WINTER 18 */
 %{
- #include <vector>
- #include <string>
+ #include "semanticValues.h"
  #include <stdio.h>
  #include <stdlib.h>
- #include <iostream>
- using namespace std; //don't wanna add std:: to everything
  void yyerror(const char *msg);
  int yylex(void);
  extern int currLine;
