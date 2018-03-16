@@ -122,7 +122,7 @@ struct semanticValues* terminalParams;
 program:	
 	functionset { 		
 	};
-/*functionset:
+functionset:
 	functionname function functionset {} 
 	| {};
 functionname: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
@@ -133,15 +133,15 @@ functionname: //not sure if having a non-terminal named function and a terminal 
 function:
 	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { 	
 		cout << "endfunc" << endl; 
-	};*/
-functionset:
+	};
+/*functionset:
 	{ cout << "functionset -> Epsilon" << endl;} | function functionset { cout << "functionset -> function functionset" << endl;};
 function:
 	FUNCTION ident SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY {
 		cout << "function" << endl;
 		cout << "begun params" << endl;
 		cout << "ended params" << endl;
-	};
+	};*/
 ident:
 	IDENT { cout << "ident->IDENT" << endl; };
 declarationset:
