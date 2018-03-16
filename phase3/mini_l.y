@@ -337,7 +337,7 @@ var:
 		symbolTable->push_back(temp);
 		$$->place = new string( to_string(symbolTable->size() - 1));
 		$$->type = new string("ARRAY");
-		$$->index = new string(symbolTable->at(*($3->place)));
+		$$->index = new string(symbolTable->at(stoi(*($3->place))));
 		cout << ". " << temp << endl;
 	};
 
@@ -367,7 +367,7 @@ relation-expr:
 		symbolTable->push_back(temp);
 		$$->place = new string( to_string(symbolTable->size() - 1));
 		cout << ". " << temp << endl;
-		cout << *($2->val) << " " << temp << ", " << symbolTable->at(stoi(*($1->place))) << ", " << symbolTable->at(stoi*($1->place))) << endl; 
+		cout << *($2->val) << " " << temp << ", " << symbolTable->at(stoi(*($1->place))) << ", " << symbolTable->at(stoi(*($1->place))) << endl; 
 	} 
 	| TRUE {
 		string temp = newtemp();
@@ -450,7 +450,7 @@ term:
 			yyerror("Calling a function not previously defined.");
 		for (unsigned i = 0; i < $3->exprSet->size(); i++)
 		{
-			cout << "param " << symbolTable->at(*($3->exprSet->at(i).place)) << endl;
+			cout << "param " << symbolTable->at(stoi(*($3->exprSet->at(i).place))) << endl;
 		}
 		string temp = newtemp();
 		symbolTable->push_back(temp);
@@ -465,7 +465,7 @@ termset:
 		symbolTable->push_back(temp);
 		$$->place = new string( to_string(symbolTable->size() - 1));
 		cout << ". " << temp << endl;
-		cout << *($2->val) << " " << temp << ", " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
+		cout << *($2->val) << " " << temp << ", " << symbolTable->at(stoi(*($1->place))) << ", " << symbolTable->at(stoi(*($3->place))) << endl;
 	};
 multordivormodoraddorsub:
 	MULT {$$->val = new string("*");} 
