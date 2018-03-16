@@ -324,7 +324,7 @@ varset:
 var:
 	ident { 
 		cout << "var->ident" << endl;
-		if (!findVariable(($1->val)))
+		if (!findVariable(*($1->val)))
 			yyerror("Using a variable not previously declared.");
 		string temp = newtemp();
 		symbolTable->push_back(temp);
@@ -340,7 +340,7 @@ var:
 		symbolTable->push_back(temp);
 		$$->place = new int( symbolTable->size() - 1);
 		$$->type = new string("ARRAY");
-		$$->index = new string(symbolTable->at(*($3->place)));
+		$$->index = new string(symbolTable->at(($3->place)));
 		cout << ". " << temp << endl;
 	};
 
@@ -355,9 +355,9 @@ relation-exprset:
 		$$->place = new int(symbolTable->size() - 1);
 		cout << ". " << temp << endl;
 		if (*($2->val) == "!")
-			cout << *($2->val) << temp << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
+			cout << *($2->val) << temp << symbolTable->at(($1->place)) << ", " << symbolTable->at(($3->place)) << endl;
 		else
-			cout << *($2->val) << " " << temp << ", " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;	
+			cout << *($2->val) << " " << temp << ", " << symbolTable->at(($1->place)) << ", " << symbolTable->at(($3->place)) << endl;	
 	};
 andororornot:
 	AND {$$->val = new string("&&");}
@@ -370,7 +370,7 @@ relation-expr:
 		symbolTable->push_back(temp);
 		$$->place = new int(symbolTable->size() - 1);
 		cout << ". " << temp << endl;
-		cout << *($2->val) << " " << temp << ", " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($1->place)) << endl; 
+		cout << *($2->val) << " " << temp << ", " << symbolTable->at(($1->place)) << ", " << symbolTable->at(($1->place)) << endl; 
 	} 
 	| TRUE {
 		string temp = newtemp();
@@ -454,7 +454,7 @@ term:
 			yyerror("Calling a function not previously defined.");
 		for (unsigned i = 0; i < $3->exprSet->size(); i++)
 		{
-			cout << "param " << symbolTable->at(*($3->exprSet->at(i).place)) << endl;
+			cout << "param " << symbolTable->at(($3->exprSet->at(i).place)) << endl;
 		}
 		string temp = newtemp();
 		symbolTable->push_back(temp);
@@ -470,7 +470,7 @@ termset:
 		$$->place = new int(symbolTable->size() - 1);
 		cout << "test " << *($$->place) << endl;
 		cout << ". " << temp << endl;
-		cout << *($2->val) << " " << temp << ", " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
+		cout << *($2->val) << " " << temp << ", " << symbolTable->at(($1->place)) << ", " << symbolTable->at(($3->place)) << endl;
 	};
 multordivormodoraddorsub:
 	MULT {$$->val = new string("*");} 
