@@ -278,9 +278,9 @@ readstatement:
 		for (unsigned i = 0; i < $2.varSet->size(); i++)
 		{
 			if (*($2.varSet->at(i).type) == "ARRAY")
-				mil_code << ".[]< " << symbolTable->at(*($2.varSet->at(i).place)) << *($2.varSet->at(i).index) << endl;
+				mil_code << ".[]< " << symbolTable->at(*($2.varSet->at(i).val)) << *($2.varSet->at(i).index) << endl;
 			else
-				mil_code << ".< " << symbolTable->at(*($2.varSet->at(i).place)) << endl;
+				mil_code << ".< " << symbolTable->at(*($2.varSet->at(i).val)) << endl;
 		}
 	};
 writestatement:
@@ -288,9 +288,9 @@ writestatement:
 		for (unsigned i = 0; i < $2.varSet->size(); i++)
 		{
 			if (*($2.varSet->at(i).type) == "ARRAY")
-				mil_code << ".[]> " << symbolTable->at(*($2.varSet->at(i).place)) << *($2.varSet->at(i).index) << endl;
+				mil_code << ".[]> " << symbolTable->at(*($2.varSet->at(i).val)) << *($2.varSet->at(i).index) << endl;
 			else
-				mil_code << ".> " << symbolTable->at(*($2.varSet->at(i).place)) << endl;
+				mil_code << ".> " << symbolTable->at(*($2.varSet->at(i).val)) << endl;
 		}
 	};
 returnstatement:
@@ -304,6 +304,7 @@ varset:
 		var.place = $1.place;
 		var.type = $1.type;
 		var.index = $1.index;
+		var.val = $1.val;
 		$$.varSet->push_back(var);
 	}
 	| var COMMA varset {
@@ -311,6 +312,7 @@ varset:
 		var.place = $1.place;
 		var.type = $1.type;
 		var.index = $1.index;
+		var.val = $1.val;
 		$$.varSet->push_back(var);
 	};
 var:
@@ -322,8 +324,9 @@ var:
 		$$.place = new int( symbolTable->size() - 1);
 		$$.type = new string ("VALUE");
 		$$.index = new string("0");
-		mil_code << ". " << temp << endl;
-		mil_code << "= " << temp << ", " << *($1.val) << endl;
+		$$.val = $1.val;
+		//mil_code << ". " << temp << endl;
+		//mil_code << "= " << temp << ", " << *($1.val) << endl;
 	} 
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {
 		if (!findVariable(*($1.val)))
@@ -333,8 +336,9 @@ var:
 		$$.place = new int( symbolTable->size() - 1);
 		$$.type = new string("ARRAY");
 		$$.index = new string(symbolTable->at(*($3.place)));
-		mil_code << ". " << temp << endl;
-		mil_code << "= " << temp << ", " << *($1.val) << endl;
+		$$.val = $1.val;
+		//mil_code << ". " << temp << endl;
+		//mil_code << "= " << temp << ", " << *($1.val) << endl;
 	};
 
 
