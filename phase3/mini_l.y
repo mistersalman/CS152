@@ -216,14 +216,16 @@ ifstatement1:
 ifstatement2:
 	statementset ELSE {	
 		string label3 = newlabel();
-		labelTable->push_back(label3);
+		
 		mil_code << ":= " << label3;
-		mil_code << ": " << label2;
+		mil_code << ": " << labelTable->at(labelTable->size() - 1);
+		labelTable->pop_back();
+		labelTable->push_back(label3);
 	}
 	| {};
 ifstatement3:
 	statementset ENDIF {		
-		mil_code << ": " << labelTable.at(labelTable->size() - 1);
+		mil_code << ": " << labelTable->at(labelTable->size() - 1);
 		labelTable->pop_back();
 	}
 
