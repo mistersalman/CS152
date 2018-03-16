@@ -325,8 +325,8 @@ var:
 		$$.type = new string ("VALUE");
 		$$.index = new string("0");
 		$$.val = $1.val;
-		//mil_code << ". " << temp << endl;
-		//mil_code << "= " << temp << ", " << *($1.val) << endl;
+		mil_code << ". " << temp << endl;
+		mil_code << "= " << temp << ", " << *($1.val) << endl;
 	} 
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {
 		if (!findVariable(*($1.val)))
@@ -337,8 +337,8 @@ var:
 		$$.type = new string("ARRAY");
 		$$.index = new string(symbolTable->at(*($3.place)));
 		$$.val = $1.val;
-		//mil_code << ". " << temp << endl;
-		//mil_code << "= " << temp << ", " << *($1.val) << endl;
+		mil_code << ". " << temp << endl;
+		mil_code << "= " << temp << ", " << *($1.val) << endl;
 	};
 
 
