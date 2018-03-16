@@ -320,7 +320,7 @@ var:
 		symbolTable->push_back(temp);
 		$$->place = new int( symbolTable->size() - 1);
 		$$->type = new string ("VALUE");
-		$$->index = new string("");
+		$$->index = new string("0");
 		cout << ". " << temp << endl;
 	} 
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {
