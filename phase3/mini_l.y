@@ -343,7 +343,7 @@ var:
 
 
 bool-expr:
-	relation-exprset {cout << "bool-expr-> relation-exprset" endl; $$->place = $1->place;};
+	relation-exprset {cout << "bool-expr-> relation-exprset" << endl; $$->place = $1->place;};
 relation-exprset:
 	relation-expr {cout << "relation-exprset -> relation-expr" << endl; $$->place = $1->place;} |
 	relation-exprset andororornot relation-expr {
@@ -456,7 +456,7 @@ term:
 		cout << "call " << *($1->val) << ", " << temp << endl;
 	 };
 termset:
-	term {cout "termset -> term" << endl;  $$->place = $1->place;}
+	term {cout << "termset -> term" << endl;  $$->place = $1->place;}
 	| termset multordivormodoraddorsub term {
 		string temp = newtemp();		
 		symbolTable->push_back(temp);
