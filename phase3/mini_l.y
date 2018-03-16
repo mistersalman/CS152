@@ -215,8 +215,7 @@ ifstatement1:
 	} ;
 ifstatement2:
 	statementset ELSE {	
-		string label3 = newlabel();
-		
+		string label3 = newlabel();	
 		mil_code << ":= " << label3;
 		mil_code << ": " << labelTable->at(labelTable->size() - 1);
 		labelTable->pop_back();
@@ -227,7 +226,7 @@ ifstatement3:
 	statementset ENDIF {		
 		mil_code << ": " << labelTable->at(labelTable->size() - 1);
 		labelTable->pop_back();
-	}
+	};
 
 whilestatement1:
 	WHILE bool-expr BEGINLOOP {
