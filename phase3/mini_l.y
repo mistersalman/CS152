@@ -31,7 +31,7 @@ struct semanticValues {
 	vector<exprParams>* exprSet;
 	} terminalParams;
  
- vector <string> symbolTable = new vector<string>(); 
+ vector <string> symbolTable; 
  vector <string>* labelTable = new vector<string>();
  vector <string>* functionTable = new vector<string>();
  vector <string>* variableTable = new vector<string>();
@@ -164,7 +164,7 @@ declaration:
 			variableTable->push_back($1->valSet->at(i));
 			cout << ". " << $1->valSet->at(i) << endl;
 			string temp = newtemp();
-			symbolTable->push_back(temp);
+			symbolTable.push_back(temp);
 			cout << ". " << temp << endl;
 			cout << "= " << temp << ", " << $1->valSet->at(i) << endl;
 		}
@@ -182,7 +182,7 @@ declaration:
 			variableTable->push_back($1->valSet->at(i));
 			cout << ".[] " << $1->valSet->at(i) << ", " << $5 << endl;
 			string temp = newtemp();
-			symbolTable->push_back(temp);
+			symbolTable.push_back(temp);
 			cout << ". " << temp << endl;
 			cout << "= " << temp << ", " << $1->valSet->at(i) << endl;
 		}
@@ -268,7 +268,7 @@ dostatement:
 		labelTable->push_back(label2);
 		cout << ": " << label1 << endl;
 		
-		cout << "?:= " << label1 << ", " << symbolTable->at(*($6->place)) << endl;
+		cout << "?:= " << label1 << ", " << symbolTable.at(($6->place)) << endl;
 		cout << ": " << label2 << endl;
 	};
 
@@ -284,9 +284,9 @@ readstatement:
 		for (unsigned i = 0; i < $2->varSet->size(); i++)
 		{
 			if (*($2->varSet->at(i).type) == "ARRAY")
-				cout << ".[]< " << symbolTable->at(*($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
+				cout << ".[]< " << symbolTable.at(($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
 			else
-				cout << ".< " << symbolTable->at(*($2->varSet->at(i).place)) << endl;
+				cout << ".< " << symbolTable.at(($2->varSet->at(i).place)) << endl;
 		}
 	};
 writestatement:
@@ -294,14 +294,14 @@ writestatement:
 		for (unsigned i = 0; i < $2->varSet->size(); i++)
 		{
 			if (*($2->varSet->at(i).type) == "ARRAY")
-				cout << ".[]> " << symbolTable->at(*($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
+				cout << ".[]> " << symbolTable.at(($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
 			else
-				cout << ".> " << symbolTable->at(*($2->varSet->at(i).place)) << endl;
+				cout << ".> " << symbolTable.at(($2->varSet->at(i).place)) << endl;
 		}
 	};
 returnstatement:
 	RETURN expression { 
-		cout << "ret " << symbolTable->at(*($2->place)) << endl;
+		cout << "ret " << symbolTable.at(($2->place)) << endl;
 	};
 varset:
 	var {
