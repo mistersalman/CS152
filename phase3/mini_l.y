@@ -417,7 +417,6 @@ expressionset:
 	};
 term:
 	NUMBER { 
-		$$->place = new int(0);
 		cout << "term -> NUMBER" << endl;
 		string temp = newtemp();
 		cout << "before symboltable push" << endl;
