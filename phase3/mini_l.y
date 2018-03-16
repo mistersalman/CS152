@@ -328,7 +328,7 @@ var:
 			yyerror("Using a variable not previously declared.");
 		string temp = newtemp();
 		symbolTable.push_back(temp);
-		$$->place = new int( symbolTable.size() - 1);
+		$$->place = symbolTable.size() - 1;
 		$$->type = new string ("VALUE");
 		$$->index = new string("0");
 		cout << ". " << temp << endl;
@@ -338,7 +338,7 @@ var:
 			yyerror("Using a variable not previously declared.");
 		string temp = newtemp();
 		symbolTable.push_back(temp);
-		$$->place = new int( symbolTable.size() - 1);
+		$$->place = symbolTable.size() - 1;
 		$$->type = new string("ARRAY");
 		$$->index = new string(symbolTable.at(*($3->place)));
 		cout << ". " << temp << endl;
@@ -352,7 +352,7 @@ relation-exprset:
 	relation-exprset andororornot relation-expr {
 	string temp = newtemp();
 		symbolTable->push_back(temp);
-		$$->place = new int(symbolTable.size() - 1);
+		$$->place = symbolTable.size() - 1;
 		cout << ". " << temp << endl;
 		if (*($2->val) == "!")
 			cout << *($2->val) << temp << symbolTable.at(($1->place)) << ", " << symbolTable.at(($3->place)) << endl;
@@ -368,21 +368,21 @@ relation-expr:
 		cout << "relation-expr-> expression comp expression" << endl; 
 		string temp = newtemp();
 		symbolTable.push_back(temp);
-		$$->place = new int(symbolTable.size() - 1);
+		$$->place = symbolTable.size() - 1;
 		cout << ". " << temp << endl;
 		cout << *($2->val) << " " << temp << ", " << symbolTable.at(($1->place)) << ", " << symbolTable.at(($1->place)) << endl; 
 	} 
 	| TRUE {
 		string temp = newtemp();
 		symbolTable.push_back(temp);
-		$$->place = new int(symbolTable.size() - 1); 
+		$$->place = symbolTable.size() - 1; 
 		cout << ". " << temp << endl;
 		cout << "= " << temp << ", " << "true";
 	}
 	| FALSE {
 		string temp = newtemp();
 		symbolTable.push_back(temp);
-		$$->place = new int(symbolTable.size() - 1); 
+		$$->place = symbolTable.size() - 1; 
 		cout << ". " << temp << endl;		cout << "= " << temp << ", " << "false";
 	}
 	| L_PAREN bool-expr R_PAREN {
@@ -423,7 +423,7 @@ term:
 		symbolTable->push_back(temp);
 		cout << "before segfault?" << endl;
 		//$$->place = 1;
-		//$$->place = new int(symbolTable->size() - 1);
+		//$$->place = symbolTable.size() - 1;
 		cout << symbolTable.size() << endl;
 		//cout << *($$->place) << endl;
 		cout << "after segfault?" << endl;
@@ -434,7 +434,7 @@ term:
 		cout << "term -> var" << endl;
 		string temp = newtemp();
 		symbolTable.push_back(temp);
-		$$->place = new int(symbolTable.size() - 1);
+		$$->place = symbolTable.size() - 1;
 		cout << ". " << temp << endl;
 		cout << "= " << temp << ", " << *($1->val) << endl;
 	 } 
@@ -443,7 +443,7 @@ term:
 			yyerror("Calling a function not previously defined.");
 		string temp = newtemp();
 		symbolTable.push_back(temp);
-		$$->place = new int(symbolTable.size() - 1);	
+		$$->place = symbolTable.size() - 1;	
 		cout << ". " << temp << endl;
 		cout << "call " << *($1->val) << ", " << temp << endl;
 	 } 
@@ -459,7 +459,7 @@ term:
 		}
 		string temp = newtemp();
 		symbolTable.push_back(temp);
-		$$->place = new int(symbolTable.size() - 1);	
+		$$->place = symbolTable.size() - 1;	
 		cout << ". " << temp << endl;
 		cout << "call " << *($1->val) << ", " << temp << endl;
 	 };
@@ -468,8 +468,8 @@ termset:
 	| termset multordivormodoraddorsub term {
 		string temp = newtemp();		
 		symbolTable.push_back(temp);
-		$$->place = new int(symbolTable.size() - 1);
-		cout << "test " << *($$->place) << endl;
+		$$->place = symbolTable.size() - 1;
+		cout << "test " << ($$->place) << endl;
 		cout << ". " << temp << endl;
 		cout << *($2->val) << " " << temp << ", " << symbolTable.at(($1->place)) << ", " << symbolTable.at(($3->place)) << endl;
 	};
