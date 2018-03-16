@@ -16,13 +16,13 @@
  struct varParams {
 	string* type;
 	string* index;
-	int place;
+	int* place;
 	};
  struct exprParams {
-	int place;
+	int* place;
 	};
 struct semanticValues {
-  	int place;
+  	int* place;
   	string* type;
 	string* val;
 	string* index;
@@ -216,9 +216,9 @@ varstatement:
 	var ASSIGN expression {
 		cout << "varstatement -> var ASSIGN expression " << endl;
 		if (*($1->type) == "ARRAY")
-			cout << "[]= " << symbolTable->at(($1->place)) << ", " << *($1->index) << ", " << symbolTable->at(($3->place)) << endl;
+			cout << "[]= " << symbolTable->at(*($1->place)) << ", " << *($1->index) << ", " << symbolTable->at(*($3->place)) << endl;
 		else {
-			cout << "= " << symbolTable->at(($1->place)) << ", " << symbolTable->at(($3->place)) << endl;
+			cout << "= " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
 		}
 	};
 ifstatement:
@@ -227,7 +227,7 @@ ifstatement:
 		string label1 = newlabel();
 		string label2 = newlabel();
 		string label3 = newlabel();
-		cout << "?:= " << label1 << ", " << symbolTable->at(($2->place)) << endl;
+		cout << "?:= " << label1 << ", " << symbolTable->at(*($2->place)) << endl;
 		cout << ":= " << label2 << endl;
 		cout << ": " << label1 << endl;
 		
@@ -240,7 +240,7 @@ ifstatement:
 		cout << "ifstatement -> IF bool-expr THEN statementset ENDIF" << endl;
 		string label1 = newlabel();
 		string label2 = newlabel();
-		cout << "?:= " << label1 << ", " << symbolTable->at(($2->place)) << endl;
+		cout << "?:= " << label1 << ", " << symbolTable->at(*($2->place)) << endl;
 		cout << ":= " << label2 << endl;
 		cout << ": " << label1 << endl;
 		
@@ -254,7 +254,7 @@ whilestatement:
 		string label3 = newlabel();
 		labelTable->push_back(label3);
 		cout << ": " << label1 << endl;
-		cout << "?:= " << label2 << ", " << symbolTable->at(($2->place)) << endl;
+		cout << "?:= " << label2 << ", " << symbolTable->at(*($2->place)) << endl;
 		cout << ":= " << label3 << endl;
 		cout << ": " << label2 << endl;
 		
@@ -268,7 +268,7 @@ dostatement:
 		labelTable->push_back(label2);
 		cout << ": " << label1 << endl;
 		
-		cout << "?:= " << label1 << ", " << symbolTable->at(($6->place)) << endl;
+		cout << "?:= " << label1 << ", " << symbolTable->at(*($6->place)) << endl;
 		cout << ": " << label2 << endl;
 	};
 
@@ -284,9 +284,9 @@ readstatement:
 		for (unsigned i = 0; i < $2->varSet->size(); i++)
 		{
 			if (*($2->varSet->at(i).type) == "ARRAY")
-				cout << ".[]< " << symbolTable->at(($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
+				cout << ".[]< " << symbolTable->at(*($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
 			else
-				cout << ".< " << symbolTable->at(($2->varSet->at(i).place)) << endl;
+				cout << ".< " << symbolTable->at(*($2->varSet->at(i).place)) << endl;
 		}
 	};
 writestatement:
@@ -294,14 +294,14 @@ writestatement:
 		for (unsigned i = 0; i < $2->varSet->size(); i++)
 		{
 			if (*($2->varSet->at(i).type) == "ARRAY")
-				cout << ".[]> " << symbolTable->at(($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
+				cout << ".[]> " << symbolTable->at(*($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
 			else
-				cout << ".> " << symbolTable->at(($2->varSet->at(i).place)) << endl;
+				cout << ".> " << symbolTable->at(*($2->varSet->at(i).place)) << endl;
 		}
 	};
 returnstatement:
 	RETURN expression { 
-		cout << "ret " << symbolTable->at(($2->place)) << endl;
+		cout << "ret " << symbolTable->at(*($2->place)) << endl;
 	};
 varset:
 	var {
@@ -340,7 +340,7 @@ var:
 		symbolTable->push_back(temp);
 		$$->place = new int( symbolTable->size() - 1);
 		$$->type = new string("ARRAY");
-		$$->index = new string(symbolTable->at(($3->place)));
+		$$->index = new string(symbolTable->at(*($3->place)));
 		cout << ". " << temp << endl;
 	};
 
@@ -355,9 +355,9 @@ relation-exprset:
 		$$->place = new int(symbolTable->size() - 1);
 		cout << ". " << temp << endl;
 		if (*($2->val) == "!")
-			cout << *($2->val) << temp << symbolTable->at(($1->place)) << ", " << symbolTable->at(($3->place)) << endl;
+			cout << *($2->val) << temp << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
 		else
-			cout << *($2->val) << " " << temp << ", " << symbolTable->at(($1->place)) << ", " << symbolTable->at(($3->place)) << endl;	
+			cout << *($2->val) << " " << temp << ", " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;	
 	};
 andororornot:
 	AND {$$->val = new string("&&");}
@@ -370,7 +370,7 @@ relation-expr:
 		symbolTable->push_back(temp);
 		$$->place = new int(symbolTable->size() - 1);
 		cout << ". " << temp << endl;
-		cout << *($2->val) << " " << temp << ", " << symbolTable->at(($1->place)) << ", " << symbolTable->at(($1->place)) << endl; 
+		cout << *($2->val) << " " << temp << ", " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($1->place)) << endl; 
 	} 
 	| TRUE {
 		string temp = newtemp();
@@ -454,7 +454,7 @@ term:
 			yyerror("Calling a function not previously defined.");
 		for (unsigned i = 0; i < $3->exprSet->size(); i++)
 		{
-			cout << "param " << symbolTable->at(($3->exprSet->at(i).place)) << endl;
+			cout << "param " << symbolTable->at(*($3->exprSet->at(i).place)) << endl;
 		}
 		string temp = newtemp();
 		symbolTable->push_back(temp);
@@ -470,7 +470,7 @@ termset:
 		$$->place = new int(symbolTable->size() - 1);
 		cout << "test " << *($$->place) << endl;
 		cout << ". " << temp << endl;
-		cout << *($2->val) << " " << temp << ", " << symbolTable->at(($1->place)) << ", " << symbolTable->at(($3->place)) << endl;
+		cout << *($2->val) << " " << temp << ", " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
 	};
 multordivormodoraddorsub:
 	MULT {$$->val = new string("*");} 
