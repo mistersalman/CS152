@@ -4,6 +4,7 @@
  #include <vector>
  #include <string>
  #include <iostream>
+ #include <sstream>
  using namespace std; //don't wanna add std:: to everything
 
  struct varParams {
