@@ -419,6 +419,7 @@ term:
 		cout << "before symboltable push" << endl;
 		symbolTable->push_back(temp);
 		cout << "before segfault?" << endl;
+		cout << *($$->place) << endl;
 		$$->place = new int(1);	
 		cout << "after segfault?" << endl;
 		cout << ". " << temp << endl;
