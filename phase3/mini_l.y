@@ -127,11 +127,12 @@ functionset:
 	| {};
 functionname: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
 	FUNCTION ident SEMICOLON { 
-		cout << "function" << endl;
+		cout << "functionname -> FUNCTION ident SEMICOLON" << endl;
 	};
 	
 function:
-	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { 	
+	BEGIN_PARAMS declarationset END_PARAMS /*BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY*/ { 
+		cout << $1 << endl;
 		cout << "endfunc" << endl; 
 	};
 /*functionset:
