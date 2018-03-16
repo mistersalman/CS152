@@ -92,7 +92,7 @@ struct semanticValues terminalParams;
 %left L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN COMMA COLON SEMICOLON
 
 %type <terminalParams> program functionset functionname function ident declarationsetp declarationsetl 
-%type <terminalParams> declaration identifierset statementset statement varstatement ifstatement1 /*ifstatement2*/ ifstatement3 
+%type <terminalParams> declarationp declarationl identifierset statementset statement varstatement ifstatement1 /*ifstatement2*/ ifstatement3 
 %type <terminalParams> whilestatement1 whilestatement2 dostatement1 dostatement2 continuestatement readstatement writestatement  
 %type <terminalParams> returnstatement varset var bool-expr relation-exprset andororornot 
 %type <terminalParams> relation-expr comp expression expressionset term termset 
