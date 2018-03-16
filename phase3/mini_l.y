@@ -93,7 +93,7 @@ struct semanticValues terminalParams;
 
 %type <terminalParams> program functionset functionname function ident declarationset 
 %type <terminalParams> declaration identifierset statementset statement varstatement ifstatement1 ifstatement2 ifstatement3 
-%type <terminalParams> whilestatement dostatement continuestatement readstatement writestatement  
+%type <terminalParams> whilestatement1 whilestatement2 dostatement1 dostatement2 continuestatement readstatement writestatement  
 %type <terminalParams> returnstatement varset var bool-expr relation-exprset andororornot 
 %type <terminalParams> relation-expr comp expression expressionset term termset 
 %type <terminalParams> multordivormodoraddorsub
@@ -189,8 +189,8 @@ statementset:
 statement:
 	varstatement {}
 	| ifstatement1 ifstatement2 ifstatement3 {}
-	| whilestatement {}
-	| dostatement {}
+	| whilestatement1 whilestatement2 {}
+	| dostatement1 dostatement2 {}
 	| readstatement {}
 	| writestatement {}
 	| continuestatement {}
@@ -224,33 +224,46 @@ ifstatement2:
 ifstatement3:
 	statementset ENDIF {		
 		mil_code << ": " << labelTable.at(labelTable->size() - 1);
+		labelTable->pop_back();
 	}
 
-whilestatement:
-	WHILE bool-expr BEGINLOOP statementset ENDLOOP {
+whilestatement1:
+	WHILE bool-expr BEGINLOOP {
 	
 		string label1 = newlabel();
 		string label2 = newlabel();
 		string label3 = newlabel();
 		labelTable->push_back(label3);
+		labelTable->push_back(label1);
 		mil_code << ": " << label1 << endl;
 		mil_code << "?:= " << label2 << ", " << symbolTable->at(*($2.place)) << endl;
 		mil_code << ":= " << label3 << endl;
 		mil_code << ": " << label2 << endl;
-		
-		mil_code << ": " << label1 << endl;
-		mil_code << ": " << label3 << endl;		
+				
 	};
-dostatement:
-	DO BEGINLOOP statementset ENDLOOP WHILE bool-expr {
+whilestatement2:
+	statementset ENDLOOP {
+		
+		mil_code << ": " << labelTable->at(labelTable->size() - 1) << endl;
+		labelTable->pop_back();
+		mil_code << ": " << labelTable->at(labelTable->size() - 1) << endl;
+		labelTable->pop_back();
+	};
+dostatement1:
+	DO BEGINLOOP {
 		string label1 = newlabel();
 		string label2 = newlabel();
 		labelTable->push_back(label2);
-		mil_code << ": " << label1 << endl;
-		
-		mil_code << "?:= " << label1 << ", " << symbolTable->at(*($6.place)) << endl;
-		mil_code << ": " << label2 << endl;
+		labelTable->push_back(label1);
+		mil_code << ": " << label1 << endl;	
 	};
+dostatement2:
+	statementset ENDLOOP WHILE bool-expr {
+		mil_code << "?:= " << labelTable->at(labelTable->size() - 1) << ", " << symbolTable->at(*($4.place)) << endl;
+		labelTable->pop_back();
+		mil_code << ": " << labelTable->at(labelTable->size() - 1) << endl;
+		labelTable->pop_back();
+	}
 
 continuestatement:
 	CONTINUE {
@@ -348,7 +361,7 @@ relation-expr:
 		symbolTable->push_back(temp);
 		$$.place = new int(symbolTable->size() - 1);
 		mil_code << ". " << temp << endl;
-		mil_code << *($2.val) << " " << temp << ", " << symbolTable->at(*($1.place)) << ", " << symbolTable->at(*($1.place)) << endl; 
+		mil_code << *($2.val) << " " << temp << ", " << symbolTable->at(*($1.place)) << ", " << symbolTable->at(*($3.place)) << endl; 
 	} 
 	| TRUE {
 		string temp = newtemp();
