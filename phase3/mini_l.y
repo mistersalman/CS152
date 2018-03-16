@@ -278,9 +278,9 @@ readstatement:
 		for (unsigned i = 0; i < $2.varSet->size(); i++)
 		{
 			if (*($2.varSet->at(i).type) == "ARRAY")
-				mil_code << ".[]< " << symbolTable->at(*($2.varSet->at(i).val)) << *($2.varSet->at(i).index) << endl;
+				mil_code << ".[]< " << *($2.varSet->at(i).val) << *($2.varSet->at(i).index) << endl;
 			else
-				mil_code << ".< " << symbolTable->at(*($2.varSet->at(i).val)) << endl;
+				mil_code << ".< " << *($2.varSet->at(i).val) << endl;
 		}
 	};
 writestatement:
@@ -288,9 +288,9 @@ writestatement:
 		for (unsigned i = 0; i < $2.varSet->size(); i++)
 		{
 			if (*($2.varSet->at(i).type) == "ARRAY")
-				mil_code << ".[]> " << symbolTable->at(*($2.varSet->at(i).val)) << *($2.varSet->at(i).index) << endl;
+				mil_code << ".[]> " << *($2.varSet->at(i).val) << *($2.varSet->at(i).index) << endl;
 			else
-				mil_code << ".> " << symbolTable->at(*($2.varSet->at(i).val)) << endl;
+				mil_code << ".> " << *($2.varSet->at(i).val) << endl;
 		}
 	};
 returnstatement:
