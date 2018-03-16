@@ -11,7 +11,7 @@
  extern int currPos;
  extern FILE* yyin;
  stringstream mil_code;
- bool isBeginParams = true;
+ static bool isBeginParams = true;
  vector <string>* symbolTable = new vector<string>(); 
  vector <string>* labelTable = new vector<string>();
  vector <string>* functionTable = new vector<string>();
@@ -175,7 +175,8 @@ declaration:
 			mil_code << "= " << temp << ", " << $1.valSet->at(i) << endl;
 		}
 		isBeginParams = false;
-	};
+	}
+	| {isBeginParams = false;};
 identifierset:
 	ident { 
 		$$.valSet = new vector<string>();
