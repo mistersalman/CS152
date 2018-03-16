@@ -145,7 +145,14 @@ function:
 		cout << "endfunc" << endl; 
 	};
 ident:
-	IDENT { cout << "it went here" << endl; $$->val = new string($1); cout << "ident->IDENT" << endl; };
+	IDENT { 
+		cout << "before seg fault" << endl;
+		int* pntr = new int(1);
+		cout << "AFTER SEG FAULT" << endl;
+		$$->val = new string($1); 
+		cout << "ident->IDENT" << endl; 
+		
+		};
 declarationset:
 	declaration SEMICOLON declarationset { cout << "declarationset-> declaration SEMICOLON declarationset" << endl;} 
 	| { cout << "declarationset -> Epsilon" << endl;};
