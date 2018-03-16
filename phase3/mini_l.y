@@ -18,15 +18,6 @@
  struct exprParams {
 	int* place;
 	};
-struct semanticValues {
-  	int* place;
-  	string* type;
-	string* val;
-	string* index;
-	vector<string>* valSet;
-	vector<varParams>* varSet;
-	vector<exprParams>* exprSet;
-	} terminalParams;
  
  vector <string>* symbolTable = new vector<string>(); 
  vector <string>* labelTable = new vector<string>();
