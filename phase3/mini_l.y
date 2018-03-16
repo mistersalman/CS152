@@ -390,7 +390,7 @@ relation-expr:
 comp:
 	EQ {$$->val = new string("==" );} 
 	| NEQ {$$->val = new string("!=" );} 
-	| LT {cout << "comp -> LT" << endl; $$->val = new string("<" );} 
+	| LT {cout << "comp -> LT" << endl; $$->val = new string("<" ); cout << "woohoo" << endl;} 
 	| GT {$$->val = new string(">" );} 
 	| LTE {$$->val = new string("<=" );} 
 	| GTE {$$->val = new string(">=" );};
