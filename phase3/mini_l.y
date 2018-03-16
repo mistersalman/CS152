@@ -380,8 +380,7 @@ relation-expr:
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$->place = new int(symbolTable->size() - 1); 
-		cout << ". " << temp << endl;
-		cout << "= " << temp << ", " << "false";
+		cout << ". " << temp << endl;		cout << "= " << temp << ", " << "false";
 	}
 	| L_PAREN bool-expr R_PAREN {
 		cout << "relation-expr -> LPAREN bool-expre RPAREN" << endl;
@@ -390,7 +389,7 @@ relation-expr:
 comp:
 	EQ {$$->val = new string("==" );} 
 	| NEQ {$$->val = new string("!=" );} 
-	| LT {cout << "comp -> LT" << endl; $$->val = new string("<" ); cout << "woohoo" << endl;} 
+	| LT {cout << "comp -> LT" << endl; $$->val = new string("<" );} 
 	| GT {$$->val = new string(">" );} 
 	| LTE {$$->val = new string("<=" );} 
 	| GTE {$$->val = new string(">=" );};
@@ -414,15 +413,7 @@ expressionset:
 		$$->exprSet->push_back(expr);	
 	};
 term:
-	var { 
-		cout << "term -> var" << endl;
-		string temp = newtemp();
-		symbolTable->push_back(temp);
-		$$->place = new int(symbolTable->size() - 1);
-		cout << ". " << temp << endl;
-		cout << "= " << temp << ", " << *($1->val) << endl;
-	 } 
-	| NUMBER { 
+	NUMBER { 
 		cout << "term -> NUMBER" << endl;
 		string temp = newtemp();
 		symbolTable->push_back(temp);
@@ -430,6 +421,14 @@ term:
 		cout << ". " << temp << endl;
 		cout << "= " << temp << ", " << $1 << endl;
 	} 
+	| var { 
+		cout << "term -> var" << endl;
+		string temp = newtemp();
+		symbolTable->push_back(temp);
+		$$->place = new int(symbolTable->size() - 1);
+		cout << ". " << temp << endl;
+		cout << "= " << temp << ", " << *($1->val) << endl;
+	 } 
 	| ident L_PAREN R_PAREN { 
 		if (!findFunction(*($1->val)))
 			yyerror("Calling a function not previously defined.");
