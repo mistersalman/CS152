@@ -199,9 +199,9 @@ varstatement:
 	//this covers the case of dst = src and dst[index] = src but not dst = src[index]
 	var ASSIGN expression {
 		if (*($1.type) == "ARRAY")
-			mil_code << "[]= " << symbolTable->at(*($1.place)) << ", " << *($1.index) << ", " << symbolTable->at(*($3.place)) << endl;
+			mil_code << "[]= " << *($1.val) << ", " << *($1.index) << ", " << symbolTable->at(*($3.place)) << endl;
 		else {
-			mil_code << "= " << symbolTable->at(*($1.place)) << ", " << symbolTable->at(*($3.place)) << endl;
+			mil_code << "= " << *($1.val) << ", " << symbolTable->at(*($3.place)) << endl;
 		}
 	};
 ifstatement1:
