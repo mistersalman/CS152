@@ -10,14 +10,6 @@
  extern int currLine;
  extern int currPos;
  extern FILE* yyin;
- struct varParams {
-	string* type;
-	string* index;
-	int* place;
-	};
- struct exprParams {
-	int* place;
-	};
  
  vector <string>* symbolTable = new vector<string>(); 
  vector <string>* labelTable = new vector<string>();
