@@ -10,7 +10,7 @@
  extern int currLine;
  extern int currPos;
  extern FILE* yyin;
- 
+ stringstream mil_code;
  vector <string>* symbolTable = new vector<string>(); 
  vector <string>* labelTable = new vector<string>();
  vector <string>* functionTable = new vector<string>();
@@ -117,7 +117,7 @@ functionname: //not sure if having a non-terminal named function and a terminal 
 		keywordTable->push_back("beginloop"); keywordTable->push_back("endloop"); keywordTable->push_back("continue"); 
 		keywordTable->push_back("read"); keywordTable->push_back("write"); keywordTable->push_back("true");
 		keywordTable->push_back("false"); keywordTable->push_back("return"); 
-		cout << "func " << *($2.val) << endl; 
+		mil_code << "func " << *($2.val) << endl; 
 	};
 	
 function:
@@ -452,6 +452,13 @@ int main(int argc, char **argv) {
 
    }//end if
    yyparse(); // Calls yylex() for tokens.
+   
+   string code = mil_code.str();
+   ofstream outFile;
+   outFile.open("code.mil");
+   File << code;
+   File.close();
+   
    return 0;
 }
 
