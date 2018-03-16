@@ -126,7 +126,7 @@ functionset:
 	functionname function functionset {} 
 	| {};
 functionname: //not sure if having a non-terminal named function and a terminal name FUNCTION causes an issue.
-	FUNCTION ident SEMICOLON BEGIN_PARAMS { 
+	FUNCTION ident SEMICOLON { 
 		functionTable->push_back(*($2->val));
 		keywordTable->push_back("beginparams"); keywordTable->push_back("endParams"); keywordTable->push_back("beginlocals"); 
 		keywordTable->push_back("endlocals"); keywordTable->push_back("beginbody"); keywordTable->push_back("endbody"); 
@@ -141,7 +141,7 @@ functionname: //not sure if having a non-terminal named function and a terminal 
 	};
 	
 function:
-	declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { 	
+	BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY { 	
 		cout << "endfunc" << endl; 
 	};
 ident:
@@ -423,7 +423,7 @@ term:
 		cout << "= " << temp << ", " << *($1->val) << endl;
 	 } 
 	| NUMBER { 
-		cout << "term -> var" << endl;
+		cout << "term -> NUMBER" << endl;
 		string temp = newtemp();
 		symbolTable->push_back(temp);
 		$$->place = new int(symbolTable->size() - 1);	
