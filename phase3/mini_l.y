@@ -1,4 +1,4 @@
-* mini_l syntax parser
+/* mini_l syntax parser
    Written by Ryan Gray and Salman Azmi
    CS152 WINTER 18 */
 %{
