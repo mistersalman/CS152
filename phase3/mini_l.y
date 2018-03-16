@@ -218,7 +218,7 @@ varstatement:
 		if (*($1->type) == "ARRAY")
 			cout << "[]= " << symbolTable->at(*($1->place)) << ", " << *($1->index) << ", " << symbolTable->at(*($3->place)) << endl;
 		else {
-			cout << "= " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
+			cout << "= " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(stoi(*($3->val))) << endl;
 		}
 	};
 ifstatement:
@@ -400,7 +400,8 @@ comp:
 expression:
 	termset { 
 		cout << "expression -> termset" << endl;
-		$$->place = $1->place;
+		//$$->place = $1->place;
+		$$->val = $1->val;
 	};
 expressionset:
 	expression {
@@ -424,6 +425,7 @@ term:
 		cout << "before segfault?" << endl;
 		//$$->place = 1;
 		//$$->place = new int(symbolTable->size() - 1);
+		$$->val = new string(to_string(symbolTable->size() - 1));
 		cout << symbolTable->size() << endl;
 		//cout << *($$->place) << endl;
 		cout << "after segfault?" << endl;
@@ -464,7 +466,7 @@ term:
 		cout << "call " << *($1->val) << ", " << temp << endl;
 	 };
 termset:
-	term {cout << "termset -> term" << endl;  $$->place = $1->place;}
+	term {cout << "termset -> term" << endl;  $$->val = $1->val;/*$$->place = $1->place;*/}
 	| termset multordivormodoraddorsub term {
 		string temp = newtemp();		
 		symbolTable->push_back(temp);
