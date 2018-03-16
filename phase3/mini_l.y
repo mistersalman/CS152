@@ -92,7 +92,7 @@ struct semanticValues terminalParams;
 %left L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN COMMA COLON SEMICOLON
 
 %type <terminalParams> program functionset functionname function ident declarationset 
-%type <terminalParams> declaration identifierset statementset statement varstatement ifstatement1 ifstatement2 ifstatement3 
+%type <terminalParams> declaration identifierset statementset statement varstatement ifstatement1 /*ifstatement2*/ ifstatement3 
 %type <terminalParams> whilestatement1 whilestatement2 dostatement1 dostatement2 continuestatement readstatement writestatement  
 %type <terminalParams> returnstatement varset var bool-expr relation-exprset andororornot 
 %type <terminalParams> relation-expr comp expression expressionset term termset 
@@ -188,7 +188,7 @@ statementset:
 //pulled out foreach loops because I don't know how to implement ident in ident as a boolean expression
 statement:
 	varstatement {}
-	| ifstatement1 ifstatement2 ifstatement3 {}
+	| ifstatement1 /*ifstatement2*/ ifstatement3 {}
 	| whilestatement1 whilestatement2 {}
 	| dostatement1 dostatement2 {}
 	| readstatement {}
@@ -213,15 +213,15 @@ ifstatement1:
 		mil_code << ":= " << label2 << endl;
 		mil_code << ": " << label1 << endl;
 	} ;
-ifstatement2:
-	statementset ELSE {	
-		string label3 = newlabel();	
-		mil_code << ":= " << label3;
-		mil_code << ": " << labelTable->at(labelTable->size() - 1);
-		labelTable->pop_back();
-		labelTable->push_back(label3);
-	}
-	| {};
+//ifstatement2:
+//	statementset ELSE {	
+//		string label3 = newlabel();	
+//		mil_code << ":= " << label3;
+//		mil_code << ": " << labelTable->at(labelTable->size() - 1);
+//		labelTable->pop_back();
+//		labelTable->push_back(label3);
+//	}
+//	| {};
 ifstatement3:
 	statementset ENDIF {		
 		mil_code << ": " << labelTable->at(labelTable->size() - 1);
