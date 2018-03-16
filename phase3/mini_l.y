@@ -144,6 +144,10 @@ declaration:
 			mil_code << ". " << $1.valSet->at(i) << endl;
 			string temp = newtemp();
 			symbolTable->push_back(temp);
+			if(symbolTable->size() == 1)
+			{
+				mil_code << "= " << "$1.valSet->at(i) << ", " << $0 << endl;
+			}
 			mil_code << ". " << temp << endl;
 			mil_code << "= " << temp << ", " << $1.valSet->at(i) << endl;
 		}
