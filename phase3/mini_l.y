@@ -332,6 +332,7 @@ var:
 		$$->type = new string ("VALUE");
 		$$->index = new string("0");
 		cout << ". " << temp << endl;
+		cout << "= " << temp << ", " << *($1->val) << endl;
 	} 
 	| ident L_SQUARE_BRACKET expression R_SQUARE_BRACKET {
 		if (!findVariable(*($1->val)))
@@ -342,6 +343,7 @@ var:
 		$$->type = new string("ARRAY");
 		$$->index = new string(symbolTable->at(*($3->place)));
 		cout << ". " << temp << endl;
+		cout << "= " << temp << ", " << *($1->val) << endl;
 	};
 
 
@@ -424,9 +426,9 @@ term:
 		symbolTable->push_back(temp);
 		cout << "before segfault?" << endl;
 		//$$->place = 1;
-		//$$->place = new int(symbolTable->size() - 1);
-		$$->val = new string(to_string(symbolTable->size() - 1));
-		cout << symbolTable->size() << endl;
+		$$->place = new int(symbolTable->size() - 1);
+		//$$->val = new string(to_string(symbolTable->size() - 1));
+		//cout << symbolTable->size() << endl;
 		//cout << *($$->place) << endl;
 		cout << "after segfault?" << endl;
 		cout << ". " << temp << endl;
@@ -436,7 +438,7 @@ term:
 		cout << "term -> var" << endl;
 		string temp = newtemp();
 		symbolTable->push_back(temp);
-		$$->place = new int(symbolTable->size() - 1);
+		$$->place = $1->place;
 		cout << ". " << temp << endl;
 		cout << "= " << temp << ", " << *($1->val) << endl;
 	 } 
