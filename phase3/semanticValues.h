@@ -6,6 +6,16 @@
  #include <iostream>
  using namespace std; //don't wanna add std:: to everything
 
+ struct varParams {
+	string* type;
+	string* index;
+	int* place;
+	};
+ struct exprParams {
+	int* place;
+	};
+
+
 struct semanticValues {
   	int* place;
   	string* type;
