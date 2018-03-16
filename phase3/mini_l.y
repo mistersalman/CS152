@@ -100,16 +100,11 @@ struct semanticValues* terminalParams;
 
 %error-verbose
 %start program
-%token <cval> SUB ADD MULT DIV MOD GT LT GTE LTE EQ NEQ L_PAREN R_PAREN ASSIGN COLON SEMICOLON NOT AND OR 
-%token <cval> L_SQUARE_BRACKET R_SQUARE_BRACKET COMMA BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY FUNCTION
-%token <cval> INTEGER ARRAY OF IF THEN ENDIF ELSE WHILE DO FOREACH IN BEGINLOOP ENDLOOP CONTINUE READ WRITE TRUE FALSE RETURN
+%token SUB ADD MULT DIV MOD GT LT GTE LTE EQ NEQ L_PAREN R_PAREN ASSIGN COLON SEMICOLON NOT AND OR 
+%token L_SQUARE_BRACKET R_SQUARE_BRACKET COMMA BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY FUNCTION
+%token INTEGER ARRAY OF IF THEN ENDIF ELSE WHILE DO FOREACH IN BEGINLOOP ENDLOOP CONTINUE READ WRITE TRUE FALSE RETURN
 %token <dval> NUMBER
 %token <cval> IDENT
-
-%left BEGIN_PARAMS END_PARAMS BEGIN_LOCALS END_LOCALS BEGIN_BODY END_BODY FUNCTION 
-%left INTEGER ARRAY OF IF THEN ENDIF ELSE WHILE DO FOREACH IN BEGINLOOP ENDLOOP CONTINUE READ WRITE RETURN
-%left MOD GT LT GTE LTE EQ NEQ NOT AND OR TRUE FALSE SUB ADD MULT DIV L_PAREN R_PAREN
-%left L_SQUARE_BRACKET R_SQUARE_BRACKET ASSIGN COMMA COLON SEMICOLON
 
 %type <terminalParams> program functionset function ident declarationset 
 %type <terminalParams> declaration identifierset statementset statement varstatement ifstatement 
@@ -135,14 +130,6 @@ function:
 		cout << $1 << endl;
 		cout << "endfunc" << endl; 
 	};
-/*functionset:
-	{ cout << "functionset -> Epsilon" << endl;} | function functionset { cout << "functionset -> function functionset" << endl;};
-function:
-	FUNCTION ident SEMICOLON BEGIN_PARAMS declarationset END_PARAMS BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY {
-		cout << "function" << endl;
-		cout << "begun params" << endl;
-		cout << "ended params" << endl;
-	};*/
 ident:
 	IDENT { cout << "ident->IDENT" << endl; };
 declarationset:
