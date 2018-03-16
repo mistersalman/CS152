@@ -213,7 +213,7 @@ varstatement:
 	var ASSIGN expression {
 		cout << "varstatement -> var ASSIGN expression " << endl;
 		if (*($1->type) == "ARRAY")
-			cout << "[]= " << symbolTable->at(*($1->place)) << ", " << *($1->index) << ", " << symbolTable->at(*($3->place)) << endl;
+			cout << "[]= " << symbolTable->at(stoi(*($1->place))) << ", " << *($1->index) << ", " << symbolTable->at(stoi(*($3->place))) << endl;
 		else {
 			cout << "= " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
 		}
