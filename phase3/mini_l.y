@@ -227,10 +227,10 @@ ifstatement:
 		cout << "?:= " << label1 << ", " << symbolTable->at(*($2->place)) << endl;
 		cout << ":= " << label2 << endl;
 		cout << ": " << label1 << endl;
-		//cout << $4.val;
+		
 		cout << ":= " << label3;
 		cout << ": " << label2;
-		//cout << $6.val;
+		
 		cout << ": " << label3 << endl;
 	}
 	| IF bool-expr THEN statementset ENDIF {
@@ -240,7 +240,7 @@ ifstatement:
 		cout << "?:= " << label1 << ", " << symbolTable->at(*($2->place)) << endl;
 		cout << ":= " << label2 << endl;
 		cout << ": " << label1 << endl;
-		//cout << $4.code;
+		
 		cout << ": " << label2;
 	} ;
 whilestatement:
@@ -254,7 +254,7 @@ whilestatement:
 		cout << "?:= " << label2 << ", " << symbolTable->at(*($2->place)) << endl;
 		cout << ":= " << label3 << endl;
 		cout << ": " << label2 << endl;
-		//cout << $4.code << endl;
+		
 		cout << ": " << label1 << endl;
 		cout << ": " << label3 << endl;		
 	};
@@ -264,7 +264,7 @@ dostatement:
 		string label2 = newlabel();
 		labelTable->push_back(label2);
 		cout << ": " << label1 << endl;
-		//cout << $3.code;
+		
 		cout << "?:= " << label1 << ", " << symbolTable->at(*($6->place)) << endl;
 		cout << ": " << label2 << endl;
 	};
