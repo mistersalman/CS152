@@ -424,6 +424,7 @@ term:
 		cout << "before segfault?" << endl;
 		//$$->place = 1;
 		//$$->place = new int(symbolTable->size() - 1);
+		cout << symbolTable->size() << endl;
 		//cout << *($$->place) << endl;
 		cout << "after segfault?" << endl;
 		cout << ". " << temp << endl;
