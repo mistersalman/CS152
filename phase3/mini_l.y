@@ -16,13 +16,13 @@
  struct varParams {
 	string* type;
 	string* index;
-	int* place;
+	string* place;
 	};
  struct exprParams {
-	int* place;
+	string* place;
 	};
 struct semanticValues {
-  	int* place;
+  	string* place;
   	string* type;
 	string* val;
 	string* index;
@@ -419,8 +419,8 @@ term:
 		cout << "before symboltable push" << endl;
 		symbolTable->push_back(temp);
 		cout << "before segfault?" << endl;
-		//$$->place = new int(symbolTable->size() - 1);
-		//cout << *($$->place) << endl;
+		$$->place = new string(to_string(symbolTable->size() - 1));
+		cout << *($$->place) << endl;
 		cout << "after segfault?" << endl;
 		cout << ". " << temp << endl;
 		cout << "= " << temp << ", " << $1 << endl;
