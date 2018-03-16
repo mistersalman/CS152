@@ -127,7 +127,7 @@ functionname: //not sure if having a non-terminal named function and a terminal 
 	
 function:
 	BEGIN_PARAMS declarationset END_PARAMS /*BEGIN_LOCALS declarationset END_LOCALS BEGIN_BODY statementset END_BODY*/ { 
-		cout << $1 << endl;
+		//cout << $1 << endl;
 		cout << "endfunc" << endl; 
 	};
 ident:
