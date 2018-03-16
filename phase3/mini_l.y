@@ -216,9 +216,9 @@ varstatement:
 	var ASSIGN expression {
 		cout << "varstatement -> var ASSIGN expression " << endl;
 		if (*($1->type) == "ARRAY")
-			cout << "[]= " << symbolTable->at(*($1->place)) << ", " << *($1->index) << ", " << symbolTable->at(*($3->place)) << endl;
+			cout << "[]= " << symbolTable->at(($1->place)) << ", " << *($1->index) << ", " << symbolTable->at(($3->place)) << endl;
 		else {
-			cout << "= " << symbolTable->at(*($1->place)) << ", " << symbolTable->at(*($3->place)) << endl;
+			cout << "= " << symbolTable->at(($1->place)) << ", " << symbolTable->at(($3->place)) << endl;
 		}
 	};
 ifstatement:
@@ -227,7 +227,7 @@ ifstatement:
 		string label1 = newlabel();
 		string label2 = newlabel();
 		string label3 = newlabel();
-		cout << "?:= " << label1 << ", " << symbolTable->at(*($2->place)) << endl;
+		cout << "?:= " << label1 << ", " << symbolTable->at(($2->place)) << endl;
 		cout << ":= " << label2 << endl;
 		cout << ": " << label1 << endl;
 		
@@ -240,7 +240,7 @@ ifstatement:
 		cout << "ifstatement -> IF bool-expr THEN statementset ENDIF" << endl;
 		string label1 = newlabel();
 		string label2 = newlabel();
-		cout << "?:= " << label1 << ", " << symbolTable->at(*($2->place)) << endl;
+		cout << "?:= " << label1 << ", " << symbolTable->at(($2->place)) << endl;
 		cout << ":= " << label2 << endl;
 		cout << ": " << label1 << endl;
 		
@@ -254,7 +254,7 @@ whilestatement:
 		string label3 = newlabel();
 		labelTable->push_back(label3);
 		cout << ": " << label1 << endl;
-		cout << "?:= " << label2 << ", " << symbolTable->at(*($2->place)) << endl;
+		cout << "?:= " << label2 << ", " << symbolTable->at(($2->place)) << endl;
 		cout << ":= " << label3 << endl;
 		cout << ": " << label2 << endl;
 		
@@ -268,7 +268,7 @@ dostatement:
 		labelTable->push_back(label2);
 		cout << ": " << label1 << endl;
 		
-		cout << "?:= " << label1 << ", " << symbolTable->at(*($6->place)) << endl;
+		cout << "?:= " << label1 << ", " << symbolTable->at(($6->place)) << endl;
 		cout << ": " << label2 << endl;
 	};
 
@@ -284,9 +284,9 @@ readstatement:
 		for (unsigned i = 0; i < $2->varSet->size(); i++)
 		{
 			if (*($2->varSet->at(i).type) == "ARRAY")
-				cout << ".[]< " << symbolTable->at(*($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
+				cout << ".[]< " << symbolTable->at(($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
 			else
-				cout << ".< " << symbolTable->at(*($2->varSet->at(i).place)) << endl;
+				cout << ".< " << symbolTable->at(($2->varSet->at(i).place)) << endl;
 		}
 	};
 writestatement:
@@ -294,14 +294,14 @@ writestatement:
 		for (unsigned i = 0; i < $2->varSet->size(); i++)
 		{
 			if (*($2->varSet->at(i).type) == "ARRAY")
-				cout << ".[]> " << symbolTable->at(*($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
+				cout << ".[]> " << symbolTable->at(($2->varSet->at(i).place)) << *($2->varSet->at(i).index) << endl;
 			else
-				cout << ".> " << symbolTable->at(*($2->varSet->at(i).place)) << endl;
+				cout << ".> " << symbolTable->at(($2->varSet->at(i).place)) << endl;
 		}
 	};
 returnstatement:
 	RETURN expression { 
-		cout << "ret " << symbolTable->at(*($2->place)) << endl;
+		cout << "ret " << symbolTable->at(($2->place)) << endl;
 	};
 varset:
 	var {
@@ -324,7 +324,7 @@ varset:
 var:
 	ident { 
 		cout << "var->ident" << endl;
-		if (!findVariable(*($1->val)))
+		if (!findVariable(($1->val)))
 			yyerror("Using a variable not previously declared.");
 		string temp = newtemp();
 		symbolTable->push_back(temp);
