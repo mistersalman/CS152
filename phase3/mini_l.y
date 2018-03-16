@@ -417,6 +417,7 @@ expressionset:
 	};
 term:
 	NUMBER { 
+		$$ = new terminalParams();
 		cout << "term -> NUMBER" << endl;
 		string temp = newtemp();
 		cout << "before symboltable push" << endl;
